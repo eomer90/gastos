@@ -1,104 +1,84 @@
 import { useState } from "react";
 
 function App() {
-  const [form, setForm] = useState({
-    income: "",
-    expenses: "",
-    categories: "",
-    balance: ""
-  });
+  const [valorIncome, setValorIncome] = useState("");
+  const [valorExpense, setValorExpense] = useState("");
+  const [incomeTotal, setincomeTotal] = useState(0);
+  const [valorCategory, setValorCategory] = useState("");
+  const [expenses, setExpenses] = useState([]);
 
-  const [ExpenseBreakdown, setExpenseBreakdown] = useState({});
+  const cambioIncome = (evento) => {
+    setValorIncome(Number(evento.target.value));
+  };
 
-  function handleChange(event) {
-    const { name, value } = event.target;
+  const cambioExpense = (evento) => {
+    setValorExpense(Number(evento.target.value));
+  };
 
-    setForm(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-  }
+  const sumaIncome = () => {
+    setincomeTotal(incomeTotal + valorIncome);
+    setValorIncome("");
+  };
 
-  async function submitForm(event) {
-    event.preventDefault();
+  const cambioCategory = (evento) => {
+    setValorCategory(evento.target.value);
+  };
 
-    if (form.categories !== "") {
-      const newBalance = Number(form.balance) + Number(form.income) - Number(form.expenses);
-
-      const formWithBalance = {
-        ...form,
-        balance: newBalance
-      };
-
-      setExpenseBreakdown(prev => ({
-        ...prev,
-        [form.categories]: (prev[form.categories] || 0) + Number(form.expenses)
-      }));
-
-      const resultado = await fetch("http://localhost:3000/registrar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formWithBalance),
-      });
-
-      const resJson = await resultado.json();
-      console.log(resJson);
-
-      setForm(formWithBalance);
-
-    } else {
-      alert("Select a category")
-    }
-    
-  }
+  const addExpense = () => {
+    const newExpense = {
+      category: valorCategory,
+      quantity: valorExpense,
+    };
+    console.log(newExpense.category);
+    setExpenses([...expenses, newExpense]);
+    setValorExpense("");
+    setValorCategory("");
+  };
 
   return (
     <>
-      <form onSubmit={submitForm}>
-        <label>Expenses</label>
-        <input
-          type="text"
-          name="expenses"
-          value={form.expenses}
-          onChange={handleChange}
-        />
-
-        <label>Income</label>
-        <input
-          type="text"
-          name="income"
-          value={form.income}
-          onChange={handleChange}
-        />
-
-        <label>Categories</label>
-        <select
-          name="categories"
-          value={form.categories}
-          onChange={handleChange}
-        >
-          <option value="">Select a category</option>
-          <option value="food">Food</option>
-          <option value="transport">Transport</option>
+      <div>
+        <p>Income: {incomeTotal}</p>
+      </div>
+      <div>
+        <p>Expenses by category</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {expenses.map((expense, index) => (
+              <tr key={index}>
+                <td>{expense.category}</td>
+                <td>{expense.quantity}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <label>Add an Income:</label>
+        <input type="number" value={valorIncome} onChange={cambioIncome} />
+        <button onClick={sumaIncome}>Submit Income</button>
+      </div>
+      <div>
+        <label>Add an Expense:</label>
+        <input type="number" value={valorExpense} onChange={cambioExpense} />
+        <button onClick={addExpense}>Submit Expense</button>
+      </div>
+      <div>
+        <label>Add a Category:</label>
+        <select value={valorCategory} onChange={cambioCategory}>
+          <option value="" disabled>
+            Select a category
+          </option>
+          <option value="Alimento para perro">Alimento perro</option>
+          <option value="Alimento para gato">Alimento gato</option>
         </select>
-
-        <label>Balance</label>
-        <input
-          type="text"
-          name="balance"
-          value={form.balance}
-          disabled
-        />
-        <div>
-        <h2>Expense breakdown</h2>
-          {Object.entries(ExpenseBreakdown).map(([cat, total]) => (
-          <p key={cat}>{cat}: {total}</p>
-          ))}
-        </div>
-        <button>Submit</button>
-      </form>
+      </div>
     </>
   );
 }
