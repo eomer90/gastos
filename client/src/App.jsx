@@ -2,25 +2,44 @@ import { useState, useEffect } from "react";
 
 function App() {
   const [gastos, setGastos] = useState({
-    gastosEstimados: [],
-    gastosTarjeta: [],
-    gastosEfectivo: [],
+    gastosFijos: [],
+    gastosRecurrentes: [],
+    gastosAlimentacion: [],
+    gastosTransporte: [],
+    gastosVariables: [],
   });
 
   const [forma, setForma] = useState({
     ingreso: "",
-    gastosEstimados: {
-      descripcion: "",
-      cantidad: "",
-    },
-    gastosTarjeta: {
+    gastosFijos: {
       descripcion: "",
       cantidad: "",
       fecha: "",
+      tipoPago: "",
     },
-    gastosEfectivo: {
+    gastosRecurrentes: {
       descripcion: "",
       cantidad: "",
+      fecha: "",
+      tipoPago: "",
+    },
+    gastosAlimentacion: {
+      descripcion: "",
+      cantidad: "",
+      fecha: "",
+      tipoPago: "",
+    },
+    gastosTransporte: {
+      descripcion: "",
+      cantidad: "",
+      fecha: "",
+      tipoPago: "",
+    },
+    gastosVariables: {
+      descripcion: "",
+      cantidad: "",
+      fecha: "",
+      tipoPago: "",
     },
     mesSeleccionado: "",
   });
@@ -40,34 +59,56 @@ function App() {
     });
   };
 
-  const handleChangeGastoEstimado = (event) => {
+  const handleChangeGastoFijo = (event) => {
     const { name, value } = event.target;
     setForma({
       ...forma,
-      gastosEstimados: {
-        ...forma.gastosEstimados,
+      gastosFijos: {
+        ...forma.gastosFijos,
         [name]: value,
       },
     });
   };
 
-  const handleChangeGastoTarjeta = (event) => {
+  const handleChangeGastoRecurrente = (event) => {
     const { name, value } = event.target;
     setForma({
       ...forma,
-      gastosTarjeta: {
-        ...forma.gastosTarjeta,
+      gastosRecurrentes: {
+        ...forma.gastosRecurrentes,
         [name]: value,
       },
     });
   };
 
-  const handleChangeGastoEfectivo = (event) => {
+  const handleChangeGastoAlimentacion = (event) => {
     const { name, value } = event.target;
     setForma({
       ...forma,
-      gastosEfectivo: {
-        ...forma.gastosEfectivo,
+      gastosAlimentacion: {
+        ...forma.gastosAlimentacion,
+        [name]: value,
+      },
+    });
+  };
+
+  const handleChangeGastoTransporte = (event) => {
+    const { name, value } = event.target;
+    setForma({
+      ...forma,
+      gastosTransporte: {
+        ...forma.gastosTransporte,
+        [name]: value,
+      },
+    });
+  };
+
+  const handleChangeGastoVariable = (event) => {
+    const { name, value } = event.target;
+    setForma({
+      ...forma,
+      gastosVariables: {
+        ...forma.gastosVariables,
         [name]: value,
       },
     });
@@ -81,90 +122,234 @@ function App() {
     });
   };
 
-  const añadirGastosEstimados = () => {
+  const añadirGastoFijo = () => {
     setGastos({
       ...gastos,
-      gastosEstimados: [
-        ...gastos.gastosEstimados,
+      gastosFijos: [
+        ...gastos.gastosFijos,
         {
-          descripcion: forma.gastosEstimados.descripcion,
-          cantidad: Number(forma.gastosEstimados.cantidad),
-        },
-      ],
-    });
-    setForma({
-      ...forma,
-      gastosEstimados: {
-        descripcion: "",
-        cantidad: "",
-      },
-    });
-  };
-
-  const añadirGastoTarjeta = () => {
-    setGastos({
-      ...gastos,
-      gastosTarjeta: [
-        ...gastos.gastosTarjeta,
-        {
-          descripcion: forma.gastosTarjeta.descripcion,
-          cantidad: Number(forma.gastosTarjeta.cantidad),
-          fecha: new Date(forma.gastosTarjeta.fecha),
+          descripcion: forma.gastosFijos.descripcion,
+          cantidad: Number(forma.gastosFijos.cantidad),
+          fecha: new Date(forma.gastosFijos.fecha),
+          tipoPago: forma.gastosFijos.tipoPago,
         },
       ],
     });
 
     setForma({
       ...forma,
-      gastosTarjeta: {
+      gastosFijos: {
         descripcion: "",
         cantidad: "",
         fecha: "",
+        tipoPago: "",
       },
     });
   };
 
-  const añadirGastoEfectivo = (event) => {
+  const añadirGastoRecurrente = (event) => {
     setGastos({
       ...gastos,
-      gastosEfectivo: [
-        ...gastos.gastosEfectivo,
+      gastosRecurrentes: [
+        ...gastos.gastosRecurrentes,
         {
-          descripcion: forma.gastosEfectivo.descripcion,
-          cantidad: Number(forma.gastosEfectivo.cantidad),
+          descripcion: forma.gastosRecurrentes.descripcion,
+          cantidad: Number(forma.gastosRecurrentes.cantidad),
+          fecha: new Date(forma.gastosRecurrentes.fecha),
+          tipoPago: forma.gastosRecurrentes.tipoPago,
         },
       ],
     });
     setForma({
       ...forma,
-      gastosEfectivo: {
+      gastosRecurrentes: {
         descripcion: "",
         cantidad: "",
+        fecha: "",
+        tipoPago: "",
       },
     });
   };
 
-  const filtroMesGastosTarjeta = gastos.gastosTarjeta.filter(
+  const añadirGastoAlimentacion = () => {
+    setGastos({
+      ...gastos,
+      gastosAlimentacion: [
+        ...gastos.gastosAlimentacion,
+        {
+          descripcion: forma.gastosAlimentacion.descripcion,
+          cantidad: Number(forma.gastosAlimentacion.cantidad),
+          fecha: new Date(forma.gastosAlimentacion.fecha),
+          tipoPago: forma.gastosAlimentacion.tipoPago,
+        },
+      ],
+    });
+
+    setForma({
+      ...forma,
+      gastosAlimentacion: {
+        descripcion: "",
+        cantidad: "",
+        fecha: "",
+        tipoPago: "",
+      },
+    });
+  };
+
+  const añadirGastoTransporte = () => {
+    setGastos({
+      ...gastos,
+      gastosTransporte: [
+        ...gastos.gastosTransporte,
+        {
+          descripcion: forma.gastosTransporte.descripcion,
+          cantidad: Number(forma.gastosTransporte.cantidad),
+          fecha: new Date(forma.gastosTransporte.fecha),
+          tipoPago: forma.gastosTransporte.tipoPago,
+        },
+      ],
+    });
+
+    setForma({
+      ...forma,
+      gastosTransporte: {
+        descripcion: "",
+        cantidad: "",
+        fecha: "",
+        tipoPago: "",
+      },
+    });
+  };
+
+  const añadirGastoVariable = () => {
+    setGastos({
+      ...gastos,
+      gastosVariables: [
+        ...gastos.gastosVariables,
+        {
+          descripcion: forma.gastosVariables.descripcion,
+          cantidad: Number(forma.gastosVariables.cantidad),
+          fecha: new Date(forma.gastosVariables.fecha),
+          tipoPago: forma.gastosVariables.tipoPago,
+        },
+      ],
+    });
+
+    setForma({
+      ...forma,
+      gastosVariables: {
+        descripcion: "",
+        cantidad: "",
+        fecha: "",
+        tipoPago: "",
+      },
+    });
+  };
+
+  const filtroMesGastosFijos = gastos.gastosFijos.filter(
     (g) => g.fecha.getMonth() == forma.mesSeleccionado
   );
 
-  const sumaGastosTotalesTarjeta = filtroMesGastosTarjeta.reduce(
+  const filtroMesGastosRecurrentes = gastos.gastosRecurrentes.filter(
+    (g) => g.fecha.getMonth() == forma.mesSeleccionado
+  );
+
+  const filtroMesGastosAlimentacion = gastos.gastosAlimentacion.filter(
+    (g) => g.fecha.getMonth() == forma.mesSeleccionado
+  );
+
+  const filtroMesGastosTransporte = gastos.gastosTransporte.filter(
+    (g) => g.fecha.getMonth() == forma.mesSeleccionado
+  );
+
+  const filtroMesGastosVariables = gastos.gastosVariables.filter(
+    (g) => g.fecha.getMonth() == forma.mesSeleccionado
+  );
+
+  const sumaGastosTotalesFijos = filtroMesGastosFijos.reduce(
     (accu, actual) => accu + actual.cantidad,
     0
   );
 
-  const sumaGastosEstimadosTotales = gastos.gastosEstimados.reduce(
+  const sumaGastosTotalesRecurrentes = gastos.gastosRecurrentes.reduce(
     (accu, actual) => accu + actual.cantidad,
     0
   );
 
-  const sumaGastosTotalesEfectivo = gastos.gastosEfectivo.reduce(
+  const sumaGastosTotalesAlimentacion = filtroMesGastosAlimentacion.reduce(
     (accu, actual) => accu + actual.cantidad,
     0
   );
+
+  const sumaGastosTotalesTransporte = filtroMesGastosTransporte.reduce(
+    (accu, actual) => accu + actual.cantidad,
+    0
+  );
+
+  const sumaGastosTotalesVariables = filtroMesGastosVariables.reduce(
+    (accu, actual) => accu + actual.cantidad,
+    0
+  );
+
+  const filtroCreditoPagosFijos = filtroMesGastosFijos.filter(
+    (g) => g.tipoPago === "credito"
+  );
+
+  const filtroCreditoPagosRecurrentes = filtroMesGastosRecurrentes.filter(
+    (g) => g.tipoPago === "credito"
+  );
+
+  const filtroCreditoPagosAlimentacion = filtroMesGastosAlimentacion.filter(
+    (g) => g.tipoPago === "credito"
+  );
+
+  const filtroCreditoPagosTransporte = filtroMesGastosTransporte.filter(
+    (g) => g.tipoPago === "credito"
+  );
+
+  const filtroCreditoPagosVariables = filtroMesGastosVariables.filter(
+    (g) => g.tipoPago === "credito"
+  );
+
+  const sumaCreditoPagosFijos = filtroCreditoPagosFijos.reduce(
+    (acc, actual) => acc + actual.cantidad,
+    0
+  );
+
+  const sumaCreditoPagosRecurrentes = filtroCreditoPagosRecurrentes.reduce(
+    (acc, actual) => acc + actual.cantidad,
+    0
+  );
+
+  const sumaCreditoPagosAlimentacion = filtroCreditoPagosAlimentacion.reduce(
+    (acc, actual) => acc + actual.cantidad,
+    0
+  );
+
+  const sumaCreditoPagosTransporte = filtroCreditoPagosTransporte.reduce(
+    (acc, actual) => acc + actual.cantidad,
+    0
+  );
+
+  const sumaCreditoPagosVariables = filtroCreditoPagosVariables.reduce(
+    (acc, actual) => acc + actual.cantidad,
+    0
+  );
+
+  const sumaTotalCredito =
+    sumaCreditoPagosFijos +
+    sumaCreditoPagosRecurrentes +
+    sumaCreditoPagosAlimentacion +
+    sumaCreditoPagosTransporte +
+    sumaCreditoPagosVariables;
 
   const ahorro =
-    forma.ingreso - sumaGastosTotalesTarjeta - sumaGastosTotalesEfectivo;
+    forma.ingreso -
+    sumaGastosTotalesFijos -
+    sumaGastosTotalesRecurrentes -
+    sumaGastosTotalesAlimentacion -
+    sumaGastosTotalesTransporte -
+    sumaGastosTotalesVariables;
 
   return (
     <>
@@ -194,127 +379,284 @@ function App() {
           value={forma.ingreso}
           onChange={añadirIngreso}
         ></input>
+        <label>Total Crédito: </label>
+        <p>{sumaTotalCredito}</p>
         <label>Ahorro: </label>
-        <input disabled type="number" value={ahorro}></input>
+        <p>{ahorro}</p>
       </div>
       <div>
-        <input
-          type="text"
-          value={forma.gastosEstimados.descripcion}
-          name="descripcion"
-          onChange={handleChangeGastoEstimado}
-        ></input>
-        <input
-          type="number"
-          value={forma.gastosEstimados.cantidad}
-          name="cantidad"
-          onChange={handleChangeGastoEstimado}
-        ></input>
-        <button onClick={añadirGastosEstimados}>Añadir gasto estimado</button>
-        <input
-          type="text"
-          value={forma.gastosTarjeta.descripcion}
-          name="descripcion"
-          onChange={handleChangeGastoTarjeta}
-        ></input>
-        <input
-          type="number"
-          value={forma.gastosTarjeta.cantidad}
-          name="cantidad"
-          onChange={handleChangeGastoTarjeta}
-        ></input>
-        <input
-          type="date"
-          value={forma.gastosTarjeta.fecha}
-          name="fecha"
-          onChange={handleChangeGastoTarjeta}
-        ></input>
-        <button onClick={añadirGastoTarjeta}>
-          Añadir gasto en tarjeta realizado
-        </button>
-        <input
-          type="text"
-          value={forma.gastosEfectivo.descripcion}
-          name="descripcion"
-          onChange={handleChangeGastoEfectivo}
-        ></input>
-        <input
-          type="number"
-          value={forma.gastosEfectivo.cantidad}
-          name="cantidad"
-          onChange={handleChangeGastoEfectivo}
-        ></input>
-        <button onClick={añadirGastoEfectivo}>
-          Añadir gasto en efectivo realizado
-        </button>
-      </div>
-      <div>
-        <h3>Gastos estimados:</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Descripción</th>
-              <th>Cantidad</th>
-            </tr>
-          </thead>
-          <tbody>
-            {gastos.gastosEstimados.map((gasto) => {
-              return (
-                <tr>
-                  <td>{gasto.descripcion}</td>
-                  <td>{gasto.cantidad}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        <p> Total: {sumaGastosEstimadosTotales}</p>
-      </div>
-      <div>
-        <h3>Gastos en tarjeta realizado:</h3>
+        <h3>Fijos:</h3>
+        <div>
+          <input
+            type="text"
+            value={forma.gastosFijos.descripcion}
+            name="descripcion"
+            onChange={handleChangeGastoFijo}
+          ></input>
+          <input
+            type="number"
+            value={forma.gastosFijos.cantidad}
+            name="cantidad"
+            onChange={handleChangeGastoFijo}
+          ></input>
+          <input
+            type="date"
+            value={forma.gastosFijos.fecha}
+            name="fecha"
+            onChange={handleChangeGastoFijo}
+          ></input>
+          <select
+            value={forma.gastosFijos.tipoPago}
+            name="tipoPago"
+            onChange={handleChangeGastoFijo}
+          >
+            <option value="">Selecciona una opcion de pago</option>
+            <option value="credito">Crédito</option>
+            <option value="contado">Contado</option>
+          </select>
+          <button onClick={añadirGastoFijo}>Añadir gasto</button>
+        </div>
         <table>
           <thead>
             <tr>
               <th>Descripción</th>
               <th>Cantidad</th>
               <th>Fecha</th>
+              <th>Tipo de pago</th>
             </tr>
           </thead>
           <tbody>
-            {filtroMesGastosTarjeta.map((gasto, index) => {
+            {filtroMesGastosFijos.map((gasto, index) => {
               return (
                 <tr key={index}>
                   <td>{gasto.descripcion}</td>
                   <td>{gasto.cantidad}</td>
                   <td>{gasto.fecha.toLocaleDateString()}</td>
+                  <td>{gasto.tipoPago}</td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-        <p>Total: {sumaGastosTotalesTarjeta}</p>
+        <p>Total: {sumaGastosTotalesFijos}</p>
       </div>
       <div>
-        <h3>Gastos en efectivo realizado:</h3>
+        <h3>Recurrentes (suscripciones y pagos a meses):</h3>
+        <div>
+          <input
+            type="text"
+            value={forma.gastosRecurrentes.descripcion}
+            name="descripcion"
+            onChange={handleChangeGastoRecurrente}
+          ></input>
+          <input
+            type="number"
+            value={forma.gastosRecurrentes.cantidad}
+            name="cantidad"
+            onChange={handleChangeGastoRecurrente}
+          ></input>
+          <input
+            type="date"
+            value={forma.gastosRecurrentes.fecha}
+            name="fecha"
+            onChange={handleChangeGastoRecurrente}
+          ></input>
+          <select
+            value={forma.gastosRecurrentes.tipoPago}
+            name="tipoPago"
+            onChange={handleChangeGastoRecurrente}
+          >
+            <option value="">Selecciona una opcion de pago</option>
+            <option value="credito">Crédito</option>
+            <option value="contado">Contado</option>
+          </select>
+          <button onClick={añadirGastoRecurrente}>Añadir gasto</button>
+        </div>
         <table>
           <thead>
             <tr>
               <th>Descripción</th>
               <th>Cantidad</th>
+              <th>Fecha</th>
+              <th>Tipo de Pago</th>
             </tr>
           </thead>
           <tbody>
-            {gastos.gastosEfectivo.map((gasto) => {
+            {gastos.gastosRecurrentes.map((gasto) => {
               return (
                 <tr>
                   <td>{gasto.descripcion}</td>
                   <td>{gasto.cantidad}</td>
+                  <td>{gasto.fecha.toLocaleDateString()}</td>
+                  <td>{gasto.tipoPago}</td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-        <p>Total: {sumaGastosTotalesEfectivo}</p>
+        <p>Total: {sumaGastosTotalesRecurrentes}</p>
+      </div>
+      <div>
+        <h3>Alimentación y Despensa:</h3>
+        <input
+          type="text"
+          value={forma.gastosAlimentacion.descripcion}
+          name="descripcion"
+          onChange={handleChangeGastoAlimentacion}
+        ></input>
+        <input
+          type="number"
+          value={forma.gastosAlimentacion.cantidad}
+          name="cantidad"
+          onChange={handleChangeGastoAlimentacion}
+        ></input>
+        <input
+          type="date"
+          value={forma.gastosAlimentacion.fecha}
+          name="fecha"
+          onChange={handleChangeGastoAlimentacion}
+        ></input>
+        <select
+          value={forma.gastosAlimentacion.tipoPago}
+          name="tipoPago"
+          onChange={handleChangeGastoAlimentacion}
+        >
+          <option value="">Selecciona una opcion de pago</option>
+          <option value="credito">Crédito</option>
+          <option value="contado">Contado</option>
+        </select>
+        <button onClick={añadirGastoAlimentacion}>Añadir gasto</button>
+        <table>
+          <thead>
+            <tr>
+              <th>Descripción</th>
+              <th>Cantidad</th>
+              <th>Fecha</th>
+              <th>Tipo de Pago</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtroMesGastosAlimentacion.map((gasto, index) => {
+              return (
+                <tr key={index}>
+                  <td>{gasto.descripcion}</td>
+                  <td>{gasto.cantidad}</td>
+                  <td>{gasto.fecha.toLocaleDateString()}</td>
+                  <td>{gasto.tipoPago}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <p>Total: {sumaGastosTotalesAlimentacion}</p>
+      </div>
+      <div>
+        <h3>Trasporte:</h3>
+        <input
+          type="text"
+          value={forma.gastosTransporte.descripcion}
+          name="descripcion"
+          onChange={handleChangeGastoTransporte}
+        ></input>
+        <input
+          type="number"
+          value={forma.gastosTransporte.cantidad}
+          name="cantidad"
+          onChange={handleChangeGastoTransporte}
+        ></input>
+        <input
+          type="date"
+          value={forma.gastosTransporte.fecha}
+          name="fecha"
+          onChange={handleChangeGastoTransporte}
+        ></input>
+        <select
+          value={forma.gastosTransporte.tipoPago}
+          name="tipoPago"
+          onChange={handleChangeGastoTransporte}
+        >
+          <option value="">Selecciona una opcion de pago</option>
+          <option value="credito">Crédito</option>
+          <option value="contado">Contado</option>
+        </select>
+        <button onClick={añadirGastoTransporte}>Añadir gasto</button>
+        <table>
+          <thead>
+            <tr>
+              <th>Descripción</th>
+              <th>Cantidad</th>
+              <th>Fecha</th>
+              <th>Tipo de Pago</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtroMesGastosTransporte.map((gasto, index) => {
+              return (
+                <tr key={index}>
+                  <td>{gasto.descripcion}</td>
+                  <td>{gasto.cantidad}</td>
+                  <td>{gasto.fecha.toLocaleDateString()}</td>
+                  <td>{gasto.tipoPago}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <p>Total: {sumaGastosTotalesTransporte}</p>
+      </div>
+      <div>
+        <h3>Variables:</h3>
+        <input
+          type="text"
+          value={forma.gastosVariables.descripcion}
+          name="descripcion"
+          onChange={handleChangeGastoVariable}
+        ></input>
+        <input
+          type="number"
+          value={forma.gastosVariables.cantidad}
+          name="cantidad"
+          onChange={handleChangeGastoVariable}
+        ></input>
+        <input
+          type="date"
+          value={forma.gastosVariables.fecha}
+          name="fecha"
+          onChange={handleChangeGastoVariable}
+        ></input>
+        <select
+          value={forma.gastosVariables.tipoPago}
+          name="tipoPago"
+          onChange={handleChangeGastoVariable}
+        >
+          <option value="">Selecciona una opcion de pago</option>
+          <option value="credito">Crédito</option>
+          <option value="contado">Contado</option>
+        </select>
+        <button onClick={añadirGastoVariable}>Añadir gasto</button>
+        <table>
+          <thead>
+            <tr>
+              <th>Descripción</th>
+              <th>Cantidad</th>
+              <th>Fecha</th>
+              <th>Tipo de Pago</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtroMesGastosVariables.map((gasto, index) => {
+              return (
+                <tr key={index}>
+                  <td>{gasto.descripcion}</td>
+                  <td>{gasto.cantidad}</td>
+                  <td>{gasto.fecha.toLocaleDateString()}</td>
+                  <td>{gasto.tipoPago}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <p>Total: {sumaGastosTotalesVariables}</p>
       </div>
     </>
   );
