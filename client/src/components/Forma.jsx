@@ -1,6 +1,32 @@
-export const Forma = ({ form, guardarGasto, handleChange }) => {
+import { useState } from "react"
+
+const estadoInicialForma = {
+  descripcion: "",
+  cantidad: "",
+  fecha: "",
+  tipoPago: "credito",
+  categoria: "fijo",
+}
+
+export const Forma = ({ guardarGasto }) => {
+  const [form, setForm] = useState(estadoInicialForma)
+
+  const handleChange = ({ target }) => {
+    const { name, value } = target
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  const onSubmit = (ev) => {
+    ev.preventDefault()
+    guardarGasto(form)
+    setForm(estadoInicialForma)
+  }
+
   return (
-    <form onSubmit={guardarGasto} className="p-3 border">
+    <form onSubmit={onSubmit} className="p-3 border">
       <div className="mb-3">
         <label className="forn-label">Descripción</label>
         <input

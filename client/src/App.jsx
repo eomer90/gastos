@@ -2,29 +2,10 @@ import { useState } from "react"
 import { Forma } from "./components/Forma"
 import { TablaCategoria } from "./components/TablaCategoria"
 
-const estadoInicialForma = {
-  descripcion: "",
-  cantidad: "",
-  fecha: "",
-  tipoPago: "credito",
-  categoria: "fijo",
-}
-
 function App() {
-  const [form, setForm] = useState(estadoInicialForma)
-
   const [gastos, setGastos] = useState([])
 
-  const handleChange = ({ target }) => {
-    const { name, value } = target
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
-
-  const guardarGasto = (ev) => {
-    ev.preventDefault()
+  const guardarGasto = (form) => {
     setGastos((prev) => [
       ...prev,
       {
@@ -32,8 +13,6 @@ function App() {
         cantidad: Number(form.cantidad),
       },
     ])
-
-    setForm(estadoInicialForma)
   }
 
   const fechaFormatoMx = (fecha) => {
@@ -62,19 +41,14 @@ function App() {
     <div className="container">
       <div className="row gx-5 pt-4">
         <div className="col-4">
-          <Forma
-            form={form}
-            guardarGasto={guardarGasto}
-            handleChange={handleChange}
-          />
+          <Forma guardarGasto={guardarGasto} />
         </div>
         <div className="col">
           {Object.entries(gastosXCategoria).map(([categoria, gastos]) => (
-            <TablaCategoria
-              key={categoria}
-              categoria={categoria}
-              gastos={gastos}
-            />
+            <div key={categoria}>
+              <h2 className="fs-5">{categoria.toUpperCase()}</h2>
+              <TablaCategoria gastos={gastos} />
+            </div>
           ))}
         </div>
       </div>
