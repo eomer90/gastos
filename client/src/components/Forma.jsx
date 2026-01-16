@@ -1,32 +1,58 @@
-import { useState } from "react"
+import { useState } from "react";
 
 const estadoInicialForma = {
+  ingreso: "",
+  descripcionIngreso: "",
   descripcion: "",
   cantidad: "",
   fecha: "",
   tipoPago: "credito",
   categoria: "fijo",
-}
+};
 
-export const Forma = ({ guardarGasto }) => {
-  const [form, setForm] = useState(estadoInicialForma)
+export const Forma = ({ guardarGasto, guardarIngreso }) => {
+  const [form, setForm] = useState(estadoInicialForma);
 
   const handleChange = ({ target }) => {
-    const { name, value } = target
+    const { name, value } = target;
     setForm((prev) => ({
       ...prev,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
-  const onSubmit = (ev) => {
-    ev.preventDefault()
-    guardarGasto(form)
-    setForm(estadoInicialForma)
-  }
+  const onSubmitGasto = (ev) => {
+    ev.preventDefault();
+    guardarGasto(form);
+    setForm(estadoInicialForma);
+  };
+
+  const onSubmitIngreso = (ev) => {
+    ev.preventDefault();
+    guardarIngreso(form);
+    setForm(estadoInicialForma);
+  };
 
   return (
-    <form onSubmit={onSubmit} className="p-3 border">
+    <form className="p-3 border">
+      <div className="mb-3">
+        <label className="forn-label">Ingreso</label>
+        <input
+          type="text"
+          value={form.ingreso}
+          name="ingreso"
+          onChange={handleChange}
+          className="form-control"
+        />
+      </div>
+      <div>
+        <button
+          onClick={onSubmitIngreso}
+          className="btn btn-outline-secondary w-100"
+        >
+          Guardar
+        </button>
+      </div>
       <div className="mb-3">
         <label className="forn-label">Descripción</label>
         <input
@@ -87,8 +113,13 @@ export const Forma = ({ guardarGasto }) => {
         </select>
       </div>
       <div>
-        <button className="btn btn-outline-secondary w-100">Guardar</button>
+        <button
+          onClick={onSubmitGasto}
+          className="btn btn-outline-secondary w-100"
+        >
+          Guardar
+        </button>
       </div>
     </form>
-  )
-}
+  );
+};

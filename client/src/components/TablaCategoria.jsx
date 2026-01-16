@@ -1,5 +1,5 @@
-export const TablaCategoria = ({ gastos }) => {
-  const total = gastos.reduce((acum, { cantidad }) => acum + cantidad, 0)
+export const TablaCategoria = ({ gastos, ingresos }) => {
+  const total = gastos.reduce((acum, { cantidad }) => acum + cantidad, 0);
 
   return (
     <table className="table mb-5">
@@ -28,5 +28,5 @@ export const TablaCategoria = ({ gastos }) => {
         </tr>
       </tbody>
     </table>
-  )
-}
+  );
+};
