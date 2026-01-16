@@ -21,7 +21,7 @@ export const TablaCategoria = ({ gastos }) => {
           </tr>
         ))}
         <tr>
-          <td colSpan={2}>
+          <td colSpan={3}>
             <span className="fw-bold">Total</span>
           </td>
           <td>{total}</td>

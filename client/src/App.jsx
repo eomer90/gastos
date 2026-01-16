@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Forma } from "./components/Forma";
 import { TablaCategoria } from "./components/TablaCategoria";
 import { TablaIngresos } from "./components/TablaIngresos";
+import { TablaBalance } from "./components/TablaBalance";
 
 function App() {
   const [gastos, setGastos] = useState([]);
@@ -64,7 +65,10 @@ function App() {
           ))}
         </div>
         <div>
-          <TablaIngresos ingresos={ingresos} gastos={gastos} />
+          <TablaIngresos ingresos={ingresos} />
+        </div>
+        <div>
+          <TablaBalance ingresos={ingresos} gastos={gastos} />
         </div>
       </div>
     </div>

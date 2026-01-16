@@ -33,6 +33,8 @@ export const Forma = ({ guardarGasto, guardarIngreso }) => {
     setForm(estadoInicialForma);
   };
 
+  //const mostrarNumeroPago =
+
   return (
     <form className="p-3 border">
       <div className="mb-3">
@@ -114,13 +116,16 @@ export const Forma = ({ guardarGasto, guardarIngreso }) => {
           className="form-control"
         >
           <option value="fijo">Fijo</option>
-          <option value="recurrente">
-            Recurrente (suscripciones y pagos a meses)
-          </option>
+          <option value="suscripcion">Suscripción</option>
+          <option value="pago a meses">Pagos a meses</option>
           <option value="despensa">Alimentación y despensa</option>
           <option value="transporte">Transporte</option>
           <option value="variables">Variables</option>
         </select>
+      </div>
+      <div className="mb-3">
+        <label className="forn-label">No° de Pago</label>
+        <input type="number" className="form-control" />
       </div>
       <div>
         <button
