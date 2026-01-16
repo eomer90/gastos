@@ -36,6 +36,16 @@ export const Forma = ({ guardarGasto, guardarIngreso }) => {
   return (
     <form className="p-3 border">
       <div className="mb-3">
+        <label className="forn-label">Descripción</label>
+        <input
+          type="text"
+          value={form.descripcionIngreso}
+          name="descripcionIngreso"
+          onChange={handleChange}
+          className="form-control"
+        />
+      </div>
+      <div className="mb-3">
         <label className="forn-label">Ingreso</label>
         <input
           type="text"

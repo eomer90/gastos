@@ -17,8 +17,6 @@ function App() {
     ]);
   };
 
-  console.log(ingresos);
-
   const guardarGasto = (form) => {
     setGastos((prev) => [
       ...prev,
@@ -66,7 +64,7 @@ function App() {
           ))}
         </div>
         <div>
-          <TablaIngresos ingresos={ingresos} />
+          <TablaIngresos ingresos={ingresos} gastos={gastos} />
         </div>
       </div>
     </div>
