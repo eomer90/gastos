@@ -8,6 +8,10 @@ const estadoInicialForma = {
   fecha: "",
   tipoPago: "credito",
   categoria: "fijo",
+  numeroPago: "",
+  totalMeses: "",
+  titular: "",
+  nombreTitular: "",
 };
 
 export const Forma = ({ guardarGasto, guardarIngreso }) => {
@@ -33,7 +37,9 @@ export const Forma = ({ guardarGasto, guardarIngreso }) => {
     setForm(estadoInicialForma);
   };
 
-  //const mostrarNumeroPago =
+  const mostrarNumeroPago = form.categoria === "pago a meses";
+
+  const mostrarTitular = form.titular === "ajeno";
 
   return (
     <form className="p-3 border">
@@ -123,10 +129,54 @@ export const Forma = ({ guardarGasto, guardarIngreso }) => {
           <option value="variables">Variables</option>
         </select>
       </div>
+      {mostrarNumeroPago && (
+        <>
+          <div className="mb-3">
+            <label className="forn-label">No° de Pago</label>
+            <input
+              type="number"
+              value={form.numeroPago}
+              name="numeroPago"
+              onChange={handleChange}
+              className="form-control"
+            />
+          </div>
+          <div className="mb-3">
+            <label className="forn-label">Total de Meses</label>
+            <input
+              type="number"
+              value={form.totalMeses}
+              name="totalMeses"
+              onChange={handleChange}
+              className="form-control"
+            />
+          </div>
+        </>
+      )}
       <div className="mb-3">
-        <label className="forn-label">No° de Pago</label>
-        <input type="number" className="form-control" />
+        <label className="forn-label">Titular</label>
+        <select
+          value={form.titular}
+          name="titular"
+          onChange={handleChange}
+          className="form-control"
+        >
+          <option value="propio">Propio</option>
+          <option value="ajeno">Ajeno</option>
+        </select>
       </div>
+      {mostrarTitular && (
+        <div className="mb-3">
+          <label className="forn-label">Nombre del Titular</label>
+          <input
+            type="text"
+            value={form.nombreTitular}
+            name="nombreTitular"
+            onChange={handleChange}
+            className="form-control"
+          />
+        </div>
+      )}
       <div>
         <button
           onClick={onSubmitGasto}
