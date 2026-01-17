@@ -57,18 +57,14 @@ function App() {
           <Forma guardarGasto={guardarGasto} guardarIngreso={guardarIngreso} />
         </div>
         <div className="col">
+          <TablaIngresos ingresos={ingresos} />
+          <TablaBalance ingresos={ingresos} gastos={gastos} />
           {Object.entries(gastosXCategoria).map(([categoria, gastos]) => (
             <div key={categoria}>
               <h2 className="fs-5">{categoria.toUpperCase()}</h2>
               <TablaCategoria gastos={gastos} />
             </div>
           ))}
-        </div>
-        <div>
-          <TablaIngresos ingresos={ingresos} />
-        </div>
-        <div>
-          <TablaBalance ingresos={ingresos} gastos={gastos} />
         </div>
       </div>
     </div>
