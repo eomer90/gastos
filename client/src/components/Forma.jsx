@@ -10,7 +10,7 @@ const estadoInicialForma = {
   categoria: "fijo",
   numeroPago: "",
   totalMeses: "",
-  titular: "",
+  titular: "propio",
   nombreTitular: "",
 };
 

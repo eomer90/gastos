@@ -1,8 +1,8 @@
-export const TablaIngresos = ({ ingresos, gastos }) => {
+export const TablaIngresos = ({ ingresos }) => {
   const totalIngresos = ingresos.reduce(
     (acum, { ingreso }) => acum + ingreso,
-    0
-  );
+    0,
+  )
 
   return (
     <table className="table mb-5">
@@ -20,12 +20,10 @@ export const TablaIngresos = ({ ingresos, gastos }) => {
           </tr>
         ))}
         <tr>
-          <td colSpan={1}>
-            <span className="fw-bold">Total</span>
-          </td>
+          <td className="fw-bold">Total</td>
           <td>{totalIngresos}</td>
         </tr>
       </tbody>
     </table>
-  );
-};
+  )
+}
