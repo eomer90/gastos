@@ -1,52 +1,62 @@
-import { useState } from "react"
-import { Forma } from "./components/Forma"
-import { TablaCategoria } from "./components/TablaCategoria"
-import { TablaIngresos } from "./components/TablaIngresos"
-import { TablaBalance } from "./components/TablaBalance"
+import { useState } from "react";
+import { Forma } from "./components/Forma";
+import { TablaCategoria } from "./components/TablaCategoria";
+import { TablaIngresos } from "./components/TablaIngresos";
+import { TablaBalance } from "./components/TablaBalance";
 
 function App() {
-  const [gastos, setGastos] = useState([])
-  const [ingresos, setIngresos] = useState([])
+  const [gastos, setGastos] = useState([]);
+  const [ingresos, setIngresos] = useState([]);
 
-  const guardarIngreso = (form) => {
+  const guardarIngreso = (formIngresos) => {
     setIngresos((prev) => [
       ...prev,
       {
-        ...form,
-        ingreso: Number(form.ingreso),
+        ...formIngresos,
+        ingreso: Number(formIngresos.ingreso),
       },
-    ])
-  }
+    ]);
+  };
 
   const guardarGasto = (form) => {
+    if (form.titular === "ajeno") {
+      setIngresos((prev) => [
+        ...prev,
+        {
+          ingreso: Number(form.cantidad),
+          descripcionIngreso: `${form.nombreTitular} ${form.descripcion}`,
+          fechaIngreso: form.fecha,
+        },
+      ]);
+    }
     setGastos((prev) => [
       ...prev,
       {
         ...form,
         cantidad: Number(form.cantidad),
       },
-    ])
-  }
+    ]);
+  };
 
   const fechaFormatoMx = (fecha) => {
-    const [year, mes, dia] = fecha.split("-")
-    return `${dia}/${mes}/${year}`
-  }
+    const [year, mes, dia] = fecha.split("-");
+    return `${dia}/${mes}/${year}`;
+  };
 
   const gastosXCategoria = gastos.reduce((obj, gasto) => {
-    const categoriaGasto = gasto.categoria
+    const categoriaGasto = gasto.categoria;
 
     if (!obj[categoriaGasto]) {
-      obj[categoriaGasto] = []
+      obj[categoriaGasto] = [];
     }
 
     obj[categoriaGasto].push({
       ...gasto,
       fecha: fechaFormatoMx(gasto.fecha),
-    })
+    });
 
-    return obj
-  }, {})
+    return obj;
+  }, {});
 
   // console.log(gastosXCategoria)
 
@@ -57,7 +67,7 @@ function App() {
           <Forma guardarGasto={guardarGasto} guardarIngreso={guardarIngreso} />
         </div>
         <div className="col">
-          <TablaIngresos ingresos={ingresos} />
+          <TablaIngresos ingresos={ingresos} gastos={gastos} />
           <TablaBalance ingresos={ingresos} gastos={gastos} />
           {Object.entries(gastosXCategoria).map(([categoria, gastos]) => (
             <div key={categoria}>
@@ -68,7 +78,7 @@ function App() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
