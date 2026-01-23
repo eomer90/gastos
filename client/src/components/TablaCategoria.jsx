@@ -1,9 +1,9 @@
 export const TablaCategoria = ({ gastos, eliminarGasto }) => {
-  const total = gastos.reduce((acum, { cantidad }) => acum + cantidad, 0)
+  const total = gastos.reduce((acum, { cantidad }) => acum + cantidad, 0);
 
   const showPagoMeses = gastos.some(
     (gasto) => gasto.categoria === "pago a meses",
-  )
+  );
 
   return (
     <table className="table mb-5">
@@ -41,12 +41,10 @@ export const TablaCategoria = ({ gastos, eliminarGasto }) => {
           </tr>
         ))}
         <tr>
-          <td colSpan={4} className="fw-bold">
-            Total
-          </td>
+          <td className="fw-bold">Total</td>
           <td>{total}</td>
         </tr>
       </tbody>
     </table>
-  )
-}
+  );
+};
