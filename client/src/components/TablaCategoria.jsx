@@ -1,9 +1,9 @@
-export const TablaCategoria = ({ gastos }) => {
-  const total = gastos.reduce((acum, { cantidad }) => acum + cantidad, 0);
+export const TablaCategoria = ({ gastos, eliminarGasto }) => {
+  const total = gastos.reduce((acum, { cantidad }) => acum + cantidad, 0)
 
   const showPagoMeses = gastos.some(
-    (gasto) => gasto.categoria === "pago a meses"
-  );
+    (gasto) => gasto.categoria === "pago a meses",
+  )
 
   return (
     <table className="table mb-5">
@@ -31,7 +31,12 @@ export const TablaCategoria = ({ gastos }) => {
             )}
             <td>{gasto.cantidad}</td>
             <td>
-              <button className="btn btn-outline-secondary w-100">X</button>
+              <button
+                className="btn btn-outline-secondary w-100"
+                onClick={() => eliminarGasto(gasto.id)}
+              >
+                X
+              </button>
             </td>
           </tr>
         ))}
@@ -43,5 +48,5 @@ export const TablaCategoria = ({ gastos }) => {
         </tr>
       </tbody>
     </table>
-  );
-};
+  )
+}

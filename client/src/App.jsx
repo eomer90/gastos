@@ -1,12 +1,13 @@
-import { useState } from "react";
-import { Forma } from "./components/Forma";
-import { TablaCategoria } from "./components/TablaCategoria";
-import { TablaIngresos } from "./components/TablaIngresos";
-import { TablaBalance } from "./components/TablaBalance";
+import { useState } from "react"
+import { v4 as uuidv4 } from "uuid"
+import { Forma } from "./components/Forma"
+import { TablaCategoria } from "./components/TablaCategoria"
+import { TablaIngresos } from "./components/TablaIngresos"
+import { TablaBalance } from "./components/TablaBalance"
 
 function App() {
-  const [gastos, setGastos] = useState([]);
-  const [ingresos, setIngresos] = useState([]);
+  const [gastos, setGastos] = useState([])
+  const [ingresos, setIngresos] = useState([])
 
   const guardarIngreso = (formIngresos) => {
     setIngresos((prev) => [
@@ -15,8 +16,8 @@ function App() {
         ...formIngresos,
         ingreso: Number(formIngresos.ingreso),
       },
-    ]);
-  };
+    ])
+  }
 
   const guardarGasto = (form) => {
     if (form.titular === "ajeno") {
@@ -27,36 +28,42 @@ function App() {
           descripcionIngreso: `${form.nombreTitular} ${form.descripcion}`,
           fechaIngreso: form.fecha,
         },
-      ]);
+      ])
     }
     setGastos((prev) => [
       ...prev,
       {
         ...form,
+        id: uuidv4(),
         cantidad: Number(form.cantidad),
       },
-    ]);
-  };
+    ])
+  }
+
+  const eliminarGasto = (id) => {
+    const gastosFiltrados = gastos.filter((gasto) => gasto.id !== id)
+    setGastos(gastosFiltrados)
+  }
 
   const fechaFormatoMx = (fecha) => {
-    const [year, mes, dia] = fecha.split("-");
-    return `${dia}/${mes}/${year}`;
-  };
+    const [year, mes, dia] = fecha.split("-")
+    return `${dia}/${mes}/${year}`
+  }
 
   const gastosXCategoria = gastos.reduce((obj, gasto) => {
-    const categoriaGasto = gasto.categoria;
+    const categoriaGasto = gasto.categoria
 
     if (!obj[categoriaGasto]) {
-      obj[categoriaGasto] = [];
+      obj[categoriaGasto] = []
     }
 
     obj[categoriaGasto].push({
       ...gasto,
       fecha: fechaFormatoMx(gasto.fecha),
-    });
+    })
 
-    return obj;
-  }, {});
+    return obj
+  }, {})
 
   // console.log(gastosXCategoria)
 
@@ -72,13 +79,13 @@ function App() {
           {Object.entries(gastosXCategoria).map(([categoria, gastos]) => (
             <div key={categoria}>
               <h2 className="fs-5">{categoria.toUpperCase()}</h2>
-              <TablaCategoria gastos={gastos} />
+              <TablaCategoria gastos={gastos} eliminarGasto={eliminarGasto} />
             </div>
           ))}
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
