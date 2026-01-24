@@ -1,24 +1,41 @@
-import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { Forma } from "./components/Forma";
-import { TablaCategoria } from "./components/TablaCategoria";
-import { TablaIngresos } from "./components/TablaIngresos";
-import { TablaBalance } from "./components/TablaBalance";
+import { useEffect, useState } from "react"
+import { v4 as uuidv4 } from "uuid"
+import { Forma } from "./components/Forma"
+import { TablaCategoria } from "./components/TablaCategoria"
+import { TablaIngresos } from "./components/TablaIngresos"
+import { TablaBalance } from "./components/TablaBalance"
 
 function App() {
-  const [gastos, setGastos] = useState([]);
-  const [ingresos, setIngresos] = useState([]);
-  const [mesActivo, setMesActivo] = useState("01");
+  const [gastos, setGastos] = useState([])
+  const [ingresos, setIngresos] = useState([])
+  const [mesActivo, setMesActivo] = useState("01")
 
-  const guardarIngreso = (formIngresos) => {
-    setIngresos((prev) => [
-      ...prev,
-      {
-        ...formIngresos,
-        ingreso: Number(formIngresos.ingreso),
+  useEffect(() => {
+    const traerGastos = async () => {
+      try {
+        const req = await fetch("http://localhost:3000/ingresos")
+        const res = await req.json()
+        setIngresos(res.ingresos)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    traerGastos()
+  }, [])
+
+  const guardarIngreso = async (formIngresos) => {
+    const req = await fetch("http://localhost:3000/registrar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    ]);
-  };
+      body: JSON.stringify(formIngresos),
+    })
+
+    const res = await req.json()
+    console.log(res)
+  }
 
   const guardarGasto = (form) => {
     if (form.titular === "ajeno") {
@@ -29,7 +46,7 @@ function App() {
           descripcionIngreso: `${form.nombreTitular} ${form.descripcion}`,
           fechaIngreso: form.fecha,
         },
-      ]);
+      ])
     }
     setGastos((prev) => [
       ...prev,
@@ -38,47 +55,47 @@ function App() {
         id: uuidv4(),
         cantidad: Number(form.cantidad),
       },
-    ]);
-  };
+    ])
+  }
 
   const eliminarGasto = (id) => {
-    const gastosFiltrados = gastos.filter((gasto) => gasto.id !== id);
-    setGastos(gastosFiltrados);
-  };
+    const gastosFiltrados = gastos.filter((gasto) => gasto.id !== id)
+    setGastos(gastosFiltrados)
+  }
 
   const handleChangeMes = ({ target }) => {
-    setMesActivo(target.value);
-  };
+    setMesActivo(target.value)
+  }
 
   const fechaFormatoMx = (fecha) => {
-    const [year, mes, dia] = fecha.split("-");
-    return `${dia}/${mes}/${year}`;
-  };
+    const [year, mes, dia] = fecha.split("-")
+    return `${dia}/${mes}/${year}`
+  }
 
   const gastosPorMes = gastos.filter((g) => {
-    const [_, mes] = g.fecha.split("-");
-    return mes === mesActivo;
-  });
+    const [_, mes] = g.fecha.split("-")
+    return mes === mesActivo
+  })
 
   const ingresoPorMes = ingresos.filter((i) => {
-    const [_, mes] = i.fechaIngreso.split("-");
-    return mes === mesActivo;
-  });
+    const [_, mes] = i.fechaIngreso.split("-")
+    return mes === mesActivo
+  })
 
   const gastosXCategoria = gastosPorMes.reduce((obj, gasto) => {
-    const categoriaGasto = gasto.categoria;
+    const categoriaGasto = gasto.categoria
 
     if (!obj[categoriaGasto]) {
-      obj[categoriaGasto] = [];
+      obj[categoriaGasto] = []
     }
 
     obj[categoriaGasto].push({
       ...gasto,
       fecha: fechaFormatoMx(gasto.fecha),
-    });
+    })
 
-    return obj;
-  }, {});
+    return obj
+  }, {})
 
   // console.log(gastosXCategoria)
 
@@ -123,7 +140,7 @@ function App() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
