@@ -1,7 +1,17 @@
 [
   {
-    "ingreso": 2000,
-    "descripcionIngreso": "quincena q",
-    "fechaIngreso": "2026-01-14"
+    "ingreso": 3000,
+    "descripcionIngreso": "quincena",
+    "fechaIngreso": "2026-01-15"
+  },
+  {
+    "ingreso": 2500,
+    "descripcionIngreso": "otra quincena",
+    "fechaIngreso": "2026-01-01"
+  },
+  {
+    "ingreso": 1500,
+    "descripcionIngreso": "nuevo ingreso",
+    "fechaIngreso": "2026-02-12"
   }
 ]

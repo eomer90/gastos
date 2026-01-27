@@ -1,33 +1,38 @@
 import express from "express"
 import cors from "cors"
-import fs from "fs/promises"
+import { leerArchivoAjson, crearArchivo } from "./file.mjs"
 
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = 3000
+const rutaDB = "./db/ingresos.json"
 
 app.use(cors())
 app.use(express.json())
 
 app.get("/ingresos", async (req, res) => {
-  const file = await fs.readFile("./db/ingresos.json", "utf8")
-  const ingresos = JSON.parse(file)
-  res.json({ ingresos })
+  const mesQuery = req.query.mes
+  const ingresos = await leerArchivoAjson(rutaDB)
+  const ingresosPorMes = ingresos.filter((g) => {
+    const [_, mes] = g.fechaIngreso.split("-")
+    return mes === mesQuery
+  })
+
+  res.json({ ingresos: ingresosPorMes })
 })
 
-app.post("/registrar", async (req, res) => {
-  const ing = req.body
-  const file = await fs.readFile("./db/ingresos.json", "utf8")
-  const data = JSON.parse(file)
-  data.push({
-    ...ing,
-    ingreso: Number(ing.ingreso),
-  })
-  await fs.writeFile(
-    "./db/ingresos.json",
-    JSON.stringify(data, null, 2),
-    "utf8",
-  )
-  res.status(201).json({ mensaje: "Gasto registrado con éxito" })
+app.post("/ingresos", async (req, res) => {
+  try {
+    const data = req.body
+    const ingresos = await leerArchivoAjson(rutaDB)
+    ingresos.push({
+      ...data,
+      ingreso: Number(data.ingreso),
+    })
+    await crearArchivo(rutaDB, ingresos)
+    res.status(201).json({ mensaje: "ingreso registrado", ingresos })
+  } catch (error) {
+    res.json({ mensaje: "error al registrar ingreso" })
+  }
 })
 
 app.listen(PORT, () => {

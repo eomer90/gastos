@@ -5,6 +5,8 @@ import { TablaCategoria } from "./components/TablaCategoria"
 import { TablaIngresos } from "./components/TablaIngresos"
 import { TablaBalance } from "./components/TablaBalance"
 
+const API_URL = "http://localhost:3000"
+
 function App() {
   const [gastos, setGastos] = useState([])
   const [ingresos, setIngresos] = useState([])
@@ -13,28 +15,31 @@ function App() {
   useEffect(() => {
     const traerGastos = async () => {
       try {
-        const req = await fetch("http://localhost:3000/ingresos")
+        const req = await fetch(`${API_URL}/ingresos?mes=${mesActivo}`)
         const res = await req.json()
         setIngresos(res.ingresos)
       } catch (error) {
         console.error(error)
       }
     }
-
     traerGastos()
-  }, [])
+  }, [mesActivo])
 
   const guardarIngreso = async (formIngresos) => {
-    const req = await fetch("http://localhost:3000/registrar", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formIngresos),
-    })
+    try {
+      const req = await fetch(`${API_URL}/ingresos`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formIngresos),
+      })
 
-    const res = await req.json()
-    console.log(res)
+      const res = await req.json()
+      setIngresos(res.ingresos)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const guardarGasto = (form) => {
@@ -74,11 +79,6 @@ function App() {
 
   const gastosPorMes = gastos.filter((g) => {
     const [_, mes] = g.fecha.split("-")
-    return mes === mesActivo
-  })
-
-  const ingresoPorMes = ingresos.filter((i) => {
-    const [_, mes] = i.fechaIngreso.split("-")
     return mes === mesActivo
   })
 
@@ -129,8 +129,8 @@ function App() {
           <Forma guardarGasto={guardarGasto} guardarIngreso={guardarIngreso} />
         </div>
         <div className="col">
-          <TablaIngresos ingresos={ingresoPorMes} gastos={gastosPorMes} />
-          <TablaBalance ingresos={ingresoPorMes} gastos={gastosPorMes} />
+          <TablaIngresos ingresos={ingresos} gastos={gastosPorMes} />
+          <TablaBalance ingresos={ingresos} gastos={gastosPorMes} />
           {Object.entries(gastosXCategoria).map(([categoria, gastos]) => (
             <div key={categoria}>
               <h2 className="fs-5">{categoria.toUpperCase()}</h2>
