@@ -1,29 +1,31 @@
-import { useEffect, useState } from "react"
-import { v4 as uuidv4 } from "uuid"
-import { Forma } from "./components/Forma"
-import { TablaCategoria } from "./components/TablaCategoria"
-import { TablaIngresos } from "./components/TablaIngresos"
-import { TablaBalance } from "./components/TablaBalance"
+import { useEffect, useState } from "react";
+import { Forma } from "./components/Forma";
+import { FormaIngresos } from "./components/FormaIngresos";
+import { TablaCategoria } from "./components/TablaCategoria";
+import { TablaIngresos } from "./components/TablaIngresos";
+import { TablaBalance } from "./components/TablaBalance";
 
-const API_URL = "http://localhost:3000"
+const API_URL = "http://localhost:3000";
 
 function App() {
-  const [gastos, setGastos] = useState([])
-  const [ingresos, setIngresos] = useState([])
-  const [mesActivo, setMesActivo] = useState("01")
+  const mesActual = String(new Date().getMonth() + 1).padStart(2, "0");
+
+  const [gastos, setGastos] = useState([]);
+  const [ingresos, setIngresos] = useState([]);
+  const [mesActivo, setMesActivo] = useState(mesActual);
 
   useEffect(() => {
-    const traerGastos = async () => {
+    const traerIngreso = async () => {
       try {
-        const req = await fetch(`${API_URL}/ingresos?mes=${mesActivo}`)
-        const res = await req.json()
-        setIngresos(res.ingresos)
+        const req = await fetch(`${API_URL}/ingresos?mes=${mesActivo}`);
+        const res = await req.json();
+        setIngresos(res.ingresos);
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
-    }
-    traerGastos()
-  }, [mesActivo])
+    };
+    traerIngreso();
+  }, [mesActivo]);
 
   const guardarIngreso = async (formIngresos) => {
     try {
@@ -33,71 +35,116 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formIngresos),
-      })
+      });
 
-      const res = await req.json()
-      setIngresos(res.ingresos)
+      const res = await req.json();
+      setIngresos(res.ingresos);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
-  const guardarGasto = (form) => {
-    if (form.titular === "ajeno") {
-      setIngresos((prev) => [
-        ...prev,
-        {
-          ingreso: Number(form.cantidad),
-          descripcionIngreso: `${form.nombreTitular} ${form.descripcion}`,
-          fechaIngreso: form.fecha,
+  useEffect(() => {
+    const traerGasto = async () => {
+      try {
+        const req = await fetch(`${API_URL}/gastos?mes=${mesActivo}`);
+        const res = await req.json();
+        setGastos(res.gastos);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    traerGasto();
+  }, [mesActivo]);
+
+  const guardarGasto = async (formGastos) => {
+    try {
+      const req = await fetch(`${API_URL}/gastos`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      ])
-    }
-    setGastos((prev) => [
-      ...prev,
-      {
-        ...form,
-        id: uuidv4(),
-        cantidad: Number(form.cantidad),
-      },
-    ])
-  }
+        body: JSON.stringify(formGastos),
+      });
 
-  const eliminarGasto = (id) => {
-    const gastosFiltrados = gastos.filter((gasto) => gasto.id !== id)
-    setGastos(gastosFiltrados)
-  }
+      const res = await req.json();
+      setGastos(res.gastos);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const eliminarGasto = async (id) => {
+    try {
+      const req = await fetch(`${API_URL}/gastos`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      const res = await req.json();
+      setGastos(res.gastos);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const eliminarIngreso = async (id) => {
+    try {
+      const req = await fetch(`${API_URL}/ingresos`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+      const res = await req.json();
+      setIngresos(res.ingresos);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleChangeMes = ({ target }) => {
-    setMesActivo(target.value)
-  }
+    setMesActivo(target.value);
+  };
 
   const fechaFormatoMx = (fecha) => {
-    const [year, mes, dia] = fecha.split("-")
-    return `${dia}/${mes}/${year}`
-  }
+    const [year, mes, dia] = fecha.split("-");
+    return `${dia}/${mes}/${year}`;
+  };
 
   const gastosPorMes = gastos.filter((g) => {
-    const [_, mes] = g.fecha.split("-")
-    return mes === mesActivo
-  })
+    const [_, mes] = g.fecha.split("-");
+    return mes === mesActivo;
+  });
+
+  // const gastosOrdenados = (fecha) => {
+  //   const [, , dia] = fecha.split("-");
+  //   return dia;
+  // };
+
+  const ingresosPorMes = ingresos.filter((i) => {
+    const [_, mes] = i.fechaIngreso.split("-");
+    return mes === mesActivo;
+  });
 
   const gastosXCategoria = gastosPorMes.reduce((obj, gasto) => {
-    const categoriaGasto = gasto.categoria
+    const categoriaGasto = gasto.categoria;
 
     if (!obj[categoriaGasto]) {
-      obj[categoriaGasto] = []
+      obj[categoriaGasto] = [];
     }
 
     obj[categoriaGasto].push({
       ...gasto,
       fecha: fechaFormatoMx(gasto.fecha),
-    })
+    });
 
-    return obj
-  }, {})
-
-  // console.log(gastosXCategoria)
+    return obj;
+  }, {});
 
   return (
     <div className="container">
@@ -126,10 +173,17 @@ function App() {
       </div>
       <div className="row gx-5 pt-4">
         <div className="col-4">
-          <Forma guardarGasto={guardarGasto} guardarIngreso={guardarIngreso} />
+          <Forma guardarGasto={guardarGasto} />
+        </div>
+        <div className="col-4">
+          <FormaIngresos guardarIngreso={guardarIngreso} />
         </div>
         <div className="col">
-          <TablaIngresos ingresos={ingresos} gastos={gastosPorMes} />
+          <TablaIngresos
+            ingresosPorMes={ingresosPorMes}
+            gastos={gastosPorMes}
+            eliminarIngreso={eliminarIngreso}
+          />
           <TablaBalance ingresos={ingresos} gastos={gastosPorMes} />
           {Object.entries(gastosXCategoria).map(([categoria, gastos]) => (
             <div key={categoria}>
@@ -140,7 +194,7 @@ function App() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,7 +1,7 @@
-export const TablaIngresos = ({ ingresos, gastos }) => {
-  const totalIngresos = ingresos.reduce(
+export const TablaIngresos = ({ ingresosPorMes, gastos, eliminarIngreso }) => {
+  const totalIngresos = ingresosPorMes.reduce(
     (acum, { ingreso }) => acum + ingreso,
-    0
+    0,
   );
 
   const fechaFormatoMx = (fecha) => {
@@ -19,11 +19,19 @@ export const TablaIngresos = ({ ingresos, gastos }) => {
         </tr>
       </thead>
       <tbody>
-        {ingresos.map((ingreso, index) => (
-          <tr key={index}>
+        {ingresosPorMes.map((ingreso) => (
+          <tr key={ingreso.id}>
             <td>{ingreso.descripcionIngreso}</td>
             <td>{fechaFormatoMx(ingreso.fechaIngreso)}</td>
             <td>{ingreso.ingreso}</td>
+            <td>
+              <button
+                className="btn btn-outline-secondary w-100"
+                onClick={() => eliminarIngreso(ingreso.id)}
+              >
+                X
+              </button>
+            </td>
           </tr>
         ))}
         <tr>

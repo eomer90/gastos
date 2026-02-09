@@ -18,8 +18,8 @@ export const TablaCategoria = ({ gastos, eliminarGasto }) => {
         </tr>
       </thead>
       <tbody>
-        {gastos.map((gasto, index) => (
-          <tr key={`${gasto.descripcion}-${index}`}>
+        {gastos.map((gasto) => (
+          <tr key={gasto.id}>
             <td>{gasto.descripcion}</td>
             <td>{gasto.fecha}</td>
             <td>{gasto.tipoPago}</td>
