@@ -14,19 +14,6 @@ function App() {
   const [ingresos, setIngresos] = useState([]);
   const [mesActivo, setMesActivo] = useState(mesActual);
 
-  useEffect(() => {
-    const traerIngreso = async () => {
-      try {
-        const req = await fetch(`${API_URL}/ingresos?mes=${mesActivo}`);
-        const res = await req.json();
-        setIngresos(res.ingresos);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    traerIngreso();
-  }, [mesActivo]);
-
   const guardarIngreso = async (formIngresos) => {
     try {
       const req = await fetch(`${API_URL}/ingresos`, {
@@ -45,15 +32,27 @@ function App() {
   };
 
   useEffect(() => {
+    const traerIngreso = async () => {
+      try {
+        const req = await fetch(`${API_URL}/ingresos?mes=${mesActivo}`);
+        const res = await req.json();
+        setIngresos(res.ingresos);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     const traerGasto = async () => {
       try {
         const req = await fetch(`${API_URL}/gastos?mes=${mesActivo}`);
         const res = await req.json();
+
         setGastos(res.gastos);
       } catch (error) {
         console.error(error);
       }
     };
+    traerIngreso();
     traerGasto();
   }, [mesActivo]);
 
@@ -121,6 +120,10 @@ function App() {
     return mes === mesActivo;
   });
 
+  gastosPorMes.sort(
+    (a, b) => Number(a.fecha.split("-")[2]) - Number(b.fecha.split("-")[2]),
+  );
+
   // const gastosOrdenados = (fecha) => {
   //   const [, , dia] = fecha.split("-");
   //   return dia;
@@ -130,6 +133,12 @@ function App() {
     const [_, mes] = i.fechaIngreso.split("-");
     return mes === mesActivo;
   });
+
+  ingresosPorMes.sort(
+    (a, b) =>
+      Number(a.fechaIngreso.split("-")[2]) -
+      Number(b.fechaIngreso.split("-")[2]),
+  );
 
   const gastosXCategoria = gastosPorMes.reduce((obj, gasto) => {
     const categoriaGasto = gasto.categoria;
