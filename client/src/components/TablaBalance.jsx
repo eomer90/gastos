@@ -1,40 +1,44 @@
 export const TablaBalance = ({ ingresos, gastos }) => {
   const totalIngresos = ingresos.reduce(
     (acum, { ingreso }) => acum + ingreso,
-    0
+    0,
   );
 
   const filtrarCredito = gastos.filter((g) => g.tipoPago === "credito");
 
   const totalCredito = filtrarCredito.reduce(
     (acum, { cantidad }) => acum + cantidad,
-    0
+    0,
   );
 
   const filtrarContado = gastos.filter((g) => g.tipoPago === "contado");
 
   const totalContado = filtrarContado.reduce(
     (acum, { cantidad }) => acum + cantidad,
-    0
+    0,
   );
 
   const total = gastos.reduce((acum, { cantidad }) => acum + cantidad, 0);
 
   const balance = totalIngresos - total;
   return (
-    <table className="table mb-5">
+    <table className="table table-sm table-bordered mb-5">
       <tbody>
-        <tr>
-          <th>Total Crédito</th>
-          <td>{totalCredito}</td>
+        <tr className="text-center">
+          <th className="w-75">Total Crédito</th>
+          <td>${Number(totalCredito).toLocaleString("es-MX")}</td>
         </tr>
-        <tr>
+
+        <tr className="text-center">
           <th>Total Contado</th>
-          <td>{totalContado}</td>
+          <td>${Number(totalContado).toLocaleString("es-MX")}</td>
         </tr>
-        <tr>
-          <th>Balance</th>
-          <td>{balance}</td>
+
+        <tr className="text-center">
+          <th className="fw-bold">Balance</th>
+          <td className="fw-bold ">
+            ${Number(balance).toLocaleString("es-MX")}
+          </td>
         </tr>
       </tbody>
     </table>

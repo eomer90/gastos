@@ -34,9 +34,11 @@ export const Forma = ({ guardarGasto }) => {
   const mostrarTitular = form.titular === "ajeno";
 
   return (
-    <form onSubmit={onSubmitGasto} className="p-3 border">
+    <form onSubmit={onSubmitGasto} className="border rounded p-3 mb-4">
+      <h5 className="mb-3">Nuevo gasto</h5>
+
       <div className="mb-3">
-        <label className="forn-label">Descripción</label>
+        <label className="form-label fw-bold">Descripción</label>
         <input
           required
           type="text"
@@ -44,10 +46,12 @@ export const Forma = ({ guardarGasto }) => {
           name="descripcion"
           onChange={handleChange}
           className="form-control"
+          placeholder="Ej. Renta, Netflix"
         />
       </div>
+
       <div className="mb-3">
-        <label className="forn-label">Cantidad</label>
+        <label className="form-label fw-bold">Cantidad</label>
         <input
           required
           type="number"
@@ -55,10 +59,12 @@ export const Forma = ({ guardarGasto }) => {
           name="cantidad"
           onChange={handleChange}
           className="form-control"
+          placeholder="$0.00"
         />
       </div>
+
       <div className="mb-3">
-        <label className="forn-label">Fecha</label>
+        <label className="form-label fw-bold">Fecha</label>
         <input
           required
           type="date"
@@ -68,28 +74,32 @@ export const Forma = ({ guardarGasto }) => {
           className="form-control"
         />
       </div>
+
       <div className="mb-3">
-        <label className="forn-label">Tipo de pago</label>
+        <label className="form-label fw-bold">Tipo de pago</label>
         <select
           required
           value={form.tipoPago}
           name="tipoPago"
           onChange={handleChange}
-          className="form-control"
+          className="form-select"
         >
+          <option value="">Selecciona una opción</option>
           <option value="credito">Crédito</option>
           <option value="contado">Contado</option>
         </select>
       </div>
+
       <div className="mb-3">
-        <label className="forn-label">Categoría</label>
+        <label className="form-label fw-bold">Categoría</label>
         <select
           required
           value={form.categoria}
           name="categoria"
           onChange={handleChange}
-          className="form-control"
+          className="form-select"
         >
+          <option value="">Selecciona una categoría</option>
           <option value="fijo">Fijo</option>
           <option value="suscripcion">Suscripción</option>
           <option value="pago a meses">Pagos a meses</option>
@@ -98,10 +108,11 @@ export const Forma = ({ guardarGasto }) => {
           <option value="variables">Variables</option>
         </select>
       </div>
+
       {mostrarNumeroPago && (
-        <>
-          <div className="mb-3">
-            <label className="forn-label">No° de Pago</label>
+        <div className="row">
+          <div className="col-6 mb-3">
+            <label className="form-label fw-bold">No. de pago</label>
             <input
               required
               type="number"
@@ -111,8 +122,9 @@ export const Forma = ({ guardarGasto }) => {
               className="form-control"
             />
           </div>
-          <div className="mb-3">
-            <label className="forn-label">Total de Meses</label>
+
+          <div className="col-6 mb-3">
+            <label className="form-label fw-bold">Total de meses</label>
             <input
               required
               type="number"
@@ -122,24 +134,27 @@ export const Forma = ({ guardarGasto }) => {
               className="form-control"
             />
           </div>
-        </>
+        </div>
       )}
+
       <div className="mb-3">
-        <label className="forn-label">Titular</label>
+        <label className="form-label fw-bold">Titular</label>
         <select
           required
           value={form.titular}
           name="titular"
           onChange={handleChange}
-          className="form-control"
+          className="form-select"
         >
+          <option value="">Selecciona</option>
           <option value="propio">Propio</option>
           <option value="ajeno">Ajeno</option>
         </select>
       </div>
+
       {mostrarTitular && (
         <div className="mb-3">
-          <label className="forn-label">Nombre del Titular</label>
+          <label className="form-label fw-bold">Nombre del titular</label>
           <input
             required
             type="text"
@@ -150,9 +165,8 @@ export const Forma = ({ guardarGasto }) => {
           />
         </div>
       )}
-      <div>
-        <button className="btn btn-outline-secondary w-100">Guardar</button>
-      </div>
+
+      <button className="btn btn-outline-secondary w-100">Guardar</button>
     </form>
   );
 };

@@ -124,11 +124,6 @@ function App() {
     (a, b) => Number(a.fecha.split("-")[2]) - Number(b.fecha.split("-")[2]),
   );
 
-  // const gastosOrdenados = (fecha) => {
-  //   const [, , dia] = fecha.split("-");
-  //   return dia;
-  // };
-
   const ingresosPorMes = ingresos.filter((i) => {
     const [_, mes] = i.fechaIngreso.split("-");
     return mes === mesActivo;
@@ -157,49 +152,74 @@ function App() {
 
   return (
     <div className="container">
-      <div className="row">
-        <div className="col-4">
-          <label className="forn-label">Meses</label>
-          <select
-            className="form-control"
-            value={mesActivo}
-            onChange={handleChangeMes}
-          >
-            <option value="01">Enero</option>
-            <option value="02">Febrero</option>
-            <option value="03">Marzo</option>
-            <option value="04">Abril</option>
-            <option value="05">Mayo</option>
-            <option value="06">Junio</option>
-            <option value="07">Julio</option>
-            <option value="08">Agosto</option>
-            <option value="09">Septiembre</option>
-            <option value="10">Octubre</option>
-            <option value="11">Noviembre</option>
-            <option value="12">Diciembre</option>
-          </select>
+      <div className="pt-4 mb-4">
+        <h1>{"Control de gastos".toUpperCase()}</h1>
+      </div>
+
+      <div className="row mb-4">
+        <div className="col-2">
+          <label className="form-label fw-bold text-dark">Mes</label>
+
+          <div className="input-group shadow-sm">
+            <span className="input-group-text bg-light">📅</span>
+            <select
+              className="form-select"
+              value={mesActivo}
+              onChange={handleChangeMes}
+            >
+              <option value="01">Enero</option>
+              <option value="02">Febrero</option>
+              <option value="03">Marzo</option>
+              <option value="04">Abril</option>
+              <option value="05">Mayo</option>
+              <option value="06">Junio</option>
+              <option value="07">Julio</option>
+              <option value="08">Agosto</option>
+              <option value="09">Septiembre</option>
+              <option value="10">Octubre</option>
+              <option value="11">Noviembre</option>
+              <option value="12">Diciembre</option>
+            </select>
+          </div>
         </div>
       </div>
-      <div className="row gx-5 pt-4">
-        <div className="col-4">
-          <Forma guardarGasto={guardarGasto} />
-        </div>
+
+      <div className="row gx-5">
         <div className="col-4">
           <FormaIngresos guardarIngreso={guardarIngreso} />
+          <Forma guardarGasto={guardarGasto} />
         </div>
-        <div className="col">
-          <TablaIngresos
-            ingresosPorMes={ingresosPorMes}
-            gastos={gastosPorMes}
-            eliminarIngreso={eliminarIngreso}
-          />
-          <TablaBalance ingresos={ingresos} gastos={gastosPorMes} />
-          {Object.entries(gastosXCategoria).map(([categoria, gastos]) => (
-            <div key={categoria}>
-              <h2 className="fs-5">{categoria.toUpperCase()}</h2>
-              <TablaCategoria gastos={gastos} eliminarGasto={eliminarGasto} />
+
+        <div className="col-8">
+          <div className="row">
+            <div className="col-5">
+              <TablaBalance ingresos={ingresos} gastos={gastosPorMes} />
             </div>
-          ))}
+
+            <div className="col-7">
+              <TablaIngresos
+                ingresosPorMes={ingresosPorMes}
+                gastos={gastosPorMes}
+                eliminarIngreso={eliminarIngreso}
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col-12">
+              {Object.entries(gastosXCategoria).map(([categoria, gastos]) => (
+                <div key={categoria}>
+                  <p className="form-label fw-bold text-dark">
+                    {categoria.toUpperCase()}
+                  </p>
+                  <TablaCategoria
+                    gastos={gastos}
+                    eliminarGasto={eliminarGasto}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
