@@ -4,6 +4,7 @@ const estadoInicialFormaIngresos = {
   ingreso: "",
   descripcionIngreso: "",
   fechaIngreso: "",
+  periodoIngresos: "01",
 };
 
 export const FormaIngresos = ({ guardarIngreso }) => {
@@ -63,6 +64,29 @@ export const FormaIngresos = ({ guardarIngreso }) => {
           onChange={handleChangeIngresos}
           className="form-control"
         />
+      </div>
+
+      <div className="mb-3">
+        <label className="form-label fw-bold">Periodo</label>
+        <select
+          className="form-control"
+          name="periodoIngresos"
+          value={formIngresos.periodoIngresos}
+          onChange={handleChangeIngresos}
+        >
+          <option value="01">Diciembre-Enero</option>
+          <option value="02">Enero-Febrero</option>
+          <option value="03">Febrero-Marzo</option>
+          <option value="04">Marzo-Abril</option>
+          <option value="05">Abril-Mayo</option>
+          <option value="06">Mayo-Junio</option>
+          <option value="07">Junio-Julio</option>
+          <option value="08">Julio-Agosto</option>
+          <option value="09">Agosto-Septiembre</option>
+          <option value="10">Septiembre-Octubre</option>
+          <option value="11">Octubre-Noviembre</option>
+          <option value="12">Noviembre-Diciembre</option>
+        </select>
       </div>
 
       <button className="btn btn-outline-secondary w-100">Guardar</button>

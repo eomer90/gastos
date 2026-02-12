@@ -11,16 +11,28 @@ const gastosDB = "./db/gastos.json"
 app.use(cors())
 app.use(express.json())
 
-app.get("/ingresos", async (req, res) => {
-  const mesQuery = req.query.mes
-  const ingresos = await leerArchivoAjson(rutaDB)
-  const ingresosPorMes = ingresos.filter((i) => {
-    const [_, mes] = i.fechaIngreso.split("-")
-    return mes === mesQuery
-  })
+// app.get("/ingresos", async (req, res) => {
+//   const mesQuery = req.query.mes
+//   const ingresos = await leerArchivoAjson(rutaDB)
+//   const ingresosPorMes = ingresos.filter((i) => {
+//     const [_, mes] = i.fechaIngreso.split("-")
+//     return mes === mesQuery
+//   })
 
-  res.json({ ingresos: ingresosPorMes })
+//   res.json({ ingresos: ingresosPorMes })
+// })
+
+app.get("/ingresos", async (req, res) => {
+  const periodoQuery = req.query.periodo
+  const ingresos = await leerArchivoAjson(rutaDB)
+
+  const ingresosPorPeriodo = ingresos.filter(
+    (i) => i.periodoIngresos === periodoQuery
+  )
+
+  res.json({ ingresos: ingresosPorPeriodo })
 })
+
 
 app.post("/ingresos", async (req, res) => {
   try {

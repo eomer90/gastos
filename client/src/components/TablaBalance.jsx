@@ -1,5 +1,5 @@
-export const TablaBalance = ({ ingresos, gastos }) => {
-  const totalIngresos = ingresos.reduce(
+export const TablaBalance = ({ ingresosOrdenados, gastos }) => {
+  const totalIngresos = ingresosOrdenados.reduce(
     (acum, { ingreso }) => acum + ingreso,
     0,
   );

@@ -1,5 +1,5 @@
-export const TablaIngresos = ({ ingresosPorMes, eliminarIngreso }) => {
-  const totalIngresos = ingresosPorMes.reduce(
+export const TablaIngresos = ({ ingresosOrdenados, eliminarIngreso }) => {
+  const totalIngresos = ingresosOrdenados.reduce(
     (acum, { ingreso }) => acum + ingreso,
     0,
   );
@@ -21,7 +21,7 @@ export const TablaIngresos = ({ ingresosPorMes, eliminarIngreso }) => {
       </thead>
 
       <tbody>
-        {ingresosPorMes.map((ingreso) => (
+        {ingresosOrdenados.map((ingreso) => (
           <tr className="text-center" key={ingreso.id}>
             <td>{ingreso.descripcionIngreso}</td>
             <td>{fechaFormatoMx(ingreso.fechaIngreso)}</td>
