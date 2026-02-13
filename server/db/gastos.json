@@ -1,1 +1,93 @@
-[]
+[
+  {
+    "descripcion": "warhammer amazon",
+    "cantidad": 100,
+    "fecha": "2026-02-27",
+    "periodoGastos": "",
+    "tipoPago": "credito",
+    "categoria": "fijo",
+    "numeroPago": "",
+    "totalMeses": "",
+    "titular": "propio",
+    "nombreTitular": "",
+    "id": "2b016093-fb25-4f38-ada2-9c7aaa8cb2d3"
+  },
+  {
+    "descripcion": "Uber",
+    "cantidad": 60,
+    "fecha": "2026-02-04",
+    "periodoGastos": "02",
+    "tipoPago": "credito",
+    "categoria": "transporte",
+    "numeroPago": "",
+    "totalMeses": "",
+    "titular": "propio",
+    "nombreTitular": "",
+    "id": "89f87fa3-8a83-4a57-9228-5bc07aee8689"
+  },
+  {
+    "descripcion": "warhammer amazon",
+    "cantidad": 2000,
+    "fecha": "2026-02-26",
+    "periodoGastos": "01",
+    "tipoPago": "credito",
+    "categoria": "variables",
+    "numeroPago": "",
+    "totalMeses": "",
+    "titular": "propio",
+    "nombreTitular": "",
+    "id": "ec3d9ae5-abd8-42b5-a11f-45b13ac21119"
+  },
+  {
+    "descripcion": "Vacaciones Guadalajara",
+    "cantidad": 1000,
+    "fecha": "2026-02-17",
+    "periodoGastos": "02",
+    "tipoPago": "contado",
+    "categoria": "fijo",
+    "numeroPago": "",
+    "totalMeses": "",
+    "titular": "propio",
+    "nombreTitular": "",
+    "id": "85b2f6d7-2c93-40d3-ac76-ddfb73ea8f5f"
+  },
+  {
+    "descripcion": "warhammer amazon",
+    "cantidad": 200,
+    "fecha": "2026-02-18",
+    "periodoGastos": "02",
+    "tipoPago": "credito",
+    "categoria": "pago a meses",
+    "numeroPago": "2",
+    "totalMeses": "9",
+    "titular": "propio",
+    "nombreTitular": "",
+    "id": "d94df9a7-dc6c-4ee8-a2ac-41f151a2b186"
+  },
+  {
+    "descripcion": "netlfix",
+    "cantidad": 200,
+    "fecha": "2026-01-15",
+    "periodoGastos": "01",
+    "tipoPago": "contado",
+    "categoria": "suscripcion",
+    "numeroPago": "",
+    "totalMeses": "",
+    "titular": "propio",
+    "nombreTitular": "",
+    "id": "e5bf5036-1709-4447-8401-23af468839e8"
+  },
+  {
+    "descripcion": "warhammer amazon",
+    "cantidad": 200,
+    "fecha": "2026-02-18",
+    "periodoGastos": "01",
+    "tipoPago": "credito",
+    "categoria": "fijo",
+    "numeroPago": "",
+    "totalMeses": "",
+    "titular": "ajeno",
+    "nombreTitular": "efren",
+    "id": "9c227c4e-56a0-49e2-9792-743bfc0a3454"
+  }
+]
