@@ -11,16 +11,6 @@ const gastosDB = "./db/gastos.json"
 app.use(cors())
 app.use(express.json())
 
-// app.get("/ingresos", async (req, res) => {
-//   const mesQuery = req.query.mes
-//   const ingresos = await leerArchivoAjson(rutaDB)
-//   const ingresosPorMes = ingresos.filter((i) => {
-//     const [_, mes] = i.fechaIngreso.split("-")
-//     return mes === mesQuery
-//   })
-
-//   res.json({ ingresos: ingresosPorMes })
-// })
 
 app.get("/ingresos", async (req, res) => {
   const periodoQuery = req.query.periodo
@@ -59,16 +49,6 @@ app.get("/gastos", async (req, res) => {
   res.json({ gastos: gastosPorPeriodo })
 })
 
-// app.get("/ingresos", async (req, res) => {
-//   const periodoQuery = req.query.periodo
-//   const ingresos = await leerArchivoAjson(rutaDB)
-
-//   const ingresosPorPeriodo = ingresos.filter(
-//     (i) => i.periodoIngresos === periodoQuery
-//   )
-
-//   res.json({ ingresos: ingresosPorPeriodo })
-// })
 
 app.post("/gastos", async (req, res) => {
   try {
@@ -98,8 +78,6 @@ app.delete("/gastos", async (req, res) => {
     res.json({ mensaje: "error al eliminar gasto" })
   }
 })
-
-
 
 app.delete("/ingresos", async (req, res) => {
   try {

@@ -28,10 +28,16 @@ export const TablaIngresos = ({ ingresosOrdenados, eliminarIngreso }) => {
             <td>${Number(ingreso.ingreso).toLocaleString("es-MX")}</td>
             <td>
               <button
-                className="btn btn-outline-danger btn-sm"
+                className="btn btn-outline-danger btn-sm me-2"
                 onClick={() => eliminarIngreso(ingreso.id)}
               >
                 <i className="bi bi-trash"></i>
+              </button>
+              <button
+                className="btn btn-outline-primary btn-sm"
+                onClick={() => editarGasto(gasto.id)}
+              >
+                <i className="bi bi-pencil"></i>
               </button>
             </td>
           </tr>

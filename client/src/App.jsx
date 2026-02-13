@@ -14,24 +14,6 @@ function App() {
   const [ingresos, setIngresos] = useState([]);
   const [mesActivo, setMesActivo] = useState("01");
 
-  // const guardarIngreso = async (formIngresos) => {
-  //   try {
-  //     const req = await fetch(`${API_URL}/ingresos?periodo=${mesActivo}`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(formIngresos),
-  //     });
-
-  //     const res = await req.json();
-  //     setIngresos(res.ingresos);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  //   console.log("Respuesta backend:", res);
-  // };
-
   const guardarIngreso = async (formIngresos) => {
     try {
       await fetch(`${API_URL}/ingresos`, {
@@ -40,7 +22,6 @@ function App() {
         body: JSON.stringify(formIngresos),
       });
 
-      // Volver a sincronizar con el backend
       const req = await fetch(`${API_URL}/ingresos?periodo=${mesActivo}`);
       const res = await req.json();
 
@@ -94,41 +75,6 @@ function App() {
     }
   };
 
-  // const guardarIngreso = async (formIngresos) => {
-  //   try {
-  //     await fetch(`${API_URL}/ingresos`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(formIngresos),
-  //     });
-
-  //     // Volver a sincronizar con el backend
-  //     const req = await fetch(`${API_URL}/ingresos?periodo=${mesActivo}`);
-  //     const res = await req.json();
-
-  //     setIngresos(res.ingresos);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // const eliminarGasto = async (id) => {
-  //   try {
-  //     const req = await fetch(`${API_URL}/gastos`, {
-  //       method: "DELETE",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ id }),
-  //     });
-
-  //     const res = await req.json();
-  //     setGastos(res.gastos);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const eliminarGasto = async (id) => {
     try {
       await fetch(`${API_URL}/gastos`, {
@@ -139,7 +85,6 @@ function App() {
         body: JSON.stringify({ id }),
       });
 
-      // 🔥 volver a sincronizar filtrado por periodo
       const req = await fetch(`${API_URL}/gastos?periodo=${mesActivo}`);
       const res = await req.json();
 
@@ -174,44 +119,6 @@ function App() {
     return `${dia}/${mes}/${year}`;
   };
 
-  // const gastosPorPeriodo = gastos.filter((g) => {
-  //   const [anio, mes, dia] = g.fecha.split("-").map(Number);
-  //   const mesActivoNum = Number(mesActivo);
-
-  //   // Caso 1: mismo mes y día <= 20
-  //   if (mes === mesActivoNum && dia <= 20) {
-  //     return true;
-  //   }
-
-  //   // Caso 2: mes anterior y día > 20
-  //   const mesAnterior = mesActivoNum === 1 ? 12 : mesActivoNum - 1;
-
-  //   if (mes === mesAnterior && dia > 20) {
-  //     return true;
-  //   }
-
-  //   return false;
-  // });
-
-  // gastosPorPeriodo.sort(
-  //   (a, b) => Number(a.fecha.split("-")[2]) - Number(b.fecha.split("-")[2]),
-  // );
-
-  // const ingresosPorPeriodo = ingresos.filter(
-  //   (i) => i.periodoIngresos === req.query.periodo,
-  // );
-
-  // const ingresosPorMes = ingresos.filter((i) => {
-  //   const [_, mes] = i.fechaIngreso.split("-");
-  //   return mes === mesActivo;
-  // });
-
-  // ingresosPorMes.sort(
-  //   (a, b) =>
-  //     Number(a.fechaIngreso.split("-")[2]) -
-  //     Number(b.fechaIngreso.split("-")[2]),
-  // );
-
   const ingresosPorPeriodo = ingresos.sort(
     (a, b) =>
       Number(a.fechaIngreso.split("-")[1]) -
@@ -231,36 +138,6 @@ function App() {
   const gastosOrdenados = gastosPorPeriodo.sort(
     (a, b) => Number(a.fecha.split("-")[2]) - Number(b.fecha.split("-")[2]),
   );
-
-  // const gastosXCategoria = gastos.reduce((obj, gasto) => {
-  //   const categoriaGasto = gasto.categoria;
-
-  //   if (!obj[categoriaGasto]) {
-  //     obj[categoriaGasto] = [];
-  //   }
-
-  //   obj[categoriaGasto].push({
-  //     ...gasto,
-  //     fecha: fechaFormatoMx(gasto.fecha),
-  //   });
-
-  //   return obj;
-  // }, {});
-
-  // const gastosXTipo = gastos.reduce((obj, gasto) => {
-  //   const tipoGasto = gasto.tipoPago;
-
-  //   if (!obj[tipoGasto]) {
-  //     obj[tipoGasto] = [];
-  //   }
-
-  //   obj[tipoGasto].push({
-  //     ...gasto,
-  //     fecha: fechaFormatoMx(gasto.fecha),
-  //   });
-
-  //   return obj;
-  // }, {});
 
   const gastosXTipo = gastos.reduce(
     (obj, gasto) => {

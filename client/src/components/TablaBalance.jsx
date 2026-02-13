@@ -27,11 +27,17 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
     0,
   );
 
-  const filtroTitular = () => {
-    return gastosOrdenados.filter((g) => g.titular !== "propio");
-  };
+  const titularXGasto = gastosOrdenados
+    .filter((g) => g.titular !== "propio")
+    .reduce((acc, g) => {
+      if (!acc[g.nombreTitular.trim()]) {
+        acc[g.nombreTitular.trim()] = 0;
+      }
 
-  console.log(filtroTitular);
+      acc[g.nombreTitular.trim()] += g.cantidad;
+
+      return acc;
+    }, {});
 
   const balance = totalIngresos - total;
   return (
@@ -58,10 +64,12 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
       </table>
       <table className="table table-sm table-bordered mb-5">
         <tbody>
-          <tr className="text-center">
-            <th lassName="fw-bold">{filtroTitular}</th>
-            <td className="fw-bold "></td>
-          </tr>
+          {Object.entries(titularXGasto).map(([nombre, total]) => (
+            <tr className="text-center" key={nombre}>
+              <th className="fw-bold w-75">{nombre}</th>
+              <td>${Number(total).toLocaleString("es-MX")}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </>

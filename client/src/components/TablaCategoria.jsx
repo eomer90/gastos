@@ -14,7 +14,7 @@ export const TablaCategoria = ({ gastosOrdenados, eliminarGasto }) => {
 
   const gastosFiltradosXCategoria = gastosOrdenados.filter((gasto) => {
     if (categoriaSeleccionada === "") {
-      return true; // si no hay categoría seleccionada, muestra todo
+      return true;
     }
     return gasto.categoria === categoriaSeleccionada;
   });
@@ -75,10 +75,16 @@ export const TablaCategoria = ({ gastosOrdenados, eliminarGasto }) => {
 
               <td>
                 <button
-                  className="btn btn-outline-danger btn-sm"
+                  className="btn btn-outline-danger btn-sm me-2"
                   onClick={() => eliminarGasto(gasto.id)}
                 >
                   <i className="bi bi-trash"></i>
+                </button>
+                <button
+                  className="btn btn-outline-primary btn-sm"
+                  onClick={() => editarGasto(gasto.id)}
+                >
+                  <i className="bi bi-pencil"></i>
                 </button>
               </td>
             </tr>
