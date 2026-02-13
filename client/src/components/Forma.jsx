@@ -6,6 +6,7 @@ const estadoInicialForma = {
   fecha: "",
   periodoGastos: "01",
   tipoPago: "credito",
+  estatus: "",
   categoria: "fijo",
   numeroPago: "",
   totalMeses: "",
@@ -33,6 +34,8 @@ export const Forma = ({ guardarGasto }) => {
   const mostrarNumeroPago = form.categoria === "pago a meses";
 
   const mostrarTitular = form.titular === "ajeno";
+
+  const mostrarPendiente = form.tipoPago === "contado";
 
   return (
     <form onSubmit={onSubmitGasto} className="border rounded p-3 mb-4">
@@ -113,6 +116,23 @@ export const Forma = ({ guardarGasto }) => {
           <option value="contado">Contado</option>
         </select>
       </div>
+
+      {mostrarPendiente && (
+        <div className="mb-3">
+          <label className="form-label fw-bold">Estatus</label>
+          <select
+            required
+            value={form.estatus}
+            name="estatus"
+            onChange={handleChange}
+            className="form-select"
+          >
+            <option value="">Selecciona</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="liberado">Liberado</option>
+          </select>
+        </div>
+      )}
 
       <div className="mb-3">
         <label className="form-label fw-bold">Categoría</label>

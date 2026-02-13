@@ -12,6 +12,8 @@ export const TablaCategoria = ({ gastosOrdenados, eliminarGasto }) => {
     (gasto) => gasto.categoria === "pago a meses",
   );
 
+  const mostrarEstatus = gastosOrdenados.some((g) => g.estatus !== "");
+
   const gastosFiltradosXCategoria = gastosOrdenados.filter((gasto) => {
     if (categoriaSeleccionada === "") {
       return true;
@@ -27,6 +29,12 @@ export const TablaCategoria = ({ gastosOrdenados, eliminarGasto }) => {
   const handleCategoriaChange = (e) => {
     setCategoriaSeleccionada(e.target.value);
   };
+
+  const columnasBase = 4;
+
+  const columnasExtras = (showPagoMeses ? 1 : 0) + (mostrarEstatus ? 1 : 0);
+
+  const totalColumnasAntesDeCantidad = columnasBase + columnasExtras;
 
   return (
     <>
@@ -50,6 +58,7 @@ export const TablaCategoria = ({ gastosOrdenados, eliminarGasto }) => {
             <th>Categoría</th>
             <th>Titular</th>
             {showPagoMeses && <th>Pago</th>}
+            {mostrarEstatus && <th>Estatus</th>}
             <th>Cantidad</th>
             <th>Acción</th>
           </tr>
@@ -71,6 +80,8 @@ export const TablaCategoria = ({ gastosOrdenados, eliminarGasto }) => {
                 </td>
               )}
 
+              {mostrarEstatus && <td>{gasto.estatus}</td>}
+
               <td>${Number(gasto.cantidad).toLocaleString("es-MX")}</td>
 
               <td>
@@ -91,7 +102,7 @@ export const TablaCategoria = ({ gastosOrdenados, eliminarGasto }) => {
           ))}
 
           <tr className="text-center">
-            <td colSpan={showPagoMeses ? 5 : 4} className="fw-bold ">
+            <td colSpan={totalColumnasAntesDeCantidad} className="fw-bold">
               Total
             </td>
             <td className="fw-bold">

@@ -1,30 +1,30 @@
 [
   {
-    "ingreso": 6200,
+    "ingreso": 6300,
     "descripcionIngreso": "Quincena: Efren",
     "fechaIngreso": "2026-02-13",
     "periodoIngresos": "02",
-    "id": "6f9d8138-90c3-4b6e-a022-8328757c0d70"
+    "id": "ea155947-79ff-43e2-92f1-813516c79359"
   },
   {
-    "ingreso": 6200,
+    "ingreso": 5300,
+    "descripcionIngreso": "Quincena: Maria",
+    "fechaIngreso": "2026-02-12",
+    "periodoIngresos": "02",
+    "id": "9d327420-0073-4fdf-a6bd-0b0a1c05079a"
+  },
+  {
+    "ingreso": 6300,
     "descripcionIngreso": "Quincena: Efren",
     "fechaIngreso": "2026-02-28",
     "periodoIngresos": "02",
-    "id": "e5254170-b8b5-49a7-8ef4-9221442f98e1"
+    "id": "01cb0f67-18e9-446e-acf7-5b379d6bc341"
   },
   {
     "ingreso": 5300,
-    "descripcionIngreso": "quincena maria",
-    "fechaIngreso": "2026-02-12",
-    "periodoIngresos": "02",
-    "id": "5a579800-c273-4331-8b47-4a08f05dff7c"
-  },
-  {
-    "ingreso": 5300,
-    "descripcionIngreso": "quincena maria",
+    "descripcionIngreso": "Quincena: Maria",
     "fechaIngreso": "2026-02-27",
     "periodoIngresos": "02",
-    "id": "c12d103c-9173-4997-93ee-e57a84253da0"
+    "id": "9994aa78-be92-4fe6-b02b-eef91c194f04"
   }
 ]

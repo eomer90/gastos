@@ -131,13 +131,24 @@ function App() {
       Number(b.fechaIngreso.split("-")[2]),
   );
 
-  const gastosPorPeriodo = gastos.sort(
-    (a, b) => Number(a.fecha.split("-")[1]) - Number(b.fecha.split("-")[1]),
-  );
+  // const gastosPorPeriodo = gastos.sort(
+  //   (a, b) => Number(a.fecha.split("-")[1]) - Number(b.fecha.split("-")[1]),
+  // );
 
-  const gastosOrdenados = gastosPorPeriodo.sort(
-    (a, b) => Number(a.fecha.split("-")[2]) - Number(b.fecha.split("-")[2]),
-  );
+  // const gastosOrdenados = gastosPorPeriodo.sort(
+  //   (a, b) => Number(a.fecha.split("-")[2]) - Number(b.fecha.split("-")[2]),
+  // );
+
+  const gastosOrdenados = [...gastos].sort((a, b) => {
+    const [yearA, monthA, dayA] = a.fecha.split("-").map(Number);
+    const [yearB, monthB, dayB] = b.fecha.split("-").map(Number);
+
+    if (monthA !== monthB) {
+      return monthA - monthB;
+    }
+
+    return dayA - dayB;
+  });
 
   const gastosXTipo = gastos.reduce(
     (obj, gasto) => {

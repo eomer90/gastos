@@ -33,9 +33,7 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
       if (!acc[g.nombreTitular.trim()]) {
         acc[g.nombreTitular.trim()] = 0;
       }
-
       acc[g.nombreTitular.trim()] += g.cantidad;
-
       return acc;
     }, {});
 
