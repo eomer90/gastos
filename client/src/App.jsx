@@ -137,11 +137,6 @@ function App() {
     setMesActivo(target.value);
   };
 
-  // const fechaFormatoMx = (fecha) => {
-  //   const [year, mes, dia] = fecha.split("-");
-  //   return `${dia}/${mes}/${year}`;
-  // };
-
   const ingresosPorPeriodo = ingresos.sort(
     (a, b) =>
       Number(a.fechaIngreso.split("-")[1]) -
@@ -154,36 +149,22 @@ function App() {
       Number(b.fechaIngreso.split("-")[2]),
   );
 
-  // const gastosPorPeriodo = gastos.sort(
-  //   (a, b) => Number(a.fecha.split("-")[1]) - Number(b.fecha.split("-")[1]),
-  // );
-
-  // const gastosOrdenados = gastosPorPeriodo.sort(
-  //   (a, b) => Number(a.fecha.split("-")[2]) - Number(b.fecha.split("-")[2]),
-  // );
-
   const gastosOrdenados = [...gastos].sort(
     (a, b) => new Date(a.fecha) - new Date(b.fecha),
   );
 
-  const gastosXTipo = gastosOrdenados.reduce(
-    (obj, gasto) => {
-      const tipoGasto = gasto.tipoPago;
+  const gastosXCredito = gastosOrdenados.filter(
+    (g) => g.tipoPago === "credito",
+  );
 
-      obj[tipoGasto].push(gasto);
-
-      return obj;
-    },
-    {
-      credito: [],
-      contado: [],
-    },
+  const gastosXContado = gastosOrdenados.filter(
+    (g) => g.tipoPago === "contado",
   );
 
   return (
     <div className="container">
-      <div className="pt-4 mb-4">
-        <h1>{"Control de gastos".toUpperCase()}</h1>
+      <div className="pt-4 mb-4 bg-secondary">
+        <h1 className="text-white">{"Control de gastos".toUpperCase()}</h1>
       </div>
 
       <div className="row mb-4">
@@ -215,7 +196,7 @@ function App() {
       </div>
 
       <div className="row gx-5">
-        <div className="col-4 ">
+        <div className="col-3 ">
           <FormaIngresos
             guardarIngreso={guardarIngreso}
             mesActivo={mesActivo}
@@ -223,7 +204,7 @@ function App() {
           <Forma guardarGasto={guardarGasto} />
         </div>
 
-        <div className="col-8">
+        <div className="col-9">
           <div className="row">
             <div className="col-5">
               <TablaBalance
@@ -239,27 +220,25 @@ function App() {
               />
             </div>
           </div>
-
-          <div className="row">
+          <div className="row mb-4">
             <div className="col-12">
-              {Object.entries(gastosXTipo).map(([tipo, gastosOrdenados]) => (
-                <div key={tipo}>
-                  <p className="form-label fw-bold text-dark">
-                    {tipo.toUpperCase()}
-                  </p>
-                  <TablaCategoria
-                    gastosOrdenados={gastosOrdenados}
-                    eliminarGasto={eliminarGasto}
-                    setVentanaEdicion={setVentanaEdicion}
-                    setGastoSeleccionado={setGastoSeleccionado}
-                  />
-                </div>
-              ))}
+              <TablaCategoria
+                gastosOrdenados={gastosOrdenados}
+                gastosXCredito={gastosXCredito}
+                eliminarGasto={eliminarGasto}
+                setVentanaEdicion={setVentanaEdicion}
+                setGastoSeleccionado={setGastoSeleccionado}
+              />
             </div>
           </div>
           <div>
             <div>
-              <TablaContado />
+              <TablaContado
+                gastosXContado={gastosXContado}
+                eliminarGasto={eliminarGasto}
+                setVentanaEdicion={setVentanaEdicion}
+                setGastoSeleccionado={setGastoSeleccionado}
+              />
             </div>
           </div>
           {ventanaEdicion && (
