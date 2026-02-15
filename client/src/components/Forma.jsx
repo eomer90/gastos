@@ -38,7 +38,7 @@ export const Forma = ({ guardarGasto }) => {
   const mostrarPendiente = form.tipoPago === "contado";
 
   return (
-    <form onSubmit={onSubmitGasto} className="border rounded p-3 mb-4">
+    <form onSubmit={onSubmitGasto} className="border rounded p-3 mb-4 bg-info">
       <h5 className="mb-3">Nuevo gasto</h5>
 
       <div className="mb-3">

@@ -35,7 +35,7 @@ export const TablaIngresos = ({ ingresosOrdenados, eliminarIngreso }) => {
               </button>
               <button
                 className="btn btn-outline-primary btn-sm"
-                onClick={() => editarGasto(gasto.id)}
+                // onClick={() => editarGasto(gasto.id)}
               >
                 <i className="bi bi-pencil"></i>
               </button>
@@ -45,7 +45,7 @@ export const TablaIngresos = ({ ingresosOrdenados, eliminarIngreso }) => {
 
         <tr>
           <td colSpan={2} className="fw-bold text-center">
-            Total
+            Subtotal
           </td>
           <td className="fw-bold text-center">
             ${Number(totalIngresos).toLocaleString("es-MX")}

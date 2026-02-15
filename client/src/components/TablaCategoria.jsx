@@ -1,12 +1,17 @@
 import { useState } from "react";
 
-export const TablaCategoria = ({ gastosOrdenados, eliminarGasto }) => {
+export const TablaCategoria = ({
+  gastosOrdenados,
+  eliminarGasto,
+  setVentanaEdicion,
+  setGastoSeleccionado,
+}) => {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
 
-  const total = gastosOrdenados.reduce(
-    (acum, { cantidad }) => acum + cantidad,
-    0,
-  );
+  // const total = gastosOrdenados.reduce(
+  //   (acum, { cantidad }) => acum + cantidad,
+  //   0,
+  // );
 
   const showPagoMeses = gastosOrdenados.some(
     (gasto) => gasto.categoria === "pago a meses",
@@ -35,6 +40,11 @@ export const TablaCategoria = ({ gastosOrdenados, eliminarGasto }) => {
   const columnasExtras = (showPagoMeses ? 1 : 0) + (mostrarEstatus ? 1 : 0);
 
   const totalColumnasAntesDeCantidad = columnasBase + columnasExtras;
+
+  const editarGasto = (gasto) => {
+    setGastoSeleccionado(gasto);
+    setVentanaEdicion(true);
+  };
 
   return (
     <>
@@ -80,7 +90,19 @@ export const TablaCategoria = ({ gastosOrdenados, eliminarGasto }) => {
                 </td>
               )}
 
-              {mostrarEstatus && <td>{gasto.estatus}</td>}
+              {mostrarEstatus && (
+                <td>
+                  <span
+                    className={`${
+                      gasto.estatus === "pendiente"
+                        ? "badge bg-warning text-dark"
+                        : "badge bg-success"
+                    }`}
+                  >
+                    {gasto.estatus}
+                  </span>
+                </td>
+              )}
 
               <td>${Number(gasto.cantidad).toLocaleString("es-MX")}</td>
 
@@ -93,7 +115,7 @@ export const TablaCategoria = ({ gastosOrdenados, eliminarGasto }) => {
                 </button>
                 <button
                   className="btn btn-outline-primary btn-sm"
-                  onClick={() => editarGasto(gasto.id)}
+                  onClick={() => editarGasto(gasto)}
                 >
                   <i className="bi bi-pencil"></i>
                 </button>

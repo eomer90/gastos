@@ -37,7 +37,12 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
       return acc;
     }, {});
 
-  const balance = totalIngresos - total;
+  const totalAjenos = gastosOrdenados
+    .filter((g) => g.titular !== "propio")
+    .reduce((acc, g) => acc + Number(g.cantidad), 0);
+
+  const balance = totalIngresos + totalAjenos - total;
+
   return (
     <>
       <table className="table table-sm table-bordered mb-5">
@@ -68,6 +73,12 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
               <td>${Number(total).toLocaleString("es-MX")}</td>
             </tr>
           ))}
+          <tr className="text-center">
+            <th className="fw-bold">Total Ajenos</th>
+            <td className="fw-bold ">
+              ${Number(totalAjenos).toLocaleString("es-MX")}
+            </td>
+          </tr>
         </tbody>
       </table>
     </>

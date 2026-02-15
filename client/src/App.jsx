@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { Forma } from "./components/Forma";
 import { FormaIngresos } from "./components/FormaIngresos";
 import { TablaCategoria } from "./components/TablaCategoria";
+import { TablaContado } from "./components/TablaContado";
 import { TablaIngresos } from "./components/TablaIngresos";
 import { TablaBalance } from "./components/TablaBalance";
+import { FormaGastosEditar } from "./components/FormaGastosEditar";
 
 const API_URL = "http://localhost:3000";
 
@@ -13,6 +15,8 @@ function App() {
   const [gastos, setGastos] = useState([]);
   const [ingresos, setIngresos] = useState([]);
   const [mesActivo, setMesActivo] = useState("01");
+  const [ventanaEdicion, setVentanaEdicion] = useState(false);
+  const [gastoSeleccionado, setGastoSeleccionado] = useState(null);
 
   const guardarIngreso = async (formIngresos) => {
     try {
@@ -110,14 +114,33 @@ function App() {
     }
   };
 
+  const editarGasto = async (formGastosEdicion, id) => {
+    try {
+      await fetch(`${API_URL}/gastos/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formGastosEdicion),
+      });
+
+      const req = await fetch(`${API_URL}/gastos?periodo=${mesActivo}`);
+      const res = await req.json();
+
+      setGastos(res.gastos);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleChangeMes = ({ target }) => {
     setMesActivo(target.value);
   };
 
-  const fechaFormatoMx = (fecha) => {
-    const [year, mes, dia] = fecha.split("-");
-    return `${dia}/${mes}/${year}`;
-  };
+  // const fechaFormatoMx = (fecha) => {
+  //   const [year, mes, dia] = fecha.split("-");
+  //   return `${dia}/${mes}/${year}`;
+  // };
 
   const ingresosPorPeriodo = ingresos.sort(
     (a, b) =>
@@ -139,25 +162,15 @@ function App() {
   //   (a, b) => Number(a.fecha.split("-")[2]) - Number(b.fecha.split("-")[2]),
   // );
 
-  const gastosOrdenados = [...gastos].sort((a, b) => {
-    const [yearA, monthA, dayA] = a.fecha.split("-").map(Number);
-    const [yearB, monthB, dayB] = b.fecha.split("-").map(Number);
+  const gastosOrdenados = [...gastos].sort(
+    (a, b) => new Date(a.fecha) - new Date(b.fecha),
+  );
 
-    if (monthA !== monthB) {
-      return monthA - monthB;
-    }
-
-    return dayA - dayB;
-  });
-
-  const gastosXTipo = gastos.reduce(
+  const gastosXTipo = gastosOrdenados.reduce(
     (obj, gasto) => {
       const tipoGasto = gasto.tipoPago;
 
-      obj[tipoGasto].push({
-        ...gasto,
-        fecha: fechaFormatoMx(gasto.fecha),
-      });
+      obj[tipoGasto].push(gasto);
 
       return obj;
     },
@@ -202,7 +215,7 @@ function App() {
       </div>
 
       <div className="row gx-5">
-        <div className="col-4">
+        <div className="col-4 ">
           <FormaIngresos
             guardarIngreso={guardarIngreso}
             mesActivo={mesActivo}
@@ -237,11 +250,27 @@ function App() {
                   <TablaCategoria
                     gastosOrdenados={gastosOrdenados}
                     eliminarGasto={eliminarGasto}
+                    setVentanaEdicion={setVentanaEdicion}
+                    setGastoSeleccionado={setGastoSeleccionado}
                   />
                 </div>
               ))}
             </div>
           </div>
+          <div>
+            <div>
+              <TablaContado />
+            </div>
+          </div>
+          {ventanaEdicion && (
+            <div className="col-7">
+              <FormaGastosEditar
+                gastoSeleccionado={gastoSeleccionado}
+                editarGasto={editarGasto}
+                setVentanaEdicion={setVentanaEdicion}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

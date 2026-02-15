@@ -92,6 +92,35 @@ app.delete("/ingresos", async (req, res) => {
   }
 })
 
+app.patch("/gastos/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const dataActualizada = req.body;
+
+    const gastos = await leerArchivoAjson(gastosDB);
+
+    const index = gastos.findIndex(g => g.id === id);
+
+    if (index === -1) {
+      return res.status(404).json({ mensaje: "Gasto no encontrado" });
+    }
+
+    gastos[index] = {
+      ...gastos[index],
+      ...dataActualizada,
+      cantidad: Number(dataActualizada.cantidad ?? gastos[index].cantidad),
+    };
+
+    await crearArchivo(gastosDB, gastos);
+
+    res.status(200).json({ mensaje: "Gasto actualizado correctamente" });
+
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al actualizar gasto" });
+  }
+});
+
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`)
 })
