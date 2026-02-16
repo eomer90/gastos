@@ -8,8 +8,11 @@ const estadoInicialForma = {
   tipoPago: "credito",
   estatus: "",
   categoria: "fijo",
-  numeroPago: "",
+  totalProducto: "",
+  // numeroPago: "",
+  cantidadPagoMeses: "",
   totalMeses: "",
+  // aplicacionPago: "",
   titular: "propio",
   nombreTitular: "",
 };
@@ -17,12 +20,19 @@ const estadoInicialForma = {
 export const Forma = ({ guardarGasto }) => {
   const [form, setForm] = useState(estadoInicialForma);
 
+  // const total = Number(form.totalProducto);
+  // const meses = Number(form.totalMeses);
+
   const handleChange = ({ target }) => {
+    // const mensualidad = total / meses;
     const { name, value } = target;
     setForm((prev) => ({
       ...prev,
       [name]: value,
+      // cantidadPagoMeses: mensualidad,
     }));
+
+    // console.log(mensualidad);
   };
 
   const onSubmitGasto = (ev) => {
@@ -155,6 +165,18 @@ export const Forma = ({ guardarGasto }) => {
       {mostrarNumeroPago && (
         <div className="row">
           <div className="col-6 mb-3">
+            <label className="form-label fw-bold">Total del Producto</label>
+            <input
+              required
+              type="number"
+              value={form.totalProducto}
+              name="totalProducto"
+              onChange={handleChange}
+              className="form-control"
+              placeholder="$0.00"
+            />
+          </div>
+          {/* <div className="col-6 mb-3">
             <label className="form-label fw-bold">No. de pago</label>
             <input
               required
@@ -164,7 +186,7 @@ export const Forma = ({ guardarGasto }) => {
               onChange={handleChange}
               className="form-control"
             />
-          </div>
+          </div> */}
 
           <div className="col-6 mb-3">
             <label className="form-label fw-bold">Total de meses</label>
@@ -177,6 +199,20 @@ export const Forma = ({ guardarGasto }) => {
               className="form-control"
             />
           </div>
+
+          {/* <div className="mb-3">
+            <label className="form-label fw-bold">
+              Fecha de Aplicacion de los Pagos
+            </label>
+            <input
+              required
+              type="number"
+              // value={form.fecha}
+              // name="fecha"
+              // onChange={handleChange}
+              className="form-control"
+            />
+          </div> */}
         </div>
       )}
 
