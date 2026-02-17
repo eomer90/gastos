@@ -9,15 +9,6 @@ export const TablaCategoria = ({
   const [campo, setCampo] = useState("");
   const [busqueda, setBusqueda] = useState("");
 
-  const gastosBusqueda = gastosXCredito.filter((g) => {
-    const valor = g[campo];
-
-    if (!busqueda) return true;
-    if (!valor) return false;
-
-    return valor.toString().toLowerCase().includes(busqueda.toLowerCase());
-  });
-
   const mostrarInputBusqueda = () => {
     if (
       campo === "descripcion" ||
@@ -29,9 +20,14 @@ export const TablaCategoria = ({
     if (campo === "fecha") return "date";
   };
 
-  const showPagoMeses = gastosXCredito.some(
-    (gasto) => gasto.categoria === "pago a meses",
-  );
+  const gastosBusqueda = gastosXCredito.filter((g) => {
+    const valor = g[campo];
+
+    if (!busqueda) return true;
+    if (!valor) return false;
+
+    return valor.toString().toLowerCase().includes(busqueda.toLowerCase());
+  });
 
   const totalFiltradoXCategoria = gastosBusqueda.reduce(
     (acum, { cantidad }) => acum + cantidad,
@@ -39,14 +35,14 @@ export const TablaCategoria = ({
   );
 
   const handleChange = (e) => {
-    setCampo(e.target.value);
+    const value = e.target.value;
+
+    setCampo(value);
+
+    if (value === "") {
+      setBusqueda("");
+    }
   };
-
-  const columnasBase = 4;
-
-  const columnasExtras = showPagoMeses ? 1 : 0;
-
-  const totalColumnasAntesDeCantidad = columnasBase + columnasExtras;
 
   const editarGasto = (gasto) => {
     setGastoSeleccionado(gasto);
@@ -57,6 +53,11 @@ export const TablaCategoria = ({
     <>
       <div className="pt-4 mb-4">
         <h2>{"Crédito".toUpperCase()}</h2>
+      </div>
+      <div className="mb-3">
+        <h4>
+          Total: ${Number(totalFiltradoXCategoria).toLocaleString("es-MX")}
+        </h4>
       </div>
       <div className="mb-3 col-4">
         <label className="form-label fw-bold">Filtra por:</label>
@@ -87,36 +88,37 @@ export const TablaCategoria = ({
         }}
       >
         <table className="table table-sm table-bordered mb-5 align-middle">
-          <thead>
-            <tr className="text-center">
+          <thead className="table-light">
+            <tr className="text-center align-middle">
               <th>Descripción</th>
               <th>Fecha</th>
-              <th>Categoría</th>
-              <th>Titular</th>
-              {showPagoMeses && <th>Pago</th>}
+              <th>N° Pago</th>
               <th>Cantidad</th>
+              <th>Restante</th>
+              <th>Titular</th>
+              <th>Categoría</th>
               <th>Acción</th>
             </tr>
           </thead>
 
           <tbody>
             {gastosBusqueda.map((gasto) => (
-              <tr className="text-center" key={gasto.id}>
-                <td>{gasto.descripcion}</td>
+              <tr className="align-middle text-center" key={gasto.id}>
+                <td className="fw-semibold">{gasto.descripcion}</td>
                 <td>{gasto.fecha}</td>
-                <td>{gasto.categoria}</td>
-                <td>{gasto.nombreTitular}</td>
-
-                {showPagoMeses && (
-                  <td>
-                    {gasto.numeroPago
-                      ? `${gasto.numeroPago} de ${gasto.totalMeses}`
-                      : "-"}
-                  </td>
-                )}
-
-                <td>${Number(gasto.cantidad).toLocaleString("es-MX")}</td>
-
+                <td>{gasto.numeroPago ? `${gasto.numeroPago}` : "-"}</td>
+                <td className="fw-bold text-danger">
+                  ${Number(gasto.cantidad).toLocaleString("es-MX")}
+                </td>
+                <td>
+                  {gasto.restante
+                    ? `$${Number(gasto.restante).toLocaleString("es-MX")}`
+                    : "-"}
+                </td>
+                <td>{gasto.nombreTitular ? `${gasto.nombreTitular}` : "-"}</td>
+                <td>
+                  <span className="badge bg-secondary">{gasto.categoria}</span>
+                </td>
                 <td>
                   <button
                     className="btn btn-outline-danger btn-sm me-2"
@@ -139,16 +141,6 @@ export const TablaCategoria = ({
                 </td>
               </tr>
             ))}
-
-            <tr className="text-center">
-              <td colSpan={totalColumnasAntesDeCantidad} className="fw-bold">
-                Total
-              </td>
-              <td className="fw-bold">
-                ${Number(totalFiltradoXCategoria).toLocaleString("es-MX")}
-              </td>
-              <td></td>
-            </tr>
           </tbody>
         </table>
       </div>

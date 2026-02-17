@@ -9,12 +9,12 @@ import { FormaGastosEditar } from "./components/FormaGastosEditar";
 
 const API_URL = "http://localhost:3000";
 
-function App() {
-  // const mesActual = String(new Date().getMonth() + 1).padStart(2, "0");
+const mesActual = String(new Date().getMonth() + 1).padStart(2, "0");
 
+function App() {
   const [gastos, setGastos] = useState([]);
   const [ingresos, setIngresos] = useState([]);
-  const [mesActivo, setMesActivo] = useState("01");
+  const [mesActivo, setMesActivo] = useState(mesActual);
   const [ventanaEdicion, setVentanaEdicion] = useState(false);
   const [gastoSeleccionado, setGastoSeleccionado] = useState(null);
 
@@ -62,7 +62,7 @@ function App() {
 
   const guardarGasto = async (formGastos) => {
     try {
-      await fetch(`${API_URL}/gastos`, {
+      const req = await fetch(`${API_URL}/gastos?periodo=${mesActivo}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -70,9 +70,7 @@ function App() {
         body: JSON.stringify(formGastos),
       });
 
-      const req = await fetch(`${API_URL}/gastos?periodo=${mesActivo}`);
       const res = await req.json();
-
       setGastos(res.gastos);
     } catch (error) {
       console.log(error);
@@ -201,7 +199,7 @@ function App() {
             guardarIngreso={guardarIngreso}
             mesActivo={mesActivo}
           />
-          <Forma guardarGasto={guardarGasto} />
+          <Forma guardarGasto={guardarGasto} mesActivo={mesActivo} />
         </div>
 
         <div className="col-9">

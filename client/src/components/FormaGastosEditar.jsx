@@ -36,7 +36,7 @@ export const FormaGastosEditar = ({
         [name]: value,
         nombreTitular: "",
       }));
-    } else if (name === "categoria" && value !== "pago a meses") {
+    } else if (name === "categoria" && value !== "pagoAMeses") {
       setFormGastosEdicion((prev) => ({
         ...prev,
         [name]: value,
@@ -51,7 +51,7 @@ export const FormaGastosEditar = ({
     }
   };
 
-  const mostrarNumeroPago = formGastosEdicion.categoria === "pago a meses";
+  const mostrarNumeroPago = formGastosEdicion.categoria === "pagoAMeses";
 
   const mostrarTitular = formGastosEdicion.titular === "ajeno";
 
@@ -184,7 +184,7 @@ export const FormaGastosEditar = ({
                   >
                     <option value="fijo">Fijo</option>
                     <option value="suscripcion">Suscripción</option>
-                    <option value="pago a meses">Pagos a meses</option>
+                    <option value="pagoAMeses">Pagos a meses</option>
                     <option value="despensa">Alimentación y despensa</option>
                     <option value="transporte">Transporte</option>
                     <option value="variables">Variables</option>

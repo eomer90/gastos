@@ -1,1 +1,58 @@
-[]
+[
+  {
+    "descripcion": "warhammer amazon",
+    "cantidad": 500,
+    "categoria": "pagoAMeses",
+    "totalMeses": "2",
+    "tipoPago": "credito",
+    "estatus": "",
+    "fecha": "2026-02-16",
+    "periodoGastos": "02",
+    "titular": "propio",
+    "nombreTitular": "",
+    "id": "d7f0c8aa-974f-45b3-9e96-b82b93a81580",
+    "restante": 500,
+    "numeroPago": "1 de 2"
+  },
+  {
+    "descripcion": "warhammer amazon",
+    "cantidad": 500,
+    "categoria": "pagoAMeses",
+    "totalMeses": "2",
+    "tipoPago": "credito",
+    "estatus": "",
+    "fecha": "2026-02-16",
+    "periodoGastos": "03",
+    "titular": "propio",
+    "nombreTitular": "",
+    "id": "77ad98db-9c5a-4558-b9fa-012a9dedd840",
+    "restante": 0,
+    "numeroPago": "2 de 2"
+  },
+  {
+    "descripcion": "Uber",
+    "cantidad": 50,
+    "categoria": "transporte",
+    "totalMeses": "",
+    "tipoPago": "credito",
+    "estatus": "",
+    "fecha": "2026-02-23",
+    "periodoGastos": "02",
+    "titular": "propio",
+    "nombreTitular": "",
+    "id": "d9c73e4e-2987-434f-90e2-10ee31ddef35"
+  },
+  {
+    "descripcion": "Corte de pelo: Efren",
+    "cantidad": 70,
+    "categoria": "fijo",
+    "totalMeses": "",
+    "tipoPago": "contado",
+    "estatus": "pendiente",
+    "fecha": "2026-02-27",
+    "periodoGastos": "02",
+    "titular": "propio",
+    "nombreTitular": "",
+    "id": "438f8666-a2a4-47d3-b8c3-69638fdf9f08"
+  }
+]
