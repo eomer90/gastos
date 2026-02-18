@@ -1,13 +1,13 @@
 import { useState } from "react";
 
-const estadoInicialFormaIngresos = {
-  ingreso: "",
-  descripcionIngreso: "",
-  fechaIngreso: "",
-  periodoIngresos: "01",
-};
-
-export const FormaIngresos = ({ guardarIngreso }) => {
+export const FormaIngresos = ({ guardarIngreso, mesActivo }) => {
+  const estadoInicialFormaIngresos = {
+    descripcionIngreso: "",
+    ingreso: "",
+    tipoIngreso: "",
+    fechaIngreso: "",
+    periodoIngresos: mesActivo,
+  };
   const [formIngresos, setFormIngresos] = useState(estadoInicialFormaIngresos);
 
   const handleChangeIngresos = ({ target }) => {
@@ -52,6 +52,20 @@ export const FormaIngresos = ({ guardarIngreso }) => {
           className="form-control"
           placeholder="$0.00"
         />
+      </div>
+
+      <div className="mb-3">
+        <label className="form-label fw-bold">Tipo</label>
+        <select
+          className="form-control"
+          name="tipoIngreso"
+          value={formIngresos.tipoIngreso}
+          onChange={handleChangeIngresos}
+        >
+          <option value="">Selecciona</option>
+          <option value="efectivo">Efectivo</option>
+          <option value="proyectado">Proyectado</option>
+        </select>
       </div>
 
       <div className="mb-3">

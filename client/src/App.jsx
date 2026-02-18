@@ -135,17 +135,21 @@ function App() {
     setMesActivo(target.value);
   };
 
-  const ingresosPorPeriodo = ingresos.sort(
-    (a, b) =>
-      Number(a.fechaIngreso.split("-")[1]) -
-      Number(b.fechaIngreso.split("-")[1]),
+  const ingresosOrdenados = [...ingresos].sort(
+    (a, b) => new Date(a.fechaIngreso) - new Date(b.fechaIngreso),
   );
 
-  const ingresosOrdenados = ingresosPorPeriodo.sort(
-    (a, b) =>
-      Number(a.fechaIngreso.split("-")[2]) -
-      Number(b.fechaIngreso.split("-")[2]),
-  );
+  // const ingresosPorPeriodo = ingresos.sort(
+  //   (a, b) =>
+  //     Number(a.fechaIngreso.split("-")[1]) -
+  //     Number(b.fechaIngreso.split("-")[1]),
+  // );
+
+  // const ingresosOrdenados = ingresosPorPeriodo.sort(
+  //   (a, b) =>
+  //     Number(a.fechaIngreso.split("-")[2]) -
+  //     Number(b.fechaIngreso.split("-")[2]),
+  // );
 
   const gastosOrdenados = [...gastos].sort(
     (a, b) => new Date(a.fecha) - new Date(b.fecha),

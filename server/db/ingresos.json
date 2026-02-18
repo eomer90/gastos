@@ -1,3 +1,18 @@
 [
-  
+  {
+    "descripcionIngreso": "Quincena: MariaEfren",
+    "ingreso": 6000,
+    "tipoIngreso": "efectivo",
+    "fechaIngreso": "2026-02-13",
+    "periodoIngresos": "02",
+    "id": "a4e86117-cf32-4d08-be2c-54d83a10c0fb"
+  },
+  {
+    "descripcionIngreso": "Quincena: Efren",
+    "ingreso": 6000,
+    "tipoIngreso": "proyectado",
+    "fechaIngreso": "2026-02-28",
+    "periodoIngresos": "02",
+    "id": "45df12f8-289b-4b21-8f9c-0757cc614662"
+  }
 ]
