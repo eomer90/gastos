@@ -1,14 +1,17 @@
-export const TablaIngresos = ({ ingresosOrdenados, eliminarIngreso }) => {
-  const ingresoEfectivo = ingresosOrdenados.filter(
-    (i) => i.tipoIngreso === "efectivo",
-  );
+import { useState } from "react";
 
-  const ingresoProyectado = ingresosOrdenados.filter(
-    (i) => i.tipoIngreso === "proyectado",
-  );
+export const TablaIngresos = ({
+  ingresosOrdenados,
+  eliminarIngreso,
+  setVentanaEdicionIngresos,
+  setIngresoSeleccionado,
+  gastosOrdenados,
+}) => {
+  const [modalEliminarIngreso, setModalEliminarIngreso] = useState(false);
+  const [ingresoAEliminar, setIngresoAEliminar] = useState(null);
 
-  const totalIngresos = ingresoProyectado.reduce(
-    (acum, { ingreso }) => acum + ingreso,
+  const totalIngresos = ingresosOrdenados.reduce(
+    (acum, { ingreso }) => acum + Number(ingreso),
     0,
   );
 
@@ -17,80 +20,192 @@ export const TablaIngresos = ({ ingresosOrdenados, eliminarIngreso }) => {
     return `${dia}/${mes}/${year}`;
   };
 
+  const editarIngreso = (ingreso) => {
+    setIngresoSeleccionado(ingreso);
+    setVentanaEdicionIngresos(true);
+  };
+
+  const abrirModalEliminarIngreso = (ingreso) => {
+    setIngresoAEliminar(ingreso);
+    setModalEliminarIngreso(true);
+  };
+
+  const titularXGasto = gastosOrdenados
+    .filter((g) => g.titular !== "propio")
+    .reduce((acc, g) => {
+      if (!acc[g.nombreTitular.trim()]) {
+        acc[g.nombreTitular.trim()] = 0;
+      }
+      acc[g.nombreTitular.trim()] += g.cantidad;
+      return acc;
+    }, {});
+
+  const totalAjenos = gastosOrdenados
+    .filter((g) => g.titular !== "propio")
+    .reduce((acc, g) => acc + Number(g.cantidad), 0);
+
+  const ingresoEstimado = totalIngresos + totalAjenos;
+
   return (
     <>
-      <div className="mb-4">
-        <h3>Ingresos</h3>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="mb-0">INGRESO ESTIMADO</h2>
+        <span className="badge bg-success-subtle text-success px-3 py-2">
+          <span className="fw-semibold">Total:</span>{" "}
+          <span className="fw-bold fs-4">
+            ${Number(ingresoEstimado).toLocaleString("es-MX")}
+          </span>
+        </span>
       </div>
-      <table className="table table-sm table-bordered mb-5 align-middle">
-        <thead>
-          <tr>
-            <th>Descripción</th>
-            <th>Total</th>
-            <th>Acción</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ingresoEfectivo.map((ingreso) => (
-            <tr className="text-center" key={ingreso.id}>
-              <td>{ingreso.descripcionIngreso}</td>
-              <td>${Number(ingreso.ingreso).toLocaleString("es-MX")}</td>
-              <td>
-                <button
-                  className="btn btn-outline-danger btn-sm me-2"
-                  onClick={() => eliminarIngreso(ingreso.id)}
-                >
-                  <i className="bi bi-trash"></i>
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <table className="table table-sm table-bordered mb-5 align-middle">
-        <thead>
-          <tr className="text-center">
-            <th>Descripción</th>
-            <th>Cantidad</th>
-            <th>Fecha</th>
-            <th>Acción</th>
-          </tr>
-        </thead>
 
-        <tbody>
-          {ingresoProyectado.map((ingreso) => (
-            <tr className="text-center" key={ingreso.id}>
-              <td>{ingreso.descripcionIngreso}</td>
-              <td>${Number(ingreso.ingreso).toLocaleString("es-MX")}</td>
-              <td>{fechaFormatoMx(ingreso.fechaIngreso)}</td>
-              <td>
-                <button
-                  className="btn btn-outline-danger btn-sm me-2"
-                  onClick={() => eliminarIngreso(ingreso.id)}
-                >
-                  <i className="bi bi-trash"></i>
-                </button>
-                <button
-                  className="btn btn-outline-primary btn-sm"
-                  // onClick={() => editarGasto(gasto.id)}
-                >
-                  <i className="bi bi-pencil"></i>
-                </button>
-              </td>
-            </tr>
-          ))}
+      <div className="d-flex justify-content-between align-items-center mb-2">
+        <h5 className="mb-0">INGRESOS</h5>
+        <span className="badge bg-success-subtle text-success">
+          Total: ${Number(totalIngresos).toLocaleString("es-MX")}
+        </span>
+      </div>
 
-          <tr>
-            <td colSpan={2} className="fw-bold text-center">
-              Subtotal
-            </td>
-            <td className="fw-bold text-center">
-              ${Number(totalIngresos).toLocaleString("es-MX")}
-            </td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
+      <div className="table-responsive">
+        <table className="table table-sm table-bordered align-middle mb-5">
+          <thead className="table-light text-center">
+            <tr>
+              <th>Descripción</th>
+              <th>Fecha</th>
+              <th>Tipo</th>
+              <th className="text-end">Cantidad</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {ingresosOrdenados.map((ingreso) => (
+              <tr key={ingreso.id} className="text-center align-middle">
+                <td className="fw-semibold">{ingreso.descripcionIngreso}</td>
+
+                <td>{fechaFormatoMx(ingreso.fechaIngreso)}</td>
+
+                <td>
+                  <span
+                    className={`badge ${
+                      ingreso.tipoIngreso === "proyectado"
+                        ? "bg-secondary-subtle text-dark"
+                        : "bg-success-subtle text-dark"
+                    }`}
+                  >
+                    {ingreso.tipoIngreso}
+                  </span>
+                </td>
+
+                <td className="fw-semibold text-success text-end">
+                  ${Number(ingreso.ingreso).toLocaleString("es-MX")}
+                </td>
+
+                <td>
+                  <button
+                    className="btn btn-outline-danger btn-sm me-2"
+                    onClick={() => abrirModalEliminarIngreso(ingreso)}
+                  >
+                    <i className="bi bi-trash"></i>
+                  </button>
+
+                  <button
+                    className="btn btn-outline-primary btn-sm"
+                    onClick={() => editarIngreso(ingreso)}
+                  >
+                    <i className="bi bi-pencil"></i>
+                  </button>
+                </td>
+              </tr>
+            ))}
+
+            {ingresosOrdenados.length === 0 && (
+              <tr>
+                <td colSpan={5} className="text-center text-muted py-3">
+                  Aún no hay ingresos
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+
+        <div className="d-flex justify-content-between align-items-center mb-2">
+          <h5 className="mb-0">CUENTAS POR COBRAR</h5>
+          <span className="badge bg-success-subtle text-success">
+            Total: ${Number(totalAjenos).toLocaleString("es-MX")}
+          </span>
+        </div>
+
+        <table className="table table-sm table-bordered align-middle">
+          <thead className="table-light text-center">
+            <tr>
+              <th>A nombre de</th>
+              <th className="text-end">Cantidad</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {Object.entries(titularXGasto).map(([nombre, total]) => (
+              <tr key={nombre}>
+                <td className="fw-semibold text-center">{nombre}</td>
+                <td className="text-end text-success fw-semibold">
+                  ${Number(total).toLocaleString("es-MX")}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {modalEliminarIngreso && (
+        <>
+          <div className="modal fade show d-block">
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content border-0 shadow rounded-4">
+                <div className="modal-header bg-danger text-white">
+                  <h5 className="modal-title fw-bold">Confirmar eliminación</h5>
+                  <button
+                    type="button"
+                    className="btn-close btn-close-white"
+                    onClick={() => setModalEliminarIngreso(false)}
+                  ></button>
+                </div>
+
+                <div className="modal-body text-center py-3">
+                  <p className="fs-5 mb-2">
+                    ¿Seguro que deseas eliminar este ingreso?
+                  </p>
+                  <p className="fw-bold text-danger">
+                    {ingresoAEliminar.descripcionIngreso}
+                    {" - "}
+                    {ingresoAEliminar.fechaIngreso}
+                  </p>
+                </div>
+
+                <div className="modal-footer border-0 justify-content-center pb-3">
+                  <button
+                    className="btn btn-outline-secondary px-4"
+                    onClick={() => setModalEliminarIngreso(false)}
+                  >
+                    Cancelar
+                  </button>
+
+                  <button
+                    className="btn btn-danger px-4 rounded-pill"
+                    onClick={() => {
+                      eliminarIngreso(ingresoAEliminar.id);
+                      setModalEliminarIngreso(false);
+                    }}
+                  >
+                    Sí, eliminar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="modal-backdrop fade show"></div>
+        </>
+      )}
     </>
   );
 };

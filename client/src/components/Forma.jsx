@@ -12,15 +12,24 @@ export const Forma = ({ guardarGasto, mesActivo }) => {
     periodoGastos: mesActivo,
     titular: "propio",
     nombreTitular: "",
+    saldo: "",
   };
   const [form, setForm] = useState(estadoInicialForma);
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+    setForm((prev) => {
+      const nuevoForm = {
+        ...prev,
+        [name]: value,
+      };
+
+      return {
+        ...nuevoForm,
+        saldo: nuevoForm.nombreTitular !== "" ? "adeudado" : "",
+      };
+    });
   };
 
   const onSubmitGasto = (ev) => {
@@ -36,37 +45,37 @@ export const Forma = ({ guardarGasto, mesActivo }) => {
   const mostrarPendiente = form.tipoPago === "contado";
 
   return (
-    <form onSubmit={onSubmitGasto} className="border rounded p-3 mb-4 bg-info">
-      <h5 className="mb-3">Nuevo gasto</h5>
+    <form onSubmit={onSubmitGasto} className="card shadow-sm p-4 mb-4">
+      <h5 className="fw-bold mb-4 text-center">Nuevo gasto</h5>
 
-      <div className="mb-3">
-        <label className="form-label fw-bold">Descripción</label>
+      <div className="mb-4">
+        <label className="form-label fw-semibold">Descripción</label>
         <input
           required
           type="text"
           value={form.descripcion}
           name="descripcion"
           onChange={handleChange}
-          className="form-control"
+          className="form-control form-control-lg"
           placeholder="Ej. Renta, Netflix"
         />
       </div>
 
-      <div className="mb-3">
-        <label className="form-label fw-bold">Cantidad</label>
+      <div className="mb-4">
+        <label className="form-label fw-semibold">Cantidad</label>
         <input
           required
           type="number"
           value={form.cantidad}
           name="cantidad"
           onChange={handleChange}
-          className="form-control"
+          className="form-control form-control-lg"
           placeholder="$0.00"
         />
       </div>
 
-      <div className="mb-3">
-        <label className="form-label fw-bold">Categoría</label>
+      <div className="mb-4">
+        <label className="form-label fw-semibold">Categoría</label>
         <select
           required
           value={form.categoria}
@@ -84,8 +93,8 @@ export const Forma = ({ guardarGasto, mesActivo }) => {
       </div>
 
       {mostrarNumeroPago && (
-        <div className="mb-3">
-          <label className="form-label fw-bold">Total de meses</label>
+        <div className="mb-4">
+          <label className="form-label fw-semibold">Total de meses</label>
           <input
             required
             type="number"
@@ -97,43 +106,8 @@ export const Forma = ({ guardarGasto, mesActivo }) => {
         </div>
       )}
 
-      <div className="mb-3">
-        <label className="form-label fw-bold">Tipo de pago</label>
-        <select
-          disabled={form.categoria === "pagoAMeses"}
-          required
-          value={form.tipoPago}
-          name="tipoPago"
-          onChange={handleChange}
-          className={`form-select ${
-            form.categoria === "pagoAMeses" ? "disabled" : ""
-          }`}
-        >
-          <option value="">Selecciona una opción</option>
-          <option value="credito">Crédito</option>
-          <option value="contado">Contado</option>
-        </select>
-      </div>
-
-      {mostrarPendiente && (
-        <div className="mb-3">
-          <label className="form-label fw-bold">Estatus</label>
-          <select
-            required
-            value={form.estatus}
-            name="estatus"
-            onChange={handleChange}
-            className="form-select"
-          >
-            <option value="">Selecciona</option>
-            <option value="pendiente">Pendiente</option>
-            <option value="liberado">Liberado</option>
-          </select>
-        </div>
-      )}
-
-      <div className="mb-3">
-        <label className="form-label fw-bold">Fecha de Compra</label>
+      <div className="mb-4">
+        <label className="form-label fw-semibold">Fecha de compra</label>
         <input
           required
           type="date"
@@ -144,10 +118,10 @@ export const Forma = ({ guardarGasto, mesActivo }) => {
         />
       </div>
 
-      <div className="mb-3">
-        <label className="form-label fw-bold">Periodo</label>
+      <div className="mb-4">
+        <label className="form-label fw-semibold">Periodo</label>
         <select
-          className="form-control"
+          className="form-select"
           name="periodoGastos"
           value={form.periodoGastos}
           onChange={handleChange}
@@ -167,8 +141,41 @@ export const Forma = ({ guardarGasto, mesActivo }) => {
         </select>
       </div>
 
-      <div className="mb-3">
-        <label className="form-label fw-bold">Titular</label>
+      <div className="mb-4">
+        <label className="form-label fw-semibold">Tipo de pago</label>
+        <select
+          disabled={form.categoria === "pagoAMeses"}
+          required
+          value={form.tipoPago}
+          name="tipoPago"
+          onChange={handleChange}
+          className="form-select"
+        >
+          <option value="">Selecciona</option>
+          <option value="credito">Crédito</option>
+          <option value="contado">Contado</option>
+        </select>
+      </div>
+
+      {mostrarPendiente && (
+        <div className="mb-4">
+          <label className="form-label fw-semibold">Estatus</label>
+          <select
+            required
+            value={form.estatus}
+            name="estatus"
+            onChange={handleChange}
+            className="form-select"
+          >
+            <option value="">Selecciona</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="liberado">Liberado</option>
+          </select>
+        </div>
+      )}
+
+      <div className="mb-4">
+        <label className="form-label fw-semibold">Titular</label>
         <select
           required
           value={form.titular}
@@ -183,8 +190,8 @@ export const Forma = ({ guardarGasto, mesActivo }) => {
       </div>
 
       {mostrarTitular && (
-        <div className="mb-3">
-          <label className="form-label fw-bold">Nombre del titular</label>
+        <div className="mb-4">
+          <label className="form-label fw-semibold">Nombre del titular</label>
           <input
             required
             type="text"
@@ -196,7 +203,9 @@ export const Forma = ({ guardarGasto, mesActivo }) => {
         </div>
       )}
 
-      <button className="btn btn-outline-secondary w-100">Guardar</button>
+      <div className="d-grid mt-3">
+        <button className="btn btn-danger btn-lg">Guardar gasto</button>
+      </div>
     </form>
   );
 };

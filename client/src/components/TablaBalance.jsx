@@ -1,6 +1,6 @@
 export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
-  const totalIngresos = ingresosOrdenados.reduce(
-    (acum, { ingreso }) => acum + ingreso,
+  const totalGastos = gastosOrdenados.reduce(
+    (acum, { cantidad }) => acum + Number(cantidad),
     0,
   );
 
@@ -9,7 +9,7 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
   );
 
   const totalCredito = filtrarCredito.reduce(
-    (acum, { cantidad }) => acum + cantidad,
+    (acum, { cantidad }) => acum + Number(cantidad),
     0,
   );
 
@@ -18,14 +18,18 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
   );
 
   const totalContado = filtrarContado.reduce(
-    (acum, { cantidad }) => acum + cantidad,
+    (acum, { cantidad }) => acum + Number(cantidad),
     0,
   );
 
   const total = gastosOrdenados.reduce(
-    (acum, { cantidad }) => acum + cantidad,
+    (acum, { cantidad }) => acum + Number(cantidad),
     0,
   );
+
+  const gastosLiberados = filtrarContado
+    .filter((g) => g.estatus === "liberado")
+    .reduce((acc, g) => acc + Number(g.cantidad), 0);
 
   const titularXGasto = gastosOrdenados
     .filter((g) => g.titular !== "propio")
@@ -37,50 +41,125 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
       return acc;
     }, {});
 
-  const totalAjenos = gastosOrdenados
-    .filter((g) => g.titular !== "propio")
-    .reduce((acc, g) => acc + Number(g.cantidad), 0);
+  const totalAbonado = gastosOrdenados
+    .filter((g) => g.saldo === "abonado")
+    .reduce((acum, g) => acum + Number(g.cantidad), 0);
 
-  const balance = totalIngresos + totalAjenos - total;
+  const ingresoEfectivo = ingresosOrdenados.filter(
+    (i) => i.tipoIngreso === "efectivo",
+  );
+
+  const acumEfectivo = ingresoEfectivo.reduce(
+    (acum, actual) => acum + Number(actual.ingreso),
+    0,
+  );
+
+  const ingresoProyectado = ingresosOrdenados.filter(
+    (i) => i.tipoIngreso === "proyectado",
+  );
+
+  const acumProyectado = ingresoProyectado.reduce(
+    (acum, actual) => acum + Number(actual.ingreso),
+    0,
+  );
+
+  const totalPagado = gastosOrdenados
+    .filter((g) => g.estatus === "liberado")
+    .reduce((acum, g) => acum + Number(g.cantidad), 0);
+
+  const totalIngresosEfectivo = acumEfectivo + totalAbonado - totalPagado;
+
+  const totalGeneral = totalIngresosEfectivo + acumProyectado;
+
+  const balance = totalGeneral - total;
 
   return (
     <>
-      <table className="table table-sm table-bordered mb-5">
-        <tbody>
-          <tr className="text-center">
-            <th className="w-75">Total Crédito</th>
-            <td>${Number(totalCredito).toLocaleString("es-MX")}</td>
-          </tr>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="mb-0">BALANCE</h2>
+        <span className="badge bg-primary-subtle text-primary px-3 py-2">
+          <span className="fw-semibold">Total:</span>{" "}
+          <span className="fw-bold fs-4">
+            ${Number(balance).toLocaleString("es-MX")}
+          </span>
+        </span>
+      </div>
+      <div className="d-flex justify-content-between align-items-center mb-2">
+        <h5 className="mb-0">INGRESOS REALES</h5>
+        <span className="badge bg-success-subtle text-success">
+          Total: ${Number(totalGeneral).toLocaleString("es-MX")}
+        </span>
+      </div>
 
-          <tr className="text-center">
-            <th>Total Contado</th>
-            <td>${Number(totalContado).toLocaleString("es-MX")}</td>
-          </tr>
-
-          <tr className="text-center">
-            <th className="fw-bold">Balance</th>
-            <td className="fw-bold ">
-              ${Number(balance).toLocaleString("es-MX")}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <table className="table table-sm table-bordered mb-5">
-        <tbody>
-          {Object.entries(titularXGasto).map(([nombre, total]) => (
-            <tr className="text-center" key={nombre}>
-              <th className="fw-bold w-75">{nombre}</th>
-              <td>${Number(total).toLocaleString("es-MX")}</td>
+      <div className="table-responsive">
+        <table className="table table-sm table-bordered align-middle mb-5">
+          <thead className="table-light">
+            <tr>
+              <th className="text-center">Concepto</th>
+              <th className="text-end">Cantidad</th>
             </tr>
-          ))}
-          <tr className="text-center">
-            <th className="fw-bold">Total Ajenos</th>
-            <td className="fw-bold ">
-              ${Number(totalAjenos).toLocaleString("es-MX")}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td className="fw-semibold text-center">Efectivo</td>
+              <td className="text-end text-success fw-semibold">
+                ${Number(totalIngresosEfectivo).toLocaleString("es-MX")}
+              </td>
+            </tr>
+
+            <tr>
+              <td className="fw-semibold text-center">Proyectado</td>
+              <td className="text-end text-success fw-semibold">
+                ${Number(acumProyectado).toLocaleString("es-MX")}
+              </td>
+            </tr>
+
+            {Object.entries(titularXGasto).map(([nombre, total]) => (
+              <tr key={nombre}>
+                <td className="fw-semibold text-center">{nombre}</td>
+                <td className="text-end text-success fw-semibold">
+                  ${Number(total - totalAbonado).toLocaleString("es-MX")}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <div className="d-flex justify-content-between align-items-center mb-2">
+          <h5 className="mb-0">GASTOS TOTALES</h5>
+          <span className="badge bg-danger-subtle text-danger">
+            Total: $
+            {Number(totalGastos - gastosLiberados).toLocaleString("es-MX")}
+          </span>
+        </div>
+
+        <table className="table table-sm table-bordered align-middle">
+          <thead className="table-light">
+            <tr>
+              <th className="text-center">Concepto</th>
+              <th className="text-end">Cantidad</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td className="fw-semibold text-center">Crédito</td>
+              <td className="text-end text-danger fw-semibold">
+                ${Number(totalCredito).toLocaleString("es-MX")}
+              </td>
+            </tr>
+
+            <tr>
+              <td className="fw-semibold text-center">Contado</td>
+              <td className="text-end text-danger fw-semibold">
+                $
+                {Number(totalContado - gastosLiberados).toLocaleString("es-MX")}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </>
   );
 };

@@ -6,6 +6,7 @@ import { TablaContado } from "./components/TablaContado";
 import { TablaIngresos } from "./components/TablaIngresos";
 import { TablaBalance } from "./components/TablaBalance";
 import { FormaGastosEditar } from "./components/FormaGastosEditar";
+import { FormaIngresosEditar } from "./components/FormaIngresosEditar";
 
 const API_URL = "http://localhost:3000";
 
@@ -16,7 +17,9 @@ function App() {
   const [ingresos, setIngresos] = useState([]);
   const [mesActivo, setMesActivo] = useState(mesActual);
   const [ventanaEdicion, setVentanaEdicion] = useState(false);
+  const [ventanaEdicionIngresos, setVentanaEdicionIngresos] = useState(false);
   const [gastoSeleccionado, setGastoSeleccionado] = useState(null);
+  const [ingresoSeleccionado, setIngresoSeleccionado] = useState(null);
 
   const guardarIngreso = async (formIngresos) => {
     try {
@@ -131,6 +134,25 @@ function App() {
     }
   };
 
+  const editarIngreso = async (formIngresosEdicion, id) => {
+    try {
+      await fetch(`${API_URL}/ingresos/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formIngresosEdicion),
+      });
+
+      const req = await fetch(`${API_URL}/ingresos?periodo=${mesActivo}`);
+      const res = await req.json();
+
+      setIngresos(res.ingresos);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleChangeMes = ({ target }) => {
     setMesActivo(target.value);
   };
@@ -138,18 +160,6 @@ function App() {
   const ingresosOrdenados = [...ingresos].sort(
     (a, b) => new Date(a.fechaIngreso) - new Date(b.fechaIngreso),
   );
-
-  // const ingresosPorPeriodo = ingresos.sort(
-  //   (a, b) =>
-  //     Number(a.fechaIngreso.split("-")[1]) -
-  //     Number(b.fechaIngreso.split("-")[1]),
-  // );
-
-  // const ingresosOrdenados = ingresosPorPeriodo.sort(
-  //   (a, b) =>
-  //     Number(a.fechaIngreso.split("-")[2]) -
-  //     Number(b.fechaIngreso.split("-")[2]),
-  // );
 
   const gastosOrdenados = [...gastos].sort(
     (a, b) => new Date(a.fecha) - new Date(b.fecha),
@@ -164,15 +174,16 @@ function App() {
   );
 
   return (
-    <div className="container">
-      <div className="pt-4 mb-4 bg-secondary">
-        <h1 className="text-white">{"Control de gastos".toUpperCase()}</h1>
+    <div className="container-fluid px-4">
+      <div className="py-4 mb-4 bg-dark text-white text-center rounded">
+        <h1 className="fw-bold m-0">CONTROL DE GASTOS</h1>
       </div>
 
-      <div className="row mb-4">
-        <div className="col-3">
-          <label className="form-label fw-bold text-dark">Periodo</label>
-
+      <div className="row mb-4 align-items-end">
+        <div className="col-md-3">
+          <label className="form-label fw-bold">
+            <h2>PERIODO</h2>
+          </label>
           <div className="input-group shadow-sm">
             <span className="input-group-text bg-light">📅</span>
             <select
@@ -197,33 +208,55 @@ function App() {
         </div>
       </div>
 
-      <div className="row gx-5">
-        <div className="col-3 ">
-          <FormaIngresos
-            guardarIngreso={guardarIngreso}
-            mesActivo={mesActivo}
-          />
-          <Forma guardarGasto={guardarGasto} mesActivo={mesActivo} />
-        </div>
-
-        <div className="col-9">
-          <div className="row">
-            <div className="col-5">
-              <TablaBalance
-                ingresosOrdenados={ingresosOrdenados}
-                gastosOrdenados={gastosOrdenados}
-              />
-            </div>
-
-            <div className="col-7">
-              <TablaIngresos
-                ingresosOrdenados={ingresosOrdenados}
-                eliminarIngreso={eliminarIngreso}
+      <div className="row gx-4">
+        <div className="col-md-3">
+          <div className="card shadow-sm mb-4">
+            <div className="card-body">
+              <FormaIngresos
+                guardarIngreso={guardarIngreso}
+                mesActivo={mesActivo}
               />
             </div>
           </div>
+
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <Forma guardarGasto={guardarGasto} mesActivo={mesActivo} />
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-9">
           <div className="row mb-4">
-            <div className="col-12">
+            <div className="col-md-5">
+              <div className="card shadow-sm h-100">
+                <div className="card-body">
+                  <TablaBalance
+                    ingresosOrdenados={ingresosOrdenados}
+                    gastosOrdenados={gastosOrdenados}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-7">
+              <div className="card shadow-sm h-100">
+                <div className="card-body">
+                  <TablaIngresos
+                    ingresosOrdenados={ingresosOrdenados}
+                    eliminarIngreso={eliminarIngreso}
+                    setVentanaEdicionIngresos={setVentanaEdicionIngresos}
+                    setIngresoSeleccionado={setIngresoSeleccionado}
+                    mesActivo={mesActivo}
+                    gastosOrdenados={gastosOrdenados}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="card shadow-sm mb-4">
+            <div className="card-body">
               <TablaCategoria
                 gastosOrdenados={gastosOrdenados}
                 gastosXCredito={gastosXCredito}
@@ -233,8 +266,9 @@ function App() {
               />
             </div>
           </div>
-          <div>
-            <div>
+
+          <div className="card shadow-sm mb-4">
+            <div className="card-body">
               <TablaContado
                 gastosXContado={gastosXContado}
                 eliminarGasto={eliminarGasto}
@@ -243,13 +277,29 @@ function App() {
               />
             </div>
           </div>
+
           {ventanaEdicion && (
-            <div className="col-7">
-              <FormaGastosEditar
-                gastoSeleccionado={gastoSeleccionado}
-                editarGasto={editarGasto}
-                setVentanaEdicion={setVentanaEdicion}
-              />
+            <div className="card shadow-sm">
+              <div className="card-body">
+                <FormaGastosEditar
+                  gastoSeleccionado={gastoSeleccionado}
+                  editarGasto={editarGasto}
+                  setVentanaEdicion={setVentanaEdicion}
+                  mesActivo={mesActivo}
+                />
+              </div>
+            </div>
+          )}
+
+          {ventanaEdicionIngresos && (
+            <div className="card shadow-sm">
+              <div className="card-body">
+                <FormaIngresosEditar
+                  setVentanaEdicionIngresos={setVentanaEdicionIngresos}
+                  ingresoSeleccionado={ingresoSeleccionado}
+                  editarIngreso={editarIngreso}
+                />
+              </div>
             </div>
           )}
         </div>

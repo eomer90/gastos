@@ -1,24 +1,24 @@
 import { useState } from "react";
 
-const estadoInicialFormaEdicion = {
-  descripcion: "",
-  cantidad: "",
-  fecha: "",
-  periodoGastos: "01",
-  tipoPago: "credito",
-  estatus: "",
-  categoria: "fijo",
-  numeroPago: "",
-  totalMeses: "",
-  titular: "propio",
-  nombreTitular: "",
-};
-
 export const FormaGastosEditar = ({
   editarGasto,
   setVentanaEdicion,
   gastoSeleccionado,
+  mesActivo,
 }) => {
+  const estadoInicialFormaEdicion = {
+    descripcion: "",
+    cantidad: "",
+    categoria: "fijo",
+    totalMeses: "",
+    tipoPago: "credito",
+    estatus: "",
+    fecha: "",
+    periodoGastos: mesActivo,
+    titular: "propio",
+    nombreTitular: "",
+    saldo: "",
+  };
   const [formGastosEdicion, setFormGastosEdicion] = useState(gastoSeleccionado);
 
   const handleChange = ({ target }) => {
@@ -71,22 +71,32 @@ export const FormaGastosEditar = ({
   return (
     <>
       <div className="modal fade show d-block">
-        <div className="modal-dialog modal-dialog-centered ">
-          <div className="modal-content ">
-            <div className="modal-header">
-              <h5 className="modal-title">Editar gasto</h5>
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content shadow-lg border-0 rounded-4">
+            <div className="modal-header bg-light">
+              <h5 className="modal-title fw-bold">Editar gasto</h5>
+              <button
+                type="button"
+                className="btn-close"
+                onClick={cerrarVentanaEdicion}
+              ></button>
             </div>
+
             <form onSubmit={handleSubmit}>
               <div
-                className="modal-body"
-                style={{
-                  maxHeight: "65vh",
-                  overflowY: "auto",
-                }}
+                className="modal-body px-4"
+                style={{ maxHeight: "70vh", overflowY: "auto" }}
               >
-                <p>Cambia solo los campos que necesitas editar</p>
+                <p className="text-muted small mb-4">
+                  Modifica únicamente los campos necesarios.
+                </p>
+
+                <h6 className="fw-bold border-bottom pb-2 mb-4">
+                  Información del gasto
+                </h6>
+
                 <div className="mb-3">
-                  <label className="form-label fw-bold">Descripción</label>
+                  <label className="form-label fw-semibold">Descripción</label>
                   <input
                     type="text"
                     value={formGastosEdicion.descripcion}
@@ -98,7 +108,7 @@ export const FormaGastosEditar = ({
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label fw-bold">Cantidad</label>
+                  <label className="form-label fw-semibold">Cantidad</label>
                   <input
                     type="number"
                     value={formGastosEdicion.cantidad}
@@ -110,7 +120,7 @@ export const FormaGastosEditar = ({
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label fw-bold">Fecha</label>
+                  <label className="form-label fw-semibold">Fecha</label>
                   <input
                     type="date"
                     value={formGastosEdicion.fecha}
@@ -120,10 +130,10 @@ export const FormaGastosEditar = ({
                   />
                 </div>
 
-                <div className="mb-3">
-                  <label className="form-label fw-bold">Periodo</label>
+                <div className="mb-4">
+                  <label className="form-label fw-semibold">Periodo</label>
                   <select
-                    className="form-control"
+                    className="form-select"
                     name="periodoGastos"
                     value={formGastosEdicion.periodoGastos}
                     onChange={handleChange}
@@ -144,38 +154,21 @@ export const FormaGastosEditar = ({
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label fw-bold">Tipo de pago</label>
+                  <label className="form-label fw-semibold">Tipo de pago</label>
                   <select
                     value={formGastosEdicion.tipoPago}
                     name="tipoPago"
                     onChange={handleChange}
                     className="form-select"
                   >
-                    <option value="">Selecciona una opción</option>
+                    <option value="">Selecciona</option>
                     <option value="credito">Crédito</option>
                     <option value="contado">Contado</option>
                   </select>
                 </div>
 
-                {mostrarPendiente && (
-                  <div className="mb-3">
-                    <label className="form-label fw-bold">Estatus</label>
-                    <select
-                      required
-                      value={formGastosEdicion.estatus}
-                      name="estatus"
-                      onChange={handleChange}
-                      className="form-select"
-                    >
-                      <option value="">Selecciona una opción</option>
-                      <option value="pendiente">Pendiente</option>
-                      <option value="liberado">Liberado</option>
-                    </select>
-                  </div>
-                )}
-
                 <div className="mb-3">
-                  <label className="form-label fw-bold">Categoría</label>
+                  <label className="form-label fw-semibold">Categoría</label>
                   <select
                     value={formGastosEdicion.categoria}
                     name="categoria"
@@ -191,36 +184,39 @@ export const FormaGastosEditar = ({
                   </select>
                 </div>
 
-                {mostrarNumeroPago && (
-                  <div className="row">
-                    <div className="col-6 mb-3">
-                      <label className="form-label fw-bold">No. de pago</label>
-                      <input
-                        type="number"
-                        value={formGastosEdicion.numeroPago}
-                        name="numeroPago"
-                        onChange={handleChange}
-                        className="form-control"
-                      />
-                    </div>
+                {mostrarPendiente && (
+                  <div className="mb-3">
+                    <label className="form-label fw-semibold">Estatus</label>
+                    <select
+                      value={formGastosEdicion.estatus}
+                      name="estatus"
+                      onChange={handleChange}
+                      className="form-select"
+                    >
+                      <option value="">Selecciona</option>
+                      <option value="pendiente">Pendiente</option>
+                      <option value="liberado">Liberado</option>
+                    </select>
+                  </div>
+                )}
 
-                    <div className="col-6 mb-3">
-                      <label className="form-label fw-bold">
-                        Total de meses
-                      </label>
-                      <input
-                        type="number"
-                        value={formGastosEdicion.totalMeses}
-                        name="totalMeses"
-                        onChange={handleChange}
-                        className="form-control"
-                      />
-                    </div>
+                {mostrarNumeroPago && (
+                  <div className="mb-3">
+                    <label className="form-label fw-semibold">
+                      Total de meses
+                    </label>
+                    <input
+                      type="number"
+                      value={formGastosEdicion.totalMeses}
+                      name="totalMeses"
+                      onChange={handleChange}
+                      className="form-control"
+                    />
                   </div>
                 )}
 
                 <div className="mb-3">
-                  <label className="form-label fw-bold">Titular</label>
+                  <label className="form-label fw-semibold">Titular</label>
                   <select
                     value={formGastosEdicion.titular}
                     name="titular"
@@ -235,7 +231,7 @@ export const FormaGastosEditar = ({
 
                 {mostrarTitular && (
                   <div className="mb-3">
-                    <label className="form-label fw-bold">
+                    <label className="form-label fw-semibold">
                       Nombre del titular
                     </label>
                     <input
@@ -247,22 +243,40 @@ export const FormaGastosEditar = ({
                     />
                   </div>
                 )}
+
+                <div className="mb-3">
+                  <label className="form-label fw-semibold">Saldo</label>
+                  <select
+                    value={formGastosEdicion.saldo}
+                    name="saldo"
+                    onChange={handleChange}
+                    className="form-select"
+                  >
+                    <option value="">Selecciona</option>
+                    <option value="adeudado">Adeudado</option>
+                    <option value="abonado">Abonado</option>
+                  </select>
+                </div>
               </div>
 
-              <div className="modal-footer">
+              <div className="modal-footer border-0 px-4 pb-4">
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  className="btn btn-outline-secondary"
                   onClick={cerrarVentanaEdicion}
                 >
                   Cancelar
                 </button>
-                <button className="btn btn-primary">Guardar cambios</button>
+                <button className="btn btn-primary px-4 rounded-pill">
+                  Guardar cambios
+                </button>
               </div>
             </form>
           </div>
         </div>
       </div>
+
+      <div className="modal-backdrop fade show"></div>
     </>
   );
 };

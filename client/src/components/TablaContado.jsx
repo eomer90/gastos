@@ -40,12 +40,6 @@ export const TablaContado = ({
     setCampo(e.target.value);
   };
 
-  const columnasBase = 4;
-
-  const columnasExtras = mostrarEstatus ? 1 : 0;
-
-  const totalColumnasAntesDeCantidad = columnasBase + columnasExtras;
-
   const editarGasto = (gasto) => {
     setGastoSeleccionado(gasto);
     setVentanaEdicion(true);
@@ -53,64 +47,87 @@ export const TablaContado = ({
 
   return (
     <>
-      <div className="pt-4 mb-4">
-        <h2>{"Contado".toUpperCase()}</h2>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h2 className="mb-0">CONTADO</h2>
+        <span className="badge bg-danger-subtle text-danger px-3 py-2">
+          <span className="fw-semibold">Total:</span>{" "}
+          <span className="fw-bold fs-4">
+            ${Number(totalFiltradoXCategoria).toLocaleString("es-MX")}
+          </span>
+        </span>
       </div>
-      <div className="mb-3 col-4">
-        <label className="form-label fw-bold">Filtra por:</label>
-        <select className="form-select" onChange={handleChange}>
-          <option value="">Selecciona</option>
-          <option value="descripcion">Descripción</option>
-          <option value="cantidad">Cantidad</option>
-          <option value="fecha">Fecha</option>
-          <option value="categoria">Categoría</option>
-          <option value="nombreTitular">Nombre del Titular</option>
-        </select>
+
+      <div className="row mb-3">
+        <div className="col-md-3">
+          <select className="form-select" onChange={handleChange}>
+            <option value="">Selecciona filtro</option>
+            <option value="descripcion">Descripción</option>
+            <option value="cantidad">Cantidad</option>
+            <option value="fecha">Fecha</option>
+            <option value="categoria">Categoría</option>
+            <option value="nombreTitular">Nombre del Titular</option>
+          </select>
+        </div>
+
+        <div className="col-md-4">
+          {mostrarInputBusqueda() && (
+            <input
+              className="form-control"
+              placeholder="Buscar..."
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+            />
+          )}
+        </div>
       </div>
-      <div className="col-4">
-        {mostrarInputBusqueda() && (
-          <input
-            className="form-control mb-3 "
-            placeholder="Escribe para buscar..."
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-          />
-        )}
-      </div>
+
       <div
         style={{
           maxHeight: "65vh",
           overflowY: "auto",
         }}
       >
-        <table className="table table-sm table-bordered mb-5 align-middle">
-          <thead>
+        <table className="table table-sm table-bordered align-middle">
+          <thead className="table-light">
             <tr className="text-center">
               <th>Descripción</th>
-              <th>Fecha</th>
               <th>Categoría</th>
+              <th>Fecha</th>
               <th>Titular</th>
               {mostrarEstatus && <th>Estatus</th>}
-              <th>Cantidad</th>
+              <th className="text-end">Cantidad</th>
               <th>Acción</th>
             </tr>
           </thead>
 
           <tbody>
             {gastosBusqueda.map((gasto) => (
-              <tr className="text-center" key={gasto.id}>
-                <td>{gasto.descripcion}</td>
+              <tr key={gasto.id} className="text-center align-middle">
+                <td className="fw-semibold">{gasto.descripcion}</td>
+                <td>
+                  <span className="badge bg-dark text-light">
+                    {gasto.categoria}
+                  </span>
+                </td>
+
                 <td>{gasto.fecha}</td>
-                <td>{gasto.categoria}</td>
-                <td>{gasto.nombreTitular}</td>
+                <td>
+                  {gasto.nombreTitular ? (
+                    <span className="badge bg-light text-dark border">
+                      {gasto.nombreTitular}
+                    </span>
+                  ) : (
+                    "-"
+                  )}
+                </td>
 
                 {mostrarEstatus && (
                   <td>
                     <span
-                      className={`${
+                      className={`badge ${
                         gasto.estatus === "pendiente"
-                          ? "badge bg-warning text-dark"
-                          : "badge bg-success"
+                          ? "bg-warning text-dark"
+                          : "bg-info text-dark"
                       }`}
                     >
                       {gasto.estatus}
@@ -118,7 +135,9 @@ export const TablaContado = ({
                   </td>
                 )}
 
-                <td>${Number(gasto.cantidad).toLocaleString("es-MX")}</td>
+                <td className="fw-semibold text-danger text-end">
+                  ${Number(gasto.cantidad).toLocaleString("es-MX")}
+                </td>
 
                 <td>
                   <button
@@ -127,45 +146,29 @@ export const TablaContado = ({
                   >
                     <i className="bi bi-trash"></i>
                   </button>
+
                   <button
-                    className="btn btn-outline-primary btn-sm me-2"
+                    className="btn btn-outline-primary btn-sm"
                     onClick={() => editarGasto(gasto)}
                   >
                     <i className="bi bi-pencil"></i>
-                  </button>
-                  <button
-                    className="btn btn-outline-success btn-sm"
-                    onClick={() => compartirGasto(gasto)}
-                  >
-                    <i className="bi bi-share"></i>
                   </button>
                 </td>
               </tr>
             ))}
 
-            <tr className="text-center">
-              <td colSpan={totalColumnasAntesDeCantidad} className="fw-bold">
-                Total
-              </td>
-              <td className="fw-bold">
-                ${Number(totalFiltradoXCategoria).toLocaleString("es-MX")}
-              </td>
-              <td></td>
-            </tr>
+            {gastosBusqueda.length === 0 && (
+              <tr>
+                <td
+                  colSpan={mostrarEstatus ? 7 : 6}
+                  className="text-center text-muted py-3"
+                >
+                  No hay resultados
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
-        {/* <div className="modal fade show d-block">
-          <div className="modal-dialog modal-dialog-centered ">
-            <div className="modal-content ">
-              <div className="modal-header">
-                <h5 className="modal-title">Editar gasto</h5>
-              </div>
-              <div>
-                <p>Cambia solo los campos que necesitas editar</p>
-              </div>
-            </div>
-          </div>
-        </div> */}
       </div>
     </>
   );

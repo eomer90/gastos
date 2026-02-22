@@ -146,6 +146,33 @@ app.patch("/gastos/:id", async (req, res) => {
   }
 });
 
+app.patch("/ingresos/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const dataActualizada = req.body;
+
+    const ingresos = await leerArchivoAjson(rutaDB);
+
+    const index = ingresos.findIndex((i) => i.id === id);
+
+    if (index === -1) {
+      return res.status(404).json({ mensaje: "Ingreso no encontrado" });
+    }
+
+    ingresos[index] = {
+      ...ingresos[index],
+      ...dataActualizada,
+      cantidad: Number(dataActualizada.ingreso ?? ingresos[index].ingreso),
+    };
+
+    await crearArchivo(rutaDB, ingresos);
+
+    res.status(200).json({ mensaje: "Ingreso actualizado correctamente" });
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al actualizar ingreso" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

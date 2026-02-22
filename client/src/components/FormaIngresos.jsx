@@ -2,8 +2,8 @@ import { useState } from "react";
 
 export const FormaIngresos = ({ guardarIngreso, mesActivo }) => {
   const estadoInicialFormaIngresos = {
-    descripcionIngreso: "",
     ingreso: "",
+    descripcionIngreso: "",
     tipoIngreso: "",
     fechaIngreso: "",
     periodoIngresos: mesActivo,
@@ -25,39 +25,39 @@ export const FormaIngresos = ({ guardarIngreso, mesActivo }) => {
   };
 
   return (
-    <form onSubmit={onSubmitIngreso} className="border rounded p-3 mb-4">
-      <h5 className="mb-3">Nuevo ingreso</h5>
+    <form onSubmit={onSubmitIngreso} className="card shadow-sm p-4 mb-4">
+      <h5 className="fw-bold mb-4 text-center">Nuevo ingreso</h5>
 
-      <div className="mb-3">
-        <label className="form-label fw-bold">Descripción</label>
+      <div className="mb-4">
+        <label className="form-label fw-semibold">Descripción</label>
         <input
           required
           type="text"
           value={formIngresos.descripcionIngreso}
           name="descripcionIngreso"
           onChange={handleChangeIngresos}
-          className="form-control"
+          className="form-control form-control-lg"
           placeholder="Ej. Sueldo"
         />
       </div>
 
-      <div className="mb-3">
-        <label className="form-label fw-bold">Ingreso</label>
+      <div className="mb-4">
+        <label className="form-label fw-semibold">Monto</label>
         <input
           required
           type="number"
           value={formIngresos.ingreso}
           name="ingreso"
           onChange={handleChangeIngresos}
-          className="form-control"
+          className="form-control form-control-lg"
           placeholder="$0.00"
         />
       </div>
 
-      <div className="mb-3">
-        <label className="form-label fw-bold">Tipo</label>
+      <div className="mb-4">
+        <label className="form-label fw-semibold">Tipo de ingreso</label>
         <select
-          className="form-control"
+          className="form-select"
           name="tipoIngreso"
           value={formIngresos.tipoIngreso}
           onChange={handleChangeIngresos}
@@ -68,8 +68,8 @@ export const FormaIngresos = ({ guardarIngreso, mesActivo }) => {
         </select>
       </div>
 
-      <div className="mb-3">
-        <label className="form-label fw-bold">Fecha</label>
+      <div className="mb-4">
+        <label className="form-label fw-semibold">Fecha</label>
         <input
           required
           type="date"
@@ -80,10 +80,10 @@ export const FormaIngresos = ({ guardarIngreso, mesActivo }) => {
         />
       </div>
 
-      <div className="mb-3">
-        <label className="form-label fw-bold">Periodo</label>
+      <div className="mb-4">
+        <label className="form-label fw-semibold">Periodo</label>
         <select
-          className="form-control"
+          className="form-select"
           name="periodoIngresos"
           value={formIngresos.periodoIngresos}
           onChange={handleChangeIngresos}
@@ -103,7 +103,9 @@ export const FormaIngresos = ({ guardarIngreso, mesActivo }) => {
         </select>
       </div>
 
-      <button className="btn btn-outline-secondary w-100">Guardar</button>
+      <div className="d-grid mt-3">
+        <button className="btn btn-success btn-lg">Guardar ingreso</button>
+      </div>
     </form>
   );
 };
