@@ -15,5 +15,13 @@
     "periodoIngresos": "02",
     "id": "ed93ce93-e57c-4b0c-ab1a-c0bb10fda10c",
     "cantidad": 6000
+  },
+  {
+    "ingreso": 6000,
+    "descripcionIngreso": "Quincena: Efren",
+    "tipoIngreso": "proyectado",
+    "fechaIngreso": "2026-02-28",
+    "periodoIngresos": "02",
+    "id": "b7bf1ecb-90f3-4e1b-ad9b-e96e6c3c0746"
   }
 ]

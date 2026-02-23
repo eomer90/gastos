@@ -32,9 +32,55 @@ app.post("/ingresos", async (req, res) => {
       ingreso: Number(data.ingreso),
     });
     await crearArchivo(rutaDB, ingresos);
-    res.status(201).json({ mensaje: "ingreso registrado", ingresos });
+    res.status(201).json({ mensaje: "ingreso registrado", error: false });
   } catch (error) {
-    res.json({ mensaje: "error al registrar ingreso" });
+    res.json({ mensaje: "error al registrar ingreso", error: true });
+  }
+});
+
+app.patch("/ingresos/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const dataActualizada = req.body;
+
+    const ingresos = await leerArchivoAjson(rutaDB);
+
+    const index = ingresos.findIndex((i) => i.id === id);
+
+    if (index === -1) {
+      return res.status(404).json({ mensaje: "Ingreso no encontrado" });
+    }
+
+    ingresos[index] = {
+      ...ingresos[index],
+      ...dataActualizada,
+      cantidad: Number(dataActualizada.ingreso ?? ingresos[index].ingreso),
+    };
+
+    await crearArchivo(rutaDB, ingresos);
+
+    res
+      .status(200)
+      .json({ mensaje: "Ingreso actualizado correctamente", error: false });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ mensaje: "Error al actualizar ingreso", error: true });
+  }
+});
+
+app.delete("/ingresos", async (req, res) => {
+  try {
+    const id = req.body.id;
+    const ingresos = await leerArchivoAjson(rutaDB);
+    const ingresosFiltrados = ingresos.filter((i) => i.id !== id);
+    await crearArchivo(rutaDB, ingresosFiltrados);
+    res.status(200).json({
+      mensaje: "ingreso eliminado",
+      error: false,
+    });
+  } catch (error) {
+    res.json({ mensaje: "error al eliminar ingreso", error: true });
   }
 });
 
@@ -105,20 +151,6 @@ app.delete("/gastos", async (req, res) => {
   }
 });
 
-app.delete("/ingresos", async (req, res) => {
-  try {
-    const id = req.body.id;
-    const ingresos = await leerArchivoAjson(rutaDB);
-    const ingresosFiltrados = ingresos.filter((i) => i.id !== id);
-    await crearArchivo(rutaDB, ingresosFiltrados);
-    res
-      .status(200)
-      .json({ mensaje: "ingreso eliminado", ingresos: ingresosFiltrados });
-  } catch (error) {
-    res.json({ mensaje: "error al eliminar ingreso" });
-  }
-});
-
 app.patch("/gastos/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -143,33 +175,6 @@ app.patch("/gastos/:id", async (req, res) => {
     res.status(200).json({ mensaje: "Gasto actualizado correctamente" });
   } catch (error) {
     res.status(500).json({ mensaje: "Error al actualizar gasto" });
-  }
-});
-
-app.patch("/ingresos/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const dataActualizada = req.body;
-
-    const ingresos = await leerArchivoAjson(rutaDB);
-
-    const index = ingresos.findIndex((i) => i.id === id);
-
-    if (index === -1) {
-      return res.status(404).json({ mensaje: "Ingreso no encontrado" });
-    }
-
-    ingresos[index] = {
-      ...ingresos[index],
-      ...dataActualizada,
-      cantidad: Number(dataActualizada.ingreso ?? ingresos[index].ingreso),
-    };
-
-    await crearArchivo(rutaDB, ingresos);
-
-    res.status(200).json({ mensaje: "Ingreso actualizado correctamente" });
-  } catch (error) {
-    res.status(500).json({ mensaje: "Error al actualizar ingreso" });
   }
 });
 

@@ -21,79 +21,65 @@ function App() {
   const [gastoSeleccionado, setGastoSeleccionado] = useState(null);
   const [ingresoSeleccionado, setIngresoSeleccionado] = useState(null);
 
-  const guardarIngreso = async (formIngresos) => {
+  const traerIngreso = async () => {
     try {
-      await fetch(`${API_URL}/ingresos`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formIngresos),
-      });
-
       const req = await fetch(`${API_URL}/ingresos?periodo=${mesActivo}`);
       const res = await req.json();
-
       setIngresos(res.ingresos);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
-  useEffect(() => {
-    const traerIngreso = async () => {
-      try {
-        const req = await fetch(`${API_URL}/ingresos?periodo=${mesActivo}`);
-        const res = await req.json();
-        setIngresos(res.ingresos);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const traerGasto = async () => {
-      try {
-        const req = await fetch(`${API_URL}/gastos?periodo=${mesActivo}`);
-        const res = await req.json();
-
-        setGastos(res.gastos);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    traerIngreso();
-    traerGasto();
-  }, [mesActivo]);
-
-  const guardarGasto = async (formGastos) => {
+  const traerGasto = async () => {
     try {
-      const req = await fetch(`${API_URL}/gastos?periodo=${mesActivo}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formGastos),
-      });
-
-      const res = await req.json();
-      setGastos(res.gastos);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const eliminarGasto = async (id) => {
-    try {
-      await fetch(`${API_URL}/gastos`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
-      });
-
       const req = await fetch(`${API_URL}/gastos?periodo=${mesActivo}`);
       const res = await req.json();
 
       setGastos(res.gastos);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    traerIngreso();
+    traerGasto();
+  }, [mesActivo]);
+
+  const guardarIngreso = async (formIngresos) => {
+    try {
+      const req = await fetch(`${API_URL}/ingresos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formIngresos),
+      });
+      const res = await req.json();
+      if (res.error) {
+        //mostrar un modal de error
+      } else {
+        traerIngreso();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editarIngreso = async (formIngresosEdicion, id) => {
+    try {
+      const req = await fetch(`${API_URL}/ingresos/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formIngresosEdicion),
+      });
+      const res = await req.json();
+      if (res.error) {
+        // mensaje
+      } else {
+        traerIngreso();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -109,7 +95,28 @@ function App() {
         body: JSON.stringify({ id }),
       });
       const res = await req.json();
-      setIngresos(res.ingresos);
+      if (res.error) {
+        // mensaje
+      } else {
+        traerIngreso();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const guardarGasto = async (formGastos) => {
+    try {
+      const req = await fetch(`${API_URL}/gastos?periodo=${mesActivo}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formGastos),
+      });
+
+      const res = await req.json();
+      setGastos(res.gastos);
     } catch (error) {
       console.log(error);
     }
@@ -134,20 +141,20 @@ function App() {
     }
   };
 
-  const editarIngreso = async (formIngresosEdicion, id) => {
+  const eliminarGasto = async (id) => {
     try {
-      await fetch(`${API_URL}/ingresos/${id}`, {
-        method: "PATCH",
+      await fetch(`${API_URL}/gastos`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formIngresosEdicion),
+        body: JSON.stringify({ id }),
       });
 
-      const req = await fetch(`${API_URL}/ingresos?periodo=${mesActivo}`);
+      const req = await fetch(`${API_URL}/gastos?periodo=${mesActivo}`);
       const res = await req.json();
 
-      setIngresos(res.ingresos);
+      setGastos(res.gastos);
     } catch (error) {
       console.log(error);
     }
