@@ -4,25 +4,15 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
     0,
   );
 
-  const filtrarCredito = gastosOrdenados.filter(
-    (g) => g.tipoPago === "credito",
-  );
-
-  const totalCredito = filtrarCredito.reduce(
-    (acum, { cantidad }) => acum + Number(cantidad),
-    0,
-  );
+  const totalCredito = gastosOrdenados
+    .filter((g) => g.tipoPago === "credito")
+    .reduce((acum, { cantidad }) => acum + Number(cantidad), 0);
 
   const filtrarContado = gastosOrdenados.filter(
     (g) => g.tipoPago === "contado",
   );
 
   const totalContado = filtrarContado.reduce(
-    (acum, { cantidad }) => acum + Number(cantidad),
-    0,
-  );
-
-  const total = gastosOrdenados.reduce(
     (acum, { cantidad }) => acum + Number(cantidad),
     0,
   );
@@ -45,23 +35,13 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
     .filter((g) => g.saldo === "abonado")
     .reduce((acum, g) => acum + Number(g.cantidad), 0);
 
-  const ingresoEfectivo = ingresosOrdenados.filter(
-    (i) => i.tipoIngreso === "efectivo",
-  );
+  const acumEfectivo = ingresosOrdenados
+    .filter((i) => i.tipoIngreso === "efectivo")
+    .reduce((acum, actual) => acum + Number(actual.ingreso), 0);
 
-  const acumEfectivo = ingresoEfectivo.reduce(
-    (acum, actual) => acum + Number(actual.ingreso),
-    0,
-  );
-
-  const ingresoProyectado = ingresosOrdenados.filter(
-    (i) => i.tipoIngreso === "proyectado",
-  );
-
-  const acumProyectado = ingresoProyectado.reduce(
-    (acum, actual) => acum + Number(actual.ingreso),
-    0,
-  );
+  const acumProyectado = ingresosOrdenados
+    .filter((i) => i.tipoIngreso === "proyectado")
+    .reduce((acum, actual) => acum + Number(actual.ingreso), 0);
 
   const totalPagado = gastosOrdenados
     .filter((g) => g.estatus === "liberado")
@@ -71,7 +51,17 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
 
   const totalGeneral = totalIngresosEfectivo + acumProyectado;
 
-  const balance = totalGeneral - total;
+  const balance = totalGeneral - totalGastos;
+
+  const valoresBienEscritos = (nombre) => {
+    const valores = {
+      pagoAMeses: "Pago a Meses",
+    };
+
+    return (
+      valores[nombre] || nombre.slice(0, 1).toUpperCase() + nombre.slice(1)
+    );
+  };
 
   return (
     <>
@@ -117,7 +107,9 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
 
             {Object.entries(titularXGasto).map(([nombre, total]) => (
               <tr key={nombre}>
-                <td className="fw-semibold text-center">{nombre}</td>
+                <td className="fw-semibold text-center">
+                  {valoresBienEscritos(nombre)}
+                </td>
                 <td className="text-end text-success fw-semibold">
                   ${Number(total - totalAbonado).toLocaleString("es-MX")}
                 </td>

@@ -103,6 +103,7 @@ app.post("/gastos", async (req, res) => {
       const cantidadTotal = Number(data.cantidad);
       const totalMeses = Number(data.totalMeses);
       const mensualidad = cantidadTotal / totalMeses;
+      const idCadena = uuidv4();
       for (let i = 0; i < totalMeses; i++) {
         gastos.push({
           ...data,
@@ -114,6 +115,7 @@ app.post("/gastos", async (req, res) => {
             2,
             "0",
           ),
+          idCadena,
         });
       }
     } else {

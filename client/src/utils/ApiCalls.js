@@ -1,9 +1,9 @@
-const apiURL = "http://localhost:3000"
+const apiURL = "http://localhost:3000";
 
 export class Api {
   static async get(url) {
-    const req = await fetch(`${apiURL}/${url}`)
-    return req.json()
+    const req = await fetch(`${apiURL}/${url}`);
+    return req.json();
   }
 
   static async post(url, body) {
@@ -11,7 +11,16 @@ export class Api {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-    })
-    return req.json()
+    });
+    return req.json();
+  }
+
+  static async patch(url, body) {
+    const req = await fetch(`${apiURL}/${url}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    return req.json();
   }
 }

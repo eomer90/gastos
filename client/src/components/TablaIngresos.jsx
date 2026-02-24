@@ -15,11 +15,6 @@ export const TablaIngresos = ({
     0,
   );
 
-  const fechaFormatoMx = (fecha) => {
-    const [year, mes, dia] = fecha.split("-");
-    return `${dia}/${mes}/${year}`;
-  };
-
   const editarIngreso = (ingreso) => {
     setIngresoSeleccionado(ingreso);
     setVentanaEdicionIngresos(true);
@@ -45,6 +40,16 @@ export const TablaIngresos = ({
     .reduce((acc, g) => acc + Number(g.cantidad), 0);
 
   const ingresoEstimado = totalIngresos + totalAjenos;
+
+  const valoresBienEscritos = (nombre) => {
+    const valores = {
+      pagoAMeses: "Pago a Meses",
+    };
+
+    return (
+      valores[nombre] || nombre.slice(0, 1).toUpperCase() + nombre.slice(1)
+    );
+  };
 
   return (
     <>
@@ -80,9 +85,11 @@ export const TablaIngresos = ({
           <tbody>
             {ingresosOrdenados.map((ingreso) => (
               <tr key={ingreso.id} className="text-center align-middle">
-                <td className="fw-semibold">{ingreso.descripcionIngreso}</td>
+                <td className="fw-semibold">
+                  {valoresBienEscritos(ingreso.descripcionIngreso)}
+                </td>
 
-                <td>{fechaFormatoMx(ingreso.fechaIngreso)}</td>
+                <td>{ingreso.fechaIngreso}</td>
 
                 <td>
                   <span
@@ -92,7 +99,7 @@ export const TablaIngresos = ({
                         : "bg-success-subtle text-dark"
                     }`}
                   >
-                    {ingreso.tipoIngreso}
+                    {valoresBienEscritos(ingreso.tipoIngreso)}
                   </span>
                 </td>
 
@@ -146,7 +153,9 @@ export const TablaIngresos = ({
           <tbody>
             {Object.entries(titularXGasto).map(([nombre, total]) => (
               <tr key={nombre}>
-                <td className="fw-semibold text-center">{nombre}</td>
+                <td className="fw-semibold text-center">
+                  {valoresBienEscritos(nombre)}
+                </td>
                 <td className="text-end text-success fw-semibold">
                   ${Number(total).toLocaleString("es-MX")}
                 </td>
@@ -175,7 +184,7 @@ export const TablaIngresos = ({
                     ¿Seguro que deseas eliminar este ingreso?
                   </p>
                   <p className="fw-bold text-danger">
-                    {ingresoAEliminar.descripcionIngreso}
+                    {valoresBienEscritos(ingresoAEliminar.descripcionIngreso)}
                     {" - "}
                     {ingresoAEliminar.fechaIngreso}
                   </p>

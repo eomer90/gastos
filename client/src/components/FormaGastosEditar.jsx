@@ -35,6 +35,14 @@ export const FormaGastosEditar = ({
         ...prev,
         [name]: value,
         nombreTitular: "",
+        saldo: "",
+      }));
+    } else if (name === "titular" && value === "ajeno") {
+      setFormGastosEdicion((prev) => ({
+        ...prev,
+        [name]: value,
+        nombreTitular: "",
+        saldo: "adeudado",
       }));
     } else if (name === "categoria" && value !== "pagoAMeses") {
       setFormGastosEdicion((prev) => ({

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export const TablaContado = ({
-  gastosXContado,
+  gastosOrdenados,
   eliminarGasto,
   setVentanaEdicion,
   setGastoSeleccionado,
@@ -9,16 +9,29 @@ export const TablaContado = ({
   const [campo, setCampo] = useState("");
   const [busqueda, setBusqueda] = useState("");
 
+  const gastosXContado = gastosOrdenados.filter(
+    (g) => g.tipoPago === "contado",
+  );
+
+  const totalContado = gastosXContado.reduce(
+    (acc, g) => acc + Number(g.cantidad),
+    0,
+  );
+
   const gastosBusqueda = gastosXContado.filter((g) => {
     const valor = g[campo];
-
     if (!busqueda) return true;
     if (!valor) return false;
-
     return valor.toString().toLowerCase().includes(busqueda.toLowerCase());
   });
 
   const mostrarInputBusqueda = () => {
+    if (campo !== "") {
+      return true;
+    }
+  };
+
+  const tipoInputBusqueda = () => {
     if (
       campo === "descripcion" ||
       campo === "categoria" ||
@@ -29,20 +42,32 @@ export const TablaContado = ({
     if (campo === "fecha") return "date";
   };
 
-  const mostrarEstatus = gastosXContado.some((g) => g.estatus !== "");
-
-  const totalFiltradoXCategoria = gastosBusqueda.reduce(
+  const totalFiltradoXBusqueda = gastosBusqueda.reduce(
     (acum, { cantidad }) => acum + cantidad,
     0,
   );
 
   const handleChange = (e) => {
-    setCampo(e.target.value);
+    const value = e.target.value;
+    setCampo(value);
+    if (value !== campo) {
+      setBusqueda("");
+    }
   };
 
   const editarGasto = (gasto) => {
     setGastoSeleccionado(gasto);
     setVentanaEdicion(true);
+  };
+
+  const valoresBienEscritos = (nombre) => {
+    const valores = {
+      pagoAMeses: "Pago a Meses",
+    };
+
+    return (
+      valores[nombre] || nombre.slice(0, 1).toUpperCase() + nombre.slice(1)
+    );
   };
 
   return (
@@ -52,7 +77,7 @@ export const TablaContado = ({
         <span className="badge bg-danger-subtle text-danger px-3 py-2">
           <span className="fw-semibold">Total:</span>{" "}
           <span className="fw-bold fs-4">
-            ${Number(totalFiltradoXCategoria).toLocaleString("es-MX")}
+            ${Number(totalContado).toLocaleString("es-MX")}
           </span>
         </span>
       </div>
@@ -72,12 +97,20 @@ export const TablaContado = ({
         <div className="col-md-4">
           {mostrarInputBusqueda() && (
             <input
+              type={tipoInputBusqueda()}
               className="form-control"
               placeholder="Buscar..."
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
             />
           )}
+        </div>
+
+        <div className="col-md-auto ms-auto mt-3">
+          <span className="badge bg-danger-subtle text-danger">
+            Total filtro: $
+            {Number(totalFiltradoXBusqueda).toLocaleString("es-MX")}
+          </span>
         </div>
       </div>
 
@@ -94,7 +127,7 @@ export const TablaContado = ({
               <th>Categoría</th>
               <th>Fecha</th>
               <th>Titular</th>
-              {mostrarEstatus && <th>Estatus</th>}
+              <th>Estatus</th>
               <th className="text-end">Cantidad</th>
               <th>Acción</th>
             </tr>
@@ -103,10 +136,12 @@ export const TablaContado = ({
           <tbody>
             {gastosBusqueda.map((gasto) => (
               <tr key={gasto.id} className="text-center align-middle">
-                <td className="fw-semibold">{gasto.descripcion}</td>
+                <td className="fw-semibold">
+                  {valoresBienEscritos(gasto.descripcion)}
+                </td>
                 <td>
                   <span className="badge bg-dark text-light">
-                    {gasto.categoria}
+                    {valoresBienEscritos(gasto.categoria)}
                   </span>
                 </td>
 
@@ -114,26 +149,24 @@ export const TablaContado = ({
                 <td>
                   {gasto.nombreTitular ? (
                     <span className="badge bg-light text-dark border">
-                      {gasto.nombreTitular}
+                      {valoresBienEscritos(gasto.nombreTitular)}
                     </span>
                   ) : (
                     "-"
                   )}
                 </td>
 
-                {mostrarEstatus && (
-                  <td>
-                    <span
-                      className={`badge ${
-                        gasto.estatus === "pendiente"
-                          ? "bg-warning text-dark"
-                          : "bg-info text-dark"
-                      }`}
-                    >
-                      {gasto.estatus}
-                    </span>
-                  </td>
-                )}
+                <td>
+                  <span
+                    className={`badge ${
+                      gasto.estatus === "pendiente"
+                        ? "bg-warning text-dark"
+                        : "bg-info text-dark"
+                    }`}
+                  >
+                    {valoresBienEscritos(gasto.estatus)}
+                  </span>
+                </td>
 
                 <td className="fw-semibold text-danger text-end">
                   ${Number(gasto.cantidad).toLocaleString("es-MX")}
@@ -159,10 +192,7 @@ export const TablaContado = ({
 
             {gastosBusqueda.length === 0 && (
               <tr>
-                <td
-                  colSpan={mostrarEstatus ? 7 : 6}
-                  className="text-center text-muted py-3"
-                >
+                <td colSpan={7} className="text-center text-muted py-3">
                   No hay resultados
                 </td>
               </tr>

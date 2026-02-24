@@ -1,62 +1,66 @@
-import { useEffect, useState } from "react"
-import { Forma } from "./components/Forma"
-import { FormaIngresos } from "./components/FormaIngresos"
-import { TablaCategoria } from "./components/TablaCategoria"
-import { TablaContado } from "./components/TablaContado"
-import { TablaIngresos } from "./components/TablaIngresos"
-import { TablaBalance } from "./components/TablaBalance"
-import { FormaGastosEditar } from "./components/FormaGastosEditar"
-import { FormaIngresosEditar } from "./components/FormaIngresosEditar"
-import { Api } from "./utils/ApiCalls"
+import { useEffect, useState } from "react";
+import { Forma } from "./components/Forma";
+import { FormaIngresos } from "./components/FormaIngresos";
+import { TablaCategoria } from "./components/TablaCategoria";
+import { TablaContado } from "./components/TablaContado";
+import { TablaIngresos } from "./components/TablaIngresos";
+import { TablaBalance } from "./components/TablaBalance";
+import { FormaGastosEditar } from "./components/FormaGastosEditar";
+import { FormaIngresosEditar } from "./components/FormaIngresosEditar";
+import { ModalError } from "./components/ModalError";
+import { Api } from "./utils/ApiCalls";
+import { ModalEliminarGasto } from "./components/ModalEliminarGasto";
 
-const API_URL = "http://localhost:3000"
+const API_URL = "http://localhost:3000";
 
-const mesActual = String(new Date().getMonth() + 1).padStart(2, "0")
+const mesActual = String(new Date().getMonth() + 1).padStart(2, "0");
 
 function App() {
-  const [gastos, setGastos] = useState([])
-  const [ingresos, setIngresos] = useState([])
-  const [mesActivo, setMesActivo] = useState(mesActual)
-  const [ventanaEdicion, setVentanaEdicion] = useState(false)
-  const [ventanaEdicionIngresos, setVentanaEdicionIngresos] = useState(false)
-  const [gastoSeleccionado, setGastoSeleccionado] = useState(null)
-  const [ingresoSeleccionado, setIngresoSeleccionado] = useState(null)
+  const [gastos, setGastos] = useState([]);
+  const [ingresos, setIngresos] = useState([]);
+  const [mesActivo, setMesActivo] = useState(mesActual);
+  const [ventanaEdicion, setVentanaEdicion] = useState(false);
+  const [ventanaEdicionIngresos, setVentanaEdicionIngresos] = useState(false);
+  const [gastoSeleccionado, setGastoSeleccionado] = useState(null);
+  const [ingresoSeleccionado, setIngresoSeleccionado] = useState(null);
+  const [ventanaError, setVentanaError] = useState(false);
+  const [ventanaEliminarGasto, setVentanaEliminarGasto] = useState(false);
 
   const traerIngreso = async () => {
     try {
-      const res = await Api.get(`ingresos?periodo=${mesActivo}`)
-      setIngresos(res.ingresos)
+      const res = await Api.get(`ingresos?periodo=${mesActivo}`);
+      setIngresos(res.ingresos);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   const traerGasto = async () => {
     try {
-      const res = await Api.get(`gastos?periodo=${mesActivo}`)
-      setGastos(res.gastos)
+      const res = await Api.get(`gastos?periodo=${mesActivo}`);
+      setGastos(res.gastos);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   useEffect(() => {
-    traerIngreso()
-    traerGasto()
-  }, [mesActivo])
+    traerIngreso();
+    traerGasto();
+  }, [mesActivo]);
 
   const guardarIngreso = async (formIngresos) => {
     try {
-      const res = await Api.post("ingresos", formIngresos)
+      const res = await Api.post("ingresos", formIngresos);
       if (res.error) {
-        //mostrar un modal de error
+        setVentanaError(true);
       } else {
-        traerIngreso()
+        traerIngreso();
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const editarIngreso = async (formIngresosEdicion, id) => {
     try {
@@ -66,17 +70,17 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formIngresosEdicion),
-      })
-      const res = await req.json()
+      });
+      const res = await req.json();
       if (res.error) {
         // mensaje
       } else {
-        traerIngreso()
+        traerIngreso();
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const eliminarIngreso = async (id) => {
     try {
@@ -86,26 +90,30 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ id }),
-      })
-      const res = await req.json()
+      });
+      const res = await req.json();
       if (res.error) {
         // mensaje
       } else {
-        traerIngreso()
+        traerIngreso();
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const guardarGasto = async (formGastos) => {
     try {
-      const res = await Api.post("gastos", formGastos)
-      setGastos(res.gastos)
+      const res = await Api.post("gastos", formGastos);
+      if (res.error) {
+        //mostrar un modal de error
+      } else {
+        traerGasto();
+      }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const editarGasto = async (formGastosEdicion, id) => {
     try {
@@ -115,16 +123,16 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formGastosEdicion),
-      })
+      });
 
-      const req = await fetch(`${API_URL}/gastos?periodo=${mesActivo}`)
-      const res = await req.json()
+      const req = await fetch(`${API_URL}/gastos?periodo=${mesActivo}`);
+      const res = await req.json();
 
-      setGastos(res.gastos)
+      setGastos(res.gastos);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const eliminarGasto = async (id) => {
     try {
@@ -134,32 +142,28 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ id }),
-      })
+      });
 
-      const req = await fetch(`${API_URL}/gastos?periodo=${mesActivo}`)
-      const res = await req.json()
+      const req = await fetch(`${API_URL}/gastos?periodo=${mesActivo}`);
+      const res = await req.json();
 
-      setGastos(res.gastos)
+      setGastos(res.gastos);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const handleChangeMes = ({ target }) => {
-    setMesActivo(target.value)
-  }
+    setMesActivo(target.value);
+  };
 
   const ingresosOrdenados = [...ingresos].sort(
     (a, b) => new Date(a.fechaIngreso) - new Date(b.fechaIngreso),
-  )
+  );
 
   const gastosOrdenados = [...gastos].sort(
     (a, b) => new Date(a.fecha) - new Date(b.fecha),
-  )
-
-  const gastosXCredito = gastosOrdenados.filter((g) => g.tipoPago === "credito")
-
-  const gastosXContado = gastosOrdenados.filter((g) => g.tipoPago === "contado")
+  );
 
   return (
     <div className="container-fluid px-4">
@@ -247,10 +251,10 @@ function App() {
             <div className="card-body">
               <TablaCategoria
                 gastosOrdenados={gastosOrdenados}
-                gastosXCredito={gastosXCredito}
                 eliminarGasto={eliminarGasto}
                 setVentanaEdicion={setVentanaEdicion}
                 setGastoSeleccionado={setGastoSeleccionado}
+                setVentanaEliminarGasto={setVentanaEliminarGasto}
               />
             </div>
           </div>
@@ -258,7 +262,7 @@ function App() {
           <div className="card shadow-sm mb-4">
             <div className="card-body">
               <TablaContado
-                gastosXContado={gastosXContado}
+                gastosOrdenados={gastosOrdenados}
                 eliminarGasto={eliminarGasto}
                 setVentanaEdicion={setVentanaEdicion}
                 setGastoSeleccionado={setGastoSeleccionado}
@@ -290,10 +294,18 @@ function App() {
               </div>
             </div>
           )}
+
+          {ventanaEliminarGasto && (
+            <ModalEliminarGasto
+              setVentanaEliminarGasto={setVentanaEliminarGasto}
+            />
+          )}
+
+          {ventanaError && <ModalError setVentanaError={setVentanaError} />}
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
