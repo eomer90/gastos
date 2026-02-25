@@ -1,4 +1,10 @@
-export const ModalEliminarGasto = ({ setVentanaEliminarGasto }) => {
+export const ModalEliminarGasto = ({
+  gastoAEliminar,
+  setVentanaEliminarGasto,
+  eliminarGasto,
+}) => {
+  const existePagoMeses = gastoAEliminar.categoria === "pagoAMeses";
+
   return (
     <>
       <div className="modal fade show d-block">
@@ -14,14 +20,11 @@ export const ModalEliminarGasto = ({ setVentanaEliminarGasto }) => {
             </div>
 
             <div className="modal-body text-center py-3">
-              <p className="fs-5 mb-2">
-                ¿Seguro que deseas eliminar este ingreso?
-              </p>
-              <p className="fw-bold text-danger">
-                {/* {valoresBienEscritos(ingresoAEliminar.descripcionIngreso)}
-                {" - "}
-                {ingresoAEliminar.fechaIngreso} */}
-              </p>
+              <span className="fs-5 mb-2">
+                {existePagoMeses
+                  ? "¿Deseas eliminar solo el pago de este mes o toda la serie de pagos?"
+                  : "¿Seguro que deseas eliminar este ingreso?"}
+              </span>
             </div>
 
             <div className="modal-footer border-0 justify-content-center pb-3">
@@ -31,6 +34,39 @@ export const ModalEliminarGasto = ({ setVentanaEliminarGasto }) => {
               >
                 Cancelar
               </button>
+              {existePagoMeses ? (
+                <>
+                  <button
+                    className="btn btn-danger px-4 rounded-pill"
+                    onClick={() => {
+                      eliminarGasto(gastoAEliminar.id);
+                      setVentanaEliminarGasto(false);
+                    }}
+                  >
+                    Solo el pago del mes
+                  </button>
+                  <button
+                    className="btn btn-danger px-4 rounded-pill"
+                    onClick={() => {
+                      eliminarGasto(gastoAEliminar.idCadena, true);
+                      setVentanaEliminarGasto(false);
+                    }}
+                  >
+                    Toda la serie de pagos
+                  </button>
+                </>
+              ) : (
+                <button
+                  className="btn btn-danger px-4 rounded-pill"
+                  onClick={() => {
+                    eliminarGasto(gastoAEliminar.id);
+                    setVentanaEliminarGasto(false);
+                  }}
+                >
+                  Sí, eliminar
+                </button>
+              )}
+
               {/* 
               <button
                 className="btn btn-danger px-4 rounded-pill"

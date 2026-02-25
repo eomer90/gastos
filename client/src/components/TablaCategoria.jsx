@@ -6,6 +6,7 @@ export const TablaCategoria = ({
   setVentanaEdicion,
   setGastoSeleccionado,
   setVentanaEliminarGasto,
+  setGastoAEliminar,
 }) => {
   const [campo, setCampo] = useState("");
   const [busqueda, setBusqueda] = useState("");
@@ -71,6 +72,11 @@ export const TablaCategoria = ({
     return (
       valores[nombre] || nombre.slice(0, 1).toUpperCase() + nombre.slice(1)
     );
+  };
+
+  const abrirModalEliminarGasto = (ingreso) => {
+    setGastoAEliminar(ingreso);
+    setVentanaEliminarGasto(true);
   };
 
   return (
@@ -198,7 +204,7 @@ export const TablaCategoria = ({
                   <button
                     className="btn btn-outline-danger btn-sm me-2"
                     // onClick={() => eliminarGasto(gasto.id)}
-                    onClick={() => setVentanaEliminarGasto(true)}
+                    onClick={() => abrirModalEliminarGasto(gasto)}
                   >
                     <i className="bi bi-trash"></i>
                   </button>
@@ -215,7 +221,7 @@ export const TablaCategoria = ({
 
             {gastosBusqueda.length === 0 && (
               <tr>
-                <td colSpan="8" className="text-center text-muted py-3">
+                <td colSpan="9" className="text-center text-muted py-3">
                   No hay resultados
                 </td>
               </tr>

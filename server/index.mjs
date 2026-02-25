@@ -90,8 +90,14 @@ app.get("/gastos", async (req, res) => {
   const gastosPorPeriodo = gastos.filter(
     (g) => g.periodoGastos === periodoQuery,
   );
-
   res.json({ gastos: gastosPorPeriodo });
+});
+
+app.get("/pepito/:numero", (req, res) => {
+  const { numero } = req.params;
+  console.log(numero);
+  const edad = "54";
+  res.json({ nombre: "Juan", edad: edad });
 });
 
 app.post("/gastos", async (req, res) => {
@@ -141,9 +147,14 @@ app.post("/gastos", async (req, res) => {
 
 app.delete("/gastos", async (req, res) => {
   try {
-    const id = req.body.id;
+    const { id, isCadena } = req.body;
     const gastos = await leerArchivoAjson(gastosDB);
-    const gastosFiltrados = gastos.filter((g) => g.id !== id);
+    const gastosFiltrados = gastos.filter((g) => {
+      if (isCadena) {
+        return g.idCadena !== id;
+      }
+      return g.id !== id;
+    });
     await crearArchivo(gastosDB, gastosFiltrados);
     res
       .status(200)

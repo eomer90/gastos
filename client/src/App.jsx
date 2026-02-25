@@ -25,6 +25,7 @@ function App() {
   const [ingresoSeleccionado, setIngresoSeleccionado] = useState(null);
   const [ventanaError, setVentanaError] = useState(false);
   const [ventanaEliminarGasto, setVentanaEliminarGasto] = useState(false);
+  const [gastoAEliminar, setGastoAEliminar] = useState(null);
 
   const traerIngreso = async () => {
     try {
@@ -134,14 +135,14 @@ function App() {
     }
   };
 
-  const eliminarGasto = async (id) => {
+  const eliminarGasto = async (id, isCadena = false) => {
     try {
       await fetch(`${API_URL}/gastos`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id, isCadena }),
       });
 
       const req = await fetch(`${API_URL}/gastos?periodo=${mesActivo}`);
@@ -255,6 +256,7 @@ function App() {
                 setVentanaEdicion={setVentanaEdicion}
                 setGastoSeleccionado={setGastoSeleccionado}
                 setVentanaEliminarGasto={setVentanaEliminarGasto}
+                setGastoAEliminar={setGastoAEliminar}
               />
             </div>
           </div>
@@ -298,6 +300,8 @@ function App() {
           {ventanaEliminarGasto && (
             <ModalEliminarGasto
               setVentanaEliminarGasto={setVentanaEliminarGasto}
+              gastoAEliminar={gastoAEliminar}
+              eliminarGasto={eliminarGasto}
             />
           )}
 

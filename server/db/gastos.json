@@ -1,3 +1,16 @@
 [
-  
+  {
+    "descripcion": "Uber",
+    "cantidad": 50,
+    "categoria": "transporte",
+    "totalMeses": "",
+    "tipoPago": "credito",
+    "estatus": "",
+    "fecha": "2026-02-17",
+    "periodoGastos": "02",
+    "titular": "propio",
+    "nombreTitular": "",
+    "saldo": "",
+    "id": "87308704-fab6-443b-8f69-0626a45d8829"
+  }
 ]
