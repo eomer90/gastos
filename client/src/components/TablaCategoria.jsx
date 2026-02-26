@@ -86,7 +86,7 @@ export const TablaCategoria = ({
         <span className="badge bg-danger-subtle text-danger px-3 py-2">
           <span className="fw-semibold">Total:</span>{" "}
           <span className="fw-bold fs-4">
-            ${Number(totalCredito).toLocaleString("es-MX")}
+            ${Number(totalCredito.toFixed(1)).toLocaleString("es-MX")}
           </span>
         </span>
       </div>
@@ -117,7 +117,7 @@ export const TablaCategoria = ({
         <div className="col-md-auto ms-auto mt-3">
           <span className="badge bg-danger-subtle text-danger">
             Total filtro: $
-            {Number(totalFiltradoXBusqueda).toLocaleString("es-MX")}
+            {Number(totalFiltradoXBusqueda.toFixed(1)).toLocaleString("es-MX")}
           </span>
         </div>
       </div>
@@ -185,7 +185,7 @@ export const TablaCategoria = ({
                 <td>{gasto.numeroPago || "-"}</td>
 
                 <td className="fw-semibold text-danger text-end">
-                  ${Number(gasto.cantidad).toLocaleString("es-MX")}
+                  ${Number(gasto.cantidad.toFixed(1)).toLocaleString("es-MX")}
                 </td>
 
                 <td>

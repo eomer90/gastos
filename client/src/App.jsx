@@ -198,6 +198,12 @@ function App() {
               <option value="12">Noviembre-Diciembre</option>
             </select>
           </div>
+          <div className="col-12">
+            <input
+              type="month"
+              className="form-control shadow-sm text-center text-uppercase"
+            />
+          </div>
         </div>
       </div>
 

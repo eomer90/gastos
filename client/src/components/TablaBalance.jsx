@@ -70,14 +70,14 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
         <span className="badge bg-primary-subtle text-primary px-3 py-2">
           <span className="fw-semibold">Total:</span>{" "}
           <span className="fw-bold fs-4">
-            ${Number(balance).toLocaleString("es-MX")}
+            ${Number(balance.toFixed(1)).toLocaleString("es-MX")}
           </span>
         </span>
       </div>
       <div className="d-flex justify-content-between align-items-center mb-2">
         <h5 className="mb-0">INGRESOS REALES</h5>
         <span className="badge bg-success-subtle text-success">
-          Total: ${Number(totalGeneral).toLocaleString("es-MX")}
+          Total: ${Number(totalGeneral.toFixed(1)).toLocaleString("es-MX")}
         </span>
       </div>
 
@@ -94,14 +94,17 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
             <tr>
               <td className="fw-semibold text-center">Efectivo</td>
               <td className="text-end text-success fw-semibold">
-                ${Number(totalIngresosEfectivo).toLocaleString("es-MX")}
+                $
+                {Number(totalIngresosEfectivo.toFixed(1)).toLocaleString(
+                  "es-MX",
+                )}
               </td>
             </tr>
 
             <tr>
               <td className="fw-semibold text-center">Proyectado</td>
               <td className="text-end text-success fw-semibold">
-                ${Number(acumProyectado).toLocaleString("es-MX")}
+                ${Number(acumProyectado.toFixed(1)).toLocaleString("es-MX")}
               </td>
             </tr>
 
@@ -111,7 +114,10 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
                   {valoresBienEscritos(nombre)}
                 </td>
                 <td className="text-end text-success fw-semibold">
-                  ${Number(total - totalAbonado).toLocaleString("es-MX")}
+                  $
+                  {Number(
+                    total.toFixed(1) - totalAbonado.toFixed(1),
+                  ).toLocaleString("es-MX")}
                 </td>
               </tr>
             ))}
@@ -122,7 +128,9 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
           <h5 className="mb-0">GASTOS TOTALES</h5>
           <span className="badge bg-danger-subtle text-danger">
             Total: $
-            {Number(totalGastos - gastosLiberados).toLocaleString("es-MX")}
+            {Number(
+              totalGastos.toFixed(1) - gastosLiberados.toFixed(1),
+            ).toLocaleString("es-MX")}
           </span>
         </div>
 
@@ -138,7 +146,7 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
             <tr>
               <td className="fw-semibold text-center">Crédito</td>
               <td className="text-end text-danger fw-semibold">
-                ${Number(totalCredito).toLocaleString("es-MX")}
+                ${Number(totalCredito.toFixed(1)).toLocaleString("es-MX")}
               </td>
             </tr>
 
@@ -146,7 +154,9 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
               <td className="fw-semibold text-center">Contado</td>
               <td className="text-end text-danger fw-semibold">
                 $
-                {Number(totalContado - gastosLiberados).toLocaleString("es-MX")}
+                {Number(
+                  totalContado.toFixed(1) - gastosLiberados.toFixed(1),
+                ).toLocaleString("es-MX")}
               </td>
             </tr>
           </tbody>

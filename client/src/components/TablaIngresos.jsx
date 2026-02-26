@@ -58,7 +58,7 @@ export const TablaIngresos = ({
         <span className="badge bg-success-subtle text-success px-3 py-2">
           <span className="fw-semibold">Total:</span>{" "}
           <span className="fw-bold fs-4">
-            ${Number(ingresoEstimado).toLocaleString("es-MX")}
+            ${Number(ingresoEstimado.toFixed(1)).toLocaleString("es-MX")}
           </span>
         </span>
       </div>
@@ -66,7 +66,7 @@ export const TablaIngresos = ({
       <div className="d-flex justify-content-between align-items-center mb-2">
         <h5 className="mb-0">INGRESOS</h5>
         <span className="badge bg-success-subtle text-success">
-          Total: ${Number(totalIngresos).toLocaleString("es-MX")}
+          Total: ${Number(totalIngresos.toFixed(1)).toLocaleString("es-MX")}
         </span>
       </div>
 
@@ -104,7 +104,7 @@ export const TablaIngresos = ({
                 </td>
 
                 <td className="fw-semibold text-success text-end">
-                  ${Number(ingreso.ingreso).toLocaleString("es-MX")}
+                  ${Number(ingreso.ingreso.toFixed(1)).toLocaleString("es-MX")}
                 </td>
 
                 <td>
@@ -138,7 +138,7 @@ export const TablaIngresos = ({
         <div className="d-flex justify-content-between align-items-center mb-2">
           <h5 className="mb-0">CUENTAS POR COBRAR</h5>
           <span className="badge bg-success-subtle text-success">
-            Total: ${Number(totalAjenos).toLocaleString("es-MX")}
+            Total: ${Number(totalAjenos.toFixed(1)).toLocaleString("es-MX")}
           </span>
         </div>
 
@@ -157,7 +157,7 @@ export const TablaIngresos = ({
                   {valoresBienEscritos(nombre)}
                 </td>
                 <td className="text-end text-success fw-semibold">
-                  ${Number(total).toLocaleString("es-MX")}
+                  ${Number(total.toFixed(1)).toLocaleString("es-MX")}
                 </td>
               </tr>
             ))}
