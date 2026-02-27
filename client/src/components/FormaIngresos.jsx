@@ -1,12 +1,12 @@
 import { useState } from "react";
 
-export const FormaIngresos = ({ guardarIngreso, mesActivo }) => {
+export const FormaIngresos = ({ guardarIngreso, periodoActivo }) => {
   const estadoInicialFormaIngresos = {
     ingreso: "",
     descripcionIngreso: "",
     tipoIngreso: "",
     fechaIngreso: "",
-    periodoIngresos: mesActivo,
+    periodoIngresos: periodoActivo,
   };
   const [formIngresos, setFormIngresos] = useState(estadoInicialFormaIngresos);
 
@@ -82,10 +82,18 @@ export const FormaIngresos = ({ guardarIngreso, mesActivo }) => {
 
       <div className="mb-4">
         <label className="form-label fw-semibold">Periodo</label>
-        <select
-          className="form-select"
+        <input
+          required
+          type="month"
+          className="form-control"
           name="periodoIngresos"
           value={formIngresos.periodoIngresos}
+          onChange={handleChangeIngresos}
+        />
+        {/* <select
+          className="form-select"
+          name="periodoIngresos"
+          value={formperiodoIngresosIngresos.}
           onChange={handleChangeIngresos}
         >
           <option value="01">Diciembre-Enero</option>
@@ -100,7 +108,7 @@ export const FormaIngresos = ({ guardarIngreso, mesActivo }) => {
           <option value="10">Septiembre-Octubre</option>
           <option value="11">Octubre-Noviembre</option>
           <option value="12">Noviembre-Diciembre</option>
-        </select>
+        </select> */}
       </div>
 
       <div className="d-grid mt-3">

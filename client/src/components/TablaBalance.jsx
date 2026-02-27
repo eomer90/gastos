@@ -4,10 +4,6 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
     0,
   );
 
-  const totalCredito = gastosOrdenados
-    .filter((g) => g.tipoPago === "credito")
-    .reduce((acum, { cantidad }) => acum + Number(cantidad), 0);
-
   const filtrarContado = gastosOrdenados.filter(
     (g) => g.tipoPago === "contado",
   );
@@ -31,6 +27,16 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
       return acc;
     }, {});
 
+  const totalCreditoAjenos = gastosOrdenados
+    .filter((g) => g.tipoPago === "credito")
+    .filter((g) => g.titular !== "propio")
+    .reduce((acc, g) => acc + Number(g.cantidad), 0);
+
+  const totalCreditoPropio = gastosOrdenados
+    .filter((g) => g.tipoPago === "credito")
+    .filter((g) => g.titular === "propio")
+    .reduce((acc, g) => acc + Number(g.cantidad), 0);
+
   const totalAbonado = gastosOrdenados
     .filter((g) => g.saldo === "abonado")
     .reduce((acum, g) => acum + Number(g.cantidad), 0);
@@ -47,11 +53,22 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
     .filter((g) => g.estatus === "liberado")
     .reduce((acum, g) => acum + Number(g.cantidad), 0);
 
+  const totalIngresos = ingresosOrdenados.reduce(
+    (acum, { ingreso }) => acum + Number(ingreso),
+    0,
+  );
+
+  const totalAjenos = gastosOrdenados
+    .filter((g) => g.titular !== "propio")
+    .reduce((acc, g) => acc + Number(g.cantidad), 0);
+
   const totalIngresosEfectivo = acumEfectivo + totalAbonado - totalPagado;
 
   const totalGeneral = totalIngresosEfectivo + acumProyectado;
 
-  const balance = totalGeneral - totalGastos;
+  const balanceReal = totalGeneral - totalGastos;
+
+  const balanceProyectado = totalIngresos + totalAjenos - totalGastos;
 
   const valoresBienEscritos = (nombre) => {
     const valores = {
@@ -65,19 +82,26 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
 
   return (
     <>
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      <div className="d-flex justify-content-between align-items-center mb-2">
         <h2 className="mb-0">BALANCE</h2>
         <span className="badge bg-primary-subtle text-primary px-3 py-2">
           <span className="fw-semibold">Total:</span>{" "}
           <span className="fw-bold fs-4">
-            ${Number(balance.toFixed(1)).toLocaleString("es-MX")}
+            ${Number(balanceProyectado.toFixed(2)).toLocaleString("es-MX")}
           </span>
         </span>
       </div>
+      <div className="d-flex justify-content-between align-items-left mb-4">
+        <h5 className="mb-0">BALANCE REAL</h5>
+        <span className="badge bg-primary-subtle text-primary">
+          Total Real: ${Number(balanceReal.toFixed(2)).toLocaleString("es-MX")}
+        </span>
+      </div>
+
       <div className="d-flex justify-content-between align-items-center mb-2">
         <h5 className="mb-0">INGRESOS REALES</h5>
         <span className="badge bg-success-subtle text-success">
-          Total: ${Number(totalGeneral.toFixed(1)).toLocaleString("es-MX")}
+          Total: ${Number(totalGeneral.toFixed(2)).toLocaleString("es-MX")}
         </span>
       </div>
 
@@ -95,7 +119,7 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
               <td className="fw-semibold text-center">Efectivo</td>
               <td className="text-end text-success fw-semibold">
                 $
-                {Number(totalIngresosEfectivo.toFixed(1)).toLocaleString(
+                {Number(totalIngresosEfectivo.toFixed(2)).toLocaleString(
                   "es-MX",
                 )}
               </td>
@@ -104,7 +128,7 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
             <tr>
               <td className="fw-semibold text-center">Proyectado</td>
               <td className="text-end text-success fw-semibold">
-                ${Number(acumProyectado.toFixed(1)).toLocaleString("es-MX")}
+                ${Number(acumProyectado.toFixed(2)).toLocaleString("es-MX")}
               </td>
             </tr>
 
@@ -116,7 +140,7 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
                 <td className="text-end text-success fw-semibold">
                   $
                   {Number(
-                    total.toFixed(1) - totalAbonado.toFixed(1),
+                    total.toFixed(2) - totalAbonado.toFixed(2),
                   ).toLocaleString("es-MX")}
                 </td>
               </tr>
@@ -129,7 +153,7 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
           <span className="badge bg-danger-subtle text-danger">
             Total: $
             {Number(
-              totalGastos.toFixed(1) - gastosLiberados.toFixed(1),
+              totalGastos.toFixed(2) - gastosLiberados.toFixed(2),
             ).toLocaleString("es-MX")}
           </span>
         </div>
@@ -144,9 +168,16 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
 
           <tbody>
             <tr>
-              <td className="fw-semibold text-center">Crédito</td>
+              <td className="fw-semibold text-center">Crédito propio</td>
               <td className="text-end text-danger fw-semibold">
-                ${Number(totalCredito.toFixed(1)).toLocaleString("es-MX")}
+                ${Number(totalCreditoPropio.toFixed(2)).toLocaleString("es-MX")}
+              </td>
+            </tr>
+
+            <tr>
+              <td className="fw-semibold text-center">Crédito compartido</td>
+              <td className="text-end text-danger fw-semibold">
+                ${Number(totalCreditoAjenos.toFixed(2)).toLocaleString("es-MX")}
               </td>
             </tr>
 
@@ -155,7 +186,7 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
               <td className="text-end text-danger fw-semibold">
                 $
                 {Number(
-                  totalContado.toFixed(1) - gastosLiberados.toFixed(1),
+                  totalContado.toFixed(2) - gastosLiberados.toFixed(2),
                 ).toLocaleString("es-MX")}
               </td>
             </tr>

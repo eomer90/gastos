@@ -10,15 +10,16 @@ import { FormaIngresosEditar } from "./components/FormaIngresosEditar";
 import { ModalError } from "./components/ModalError";
 import { Api } from "./utils/ApiCalls";
 import { ModalEliminarGasto } from "./components/ModalEliminarGasto";
+import { ModalEliminarIngreso } from "./components/ModalEliminarIngreso";
 
 const API_URL = "http://localhost:3000";
 
-const mesActual = String(new Date().getMonth() + 1).padStart(2, "0");
+const periodoActual = new Date().toISOString().slice(0, 7);
 
 function App() {
   const [gastos, setGastos] = useState([]);
   const [ingresos, setIngresos] = useState([]);
-  const [mesActivo, setMesActivo] = useState(mesActual);
+  const [periodoActivo, setPeriodoActivo] = useState(periodoActual);
   const [ventanaEdicion, setVentanaEdicion] = useState(false);
   const [ventanaEdicionIngresos, setVentanaEdicionIngresos] = useState(false);
   const [gastoSeleccionado, setGastoSeleccionado] = useState(null);
@@ -26,10 +27,12 @@ function App() {
   const [ventanaError, setVentanaError] = useState(false);
   const [ventanaEliminarGasto, setVentanaEliminarGasto] = useState(false);
   const [gastoAEliminar, setGastoAEliminar] = useState(null);
+  const [ventanaEliminarIngreso, setVentanaEliminarIngreso] = useState(false);
+  const [ingresoAEliminar, setIngresoAEliminar] = useState(null);
 
   const traerIngreso = async () => {
     try {
-      const res = await Api.get(`ingresos?periodo=${mesActivo}`);
+      const res = await Api.get(`ingresos?periodo=${periodoActivo}`);
       setIngresos(res.ingresos);
     } catch (error) {
       console.error(error);
@@ -38,7 +41,7 @@ function App() {
 
   const traerGasto = async () => {
     try {
-      const res = await Api.get(`gastos?periodo=${mesActivo}`);
+      const res = await Api.get(`gastos?periodo=${periodoActivo}`);
       setGastos(res.gastos);
     } catch (error) {
       console.error(error);
@@ -48,7 +51,7 @@ function App() {
   useEffect(() => {
     traerIngreso();
     traerGasto();
-  }, [mesActivo]);
+  }, [periodoActivo]);
 
   const guardarIngreso = async (formIngresos) => {
     try {
@@ -126,7 +129,7 @@ function App() {
         body: JSON.stringify(formGastosEdicion),
       });
 
-      const req = await fetch(`${API_URL}/gastos?periodo=${mesActivo}`);
+      const req = await fetch(`${API_URL}/gastos?periodo=${periodoActivo}`);
       const res = await req.json();
 
       setGastos(res.gastos);
@@ -145,7 +148,7 @@ function App() {
         body: JSON.stringify({ id, isCadena }),
       });
 
-      const req = await fetch(`${API_URL}/gastos?periodo=${mesActivo}`);
+      const req = await fetch(`${API_URL}/gastos?periodo=${periodoActivo}`);
       const res = await req.json();
 
       setGastos(res.gastos);
@@ -155,7 +158,7 @@ function App() {
   };
 
   const handleChangeMes = ({ target }) => {
-    setMesActivo(target.value);
+    setPeriodoActivo(target.value);
   };
 
   const ingresosOrdenados = [...ingresos].sort(
@@ -177,30 +180,11 @@ function App() {
           <label className="form-label fw-bold">
             <h2>PERIODO</h2>
           </label>
-          <div className="input-group shadow-sm">
-            <span className="input-group-text bg-light">📅</span>
-            <select
-              className="form-select"
-              value={mesActivo}
-              onChange={handleChangeMes}
-            >
-              <option value="01">Diciembre-Enero</option>
-              <option value="02">Enero-Febrero</option>
-              <option value="03">Febrero-Marzo</option>
-              <option value="04">Marzo-Abril</option>
-              <option value="05">Abril-Mayo</option>
-              <option value="06">Mayo-Junio</option>
-              <option value="07">Junio-Julio</option>
-              <option value="08">Julio-Agosto</option>
-              <option value="09">Agosto-Septiembre</option>
-              <option value="10">Septiembre-Octubre</option>
-              <option value="11">Octubre-Noviembre</option>
-              <option value="12">Noviembre-Diciembre</option>
-            </select>
-          </div>
           <div className="col-12">
             <input
               type="month"
+              value={periodoActivo}
+              onChange={handleChangeMes}
               className="form-control shadow-sm text-center text-uppercase"
             />
           </div>
@@ -213,14 +197,17 @@ function App() {
             <div className="card-body">
               <FormaIngresos
                 guardarIngreso={guardarIngreso}
-                mesActivo={mesActivo}
+                periodoActivo={periodoActivo}
               />
             </div>
           </div>
 
           <div className="card shadow-sm">
             <div className="card-body">
-              <Forma guardarGasto={guardarGasto} mesActivo={mesActivo} />
+              <Forma
+                guardarGasto={guardarGasto}
+                periodoActivo={periodoActivo}
+              />
             </div>
           </div>
         </div>
@@ -246,8 +233,10 @@ function App() {
                     eliminarIngreso={eliminarIngreso}
                     setVentanaEdicionIngresos={setVentanaEdicionIngresos}
                     setIngresoSeleccionado={setIngresoSeleccionado}
-                    mesActivo={mesActivo}
+                    periodoActivo={periodoActivo}
                     gastosOrdenados={gastosOrdenados}
+                    setVentanaEliminarIngreso={setVentanaEliminarIngreso}
+                    setIngresoAEliminar={setIngresoAEliminar}
                   />
                 </div>
               </div>
@@ -274,6 +263,8 @@ function App() {
                 eliminarGasto={eliminarGasto}
                 setVentanaEdicion={setVentanaEdicion}
                 setGastoSeleccionado={setGastoSeleccionado}
+                setVentanaEliminarGasto={setVentanaEliminarGasto}
+                setGastoAEliminar={setGastoAEliminar}
               />
             </div>
           </div>
@@ -285,7 +276,7 @@ function App() {
                   gastoSeleccionado={gastoSeleccionado}
                   editarGasto={editarGasto}
                   setVentanaEdicion={setVentanaEdicion}
-                  mesActivo={mesActivo}
+                  periodoActivo={periodoActivo}
                 />
               </div>
             </div>
@@ -308,6 +299,14 @@ function App() {
               setVentanaEliminarGasto={setVentanaEliminarGasto}
               gastoAEliminar={gastoAEliminar}
               eliminarGasto={eliminarGasto}
+            />
+          )}
+
+          {ventanaEliminarIngreso && (
+            <ModalEliminarIngreso
+              setVentanaEliminarIngreso={setVentanaEliminarIngreso}
+              ingresoAEliminar={ingresoAEliminar}
+              eliminarIngreso={eliminarIngreso}
             />
           )}
 

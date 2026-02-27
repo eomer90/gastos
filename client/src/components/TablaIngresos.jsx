@@ -2,28 +2,16 @@ import { useState } from "react";
 
 export const TablaIngresos = ({
   ingresosOrdenados,
-  eliminarIngreso,
   setVentanaEdicionIngresos,
   setIngresoSeleccionado,
   gastosOrdenados,
+  setVentanaEliminarIngreso,
+  setIngresoAEliminar,
 }) => {
-  const [modalEliminarIngreso, setModalEliminarIngreso] = useState(false);
-  const [ingresoAEliminar, setIngresoAEliminar] = useState(null);
-
   const totalIngresos = ingresosOrdenados.reduce(
     (acum, { ingreso }) => acum + Number(ingreso),
     0,
   );
-
-  const editarIngreso = (ingreso) => {
-    setIngresoSeleccionado(ingreso);
-    setVentanaEdicionIngresos(true);
-  };
-
-  const abrirModalEliminarIngreso = (ingreso) => {
-    setIngresoAEliminar(ingreso);
-    setModalEliminarIngreso(true);
-  };
 
   const titularXGasto = gastosOrdenados
     .filter((g) => g.titular !== "propio")
@@ -40,6 +28,16 @@ export const TablaIngresos = ({
     .reduce((acc, g) => acc + Number(g.cantidad), 0);
 
   const ingresoEstimado = totalIngresos + totalAjenos;
+
+  const editarIngreso = (ingreso) => {
+    setIngresoSeleccionado(ingreso);
+    setVentanaEdicionIngresos(true);
+  };
+
+  const abrirModalEliminarIngreso = (ingreso) => {
+    setIngresoAEliminar(ingreso);
+    setVentanaEliminarIngreso(true);
+  };
 
   const valoresBienEscritos = (nombre) => {
     const valores = {
@@ -58,7 +56,7 @@ export const TablaIngresos = ({
         <span className="badge bg-success-subtle text-success px-3 py-2">
           <span className="fw-semibold">Total:</span>{" "}
           <span className="fw-bold fs-4">
-            ${Number(ingresoEstimado.toFixed(1)).toLocaleString("es-MX")}
+            ${Number(ingresoEstimado.toFixed(2)).toLocaleString("es-MX")}
           </span>
         </span>
       </div>
@@ -66,7 +64,7 @@ export const TablaIngresos = ({
       <div className="d-flex justify-content-between align-items-center mb-2">
         <h5 className="mb-0">INGRESOS</h5>
         <span className="badge bg-success-subtle text-success">
-          Total: ${Number(totalIngresos.toFixed(1)).toLocaleString("es-MX")}
+          Total: ${Number(totalIngresos.toFixed(2)).toLocaleString("es-MX")}
         </span>
       </div>
 
@@ -104,7 +102,7 @@ export const TablaIngresos = ({
                 </td>
 
                 <td className="fw-semibold text-success text-end">
-                  ${Number(ingreso.ingreso.toFixed(1)).toLocaleString("es-MX")}
+                  ${Number(ingreso.ingreso.toFixed(2)).toLocaleString("es-MX")}
                 </td>
 
                 <td>
@@ -138,7 +136,7 @@ export const TablaIngresos = ({
         <div className="d-flex justify-content-between align-items-center mb-2">
           <h5 className="mb-0">CUENTAS POR COBRAR</h5>
           <span className="badge bg-success-subtle text-success">
-            Total: ${Number(totalAjenos.toFixed(1)).toLocaleString("es-MX")}
+            Total: ${Number(totalAjenos.toFixed(2)).toLocaleString("es-MX")}
           </span>
         </div>
 
@@ -157,64 +155,13 @@ export const TablaIngresos = ({
                   {valoresBienEscritos(nombre)}
                 </td>
                 <td className="text-end text-success fw-semibold">
-                  ${Number(total.toFixed(1)).toLocaleString("es-MX")}
+                  ${Number(total.toFixed(2)).toLocaleString("es-MX")}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
-      {modalEliminarIngreso && (
-        <>
-          <div className="modal fade show d-block">
-            <div className="modal-dialog modal-dialog-centered">
-              <div className="modal-content border-0 shadow rounded-4">
-                <div className="modal-header bg-danger text-white">
-                  <h5 className="modal-title fw-bold">Confirmar eliminación</h5>
-                  <button
-                    type="button"
-                    className="btn-close btn-close-white"
-                    onClick={() => setModalEliminarIngreso(false)}
-                  ></button>
-                </div>
-
-                <div className="modal-body text-center py-3">
-                  <p className="fs-5 mb-2">
-                    ¿Seguro que deseas eliminar este ingreso?
-                  </p>
-                  <p className="fw-bold text-danger">
-                    {valoresBienEscritos(ingresoAEliminar.descripcionIngreso)}
-                    {" - "}
-                    {ingresoAEliminar.fechaIngreso}
-                  </p>
-                </div>
-
-                <div className="modal-footer border-0 justify-content-center pb-3">
-                  <button
-                    className="btn btn-outline-secondary px-4"
-                    onClick={() => setModalEliminarIngreso(false)}
-                  >
-                    Cancelar
-                  </button>
-
-                  <button
-                    className="btn btn-danger px-4 rounded-pill"
-                    onClick={() => {
-                      eliminarIngreso(ingresoAEliminar.id);
-                      setModalEliminarIngreso(false);
-                    }}
-                  >
-                    Sí, eliminar
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="modal-backdrop fade show"></div>
-        </>
-      )}
     </>
   );
 };

@@ -2,7 +2,6 @@ import { useState } from "react";
 
 export const TablaCategoria = ({
   gastosOrdenados,
-  eliminarGasto,
   setVentanaEdicion,
   setGastoSeleccionado,
   setVentanaEliminarGasto,
@@ -17,6 +16,20 @@ export const TablaCategoria = ({
 
   const totalCredito = gastosXCredito.reduce(
     (acc, g) => acc + Number(g.cantidad),
+    0,
+  );
+
+  const gastosBusqueda = gastosXCredito.filter((g) => {
+    const valor = g[campo];
+
+    if (!busqueda) return true;
+    if (!valor) return false;
+
+    return valor.toString().toLowerCase().includes(busqueda.toLowerCase());
+  });
+
+  const totalFiltradoXBusqueda = gastosBusqueda.reduce(
+    (acum, { cantidad }) => acum + cantidad,
     0,
   );
 
@@ -36,20 +49,6 @@ export const TablaCategoria = ({
     if (campo === "cantidad") return "number";
     if (campo === "fecha") return "date";
   };
-
-  const gastosBusqueda = gastosXCredito.filter((g) => {
-    const valor = g[campo];
-
-    if (!busqueda) return true;
-    if (!valor) return false;
-
-    return valor.toString().toLowerCase().includes(busqueda.toLowerCase());
-  });
-
-  const totalFiltradoXBusqueda = gastosBusqueda.reduce(
-    (acum, { cantidad }) => acum + cantidad,
-    0,
-  );
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -74,8 +73,8 @@ export const TablaCategoria = ({
     );
   };
 
-  const abrirModalEliminarGasto = (ingreso) => {
-    setGastoAEliminar(ingreso);
+  const abrirModalEliminarGasto = (gasto) => {
+    setGastoAEliminar(gasto);
     setVentanaEliminarGasto(true);
   };
 
@@ -86,7 +85,7 @@ export const TablaCategoria = ({
         <span className="badge bg-danger-subtle text-danger px-3 py-2">
           <span className="fw-semibold">Total:</span>{" "}
           <span className="fw-bold fs-4">
-            ${Number(totalCredito.toFixed(1)).toLocaleString("es-MX")}
+            ${Number(totalCredito.toFixed(2)).toLocaleString("es-MX")}
           </span>
         </span>
       </div>
@@ -117,7 +116,7 @@ export const TablaCategoria = ({
         <div className="col-md-auto ms-auto mt-3">
           <span className="badge bg-danger-subtle text-danger">
             Total filtro: $
-            {Number(totalFiltradoXBusqueda.toFixed(1)).toLocaleString("es-MX")}
+            {Number(totalFiltradoXBusqueda.toFixed(2)).toLocaleString("es-MX")}
           </span>
         </div>
       </div>
@@ -185,14 +184,17 @@ export const TablaCategoria = ({
                 <td>{gasto.numeroPago || "-"}</td>
 
                 <td className="fw-semibold text-danger text-end">
-                  ${Number(gasto.cantidad.toFixed(1)).toLocaleString("es-MX")}
+                  ${Number(gasto.cantidad.toFixed(2)).toLocaleString("es-MX")}
                 </td>
 
                 <td>
                   {gasto.restante ? (
                     <div className="text-end">
                       <span className="fw-semibold text-danger">
-                        ${Number(gasto.restante).toLocaleString("es-MX")}
+                        $
+                        {Number(gasto.restante.toFixed(2)).toLocaleString(
+                          "es-MX",
+                        )}
                       </span>
                     </div>
                   ) : (

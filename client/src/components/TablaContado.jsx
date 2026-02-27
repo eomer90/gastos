@@ -2,9 +2,10 @@ import { useState } from "react";
 
 export const TablaContado = ({
   gastosOrdenados,
-  eliminarGasto,
   setVentanaEdicion,
   setGastoSeleccionado,
+  setVentanaEliminarGasto,
+  setGastoAEliminar,
 }) => {
   const [campo, setCampo] = useState("");
   const [busqueda, setBusqueda] = useState("");
@@ -13,17 +14,22 @@ export const TablaContado = ({
     (g) => g.tipoPago === "contado",
   );
 
-  const totalContado = gastosXContado.reduce(
-    (acc, g) => acc + Number(g.cantidad),
-    0,
-  );
-
   const gastosBusqueda = gastosXContado.filter((g) => {
     const valor = g[campo];
     if (!busqueda) return true;
     if (!valor) return false;
     return valor.toString().toLowerCase().includes(busqueda.toLowerCase());
   });
+
+  const totalContado = gastosXContado.reduce(
+    (acc, g) => acc + Number(g.cantidad),
+    0,
+  );
+
+  const totalFiltradoXBusqueda = gastosBusqueda.reduce(
+    (acum, { cantidad }) => acum + cantidad,
+    0,
+  );
 
   const mostrarInputBusqueda = () => {
     if (campo !== "") {
@@ -41,11 +47,6 @@ export const TablaContado = ({
     if (campo === "cantidad") return "number";
     if (campo === "fecha") return "date";
   };
-
-  const totalFiltradoXBusqueda = gastosBusqueda.reduce(
-    (acum, { cantidad }) => acum + cantidad,
-    0,
-  );
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -70,6 +71,11 @@ export const TablaContado = ({
     );
   };
 
+  const abrirModalEliminarGasto = (gasto) => {
+    setGastoAEliminar(gasto);
+    setVentanaEliminarGasto(true);
+  };
+
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mb-3">
@@ -77,7 +83,7 @@ export const TablaContado = ({
         <span className="badge bg-danger-subtle text-danger px-3 py-2">
           <span className="fw-semibold">Total:</span>{" "}
           <span className="fw-bold fs-4">
-            ${Number(totalContado.toFixed(1)).toLocaleString("es-MX")}
+            ${Number(totalContado.toFixed(2)).toLocaleString("es-MX")}
           </span>
         </span>
       </div>
@@ -109,7 +115,7 @@ export const TablaContado = ({
         <div className="col-md-auto ms-auto mt-3">
           <span className="badge bg-danger-subtle text-danger">
             Total filtro: $
-            {Number(totalFiltradoXBusqueda.toFixed(1)).toLocaleString("es-MX")}
+            {Number(totalFiltradoXBusqueda.toFixed(2)).toLocaleString("es-MX")}
           </span>
         </div>
       </div>
@@ -169,13 +175,14 @@ export const TablaContado = ({
                 </td>
 
                 <td className="fw-semibold text-danger text-end">
-                  ${Number(gasto.cantidad.toFixed(1)).toLocaleString("es-MX")}
+                  ${Number(gasto.cantidad.toFixed(2)).toLocaleString("es-MX")}
                 </td>
 
                 <td>
                   <button
                     className="btn btn-outline-danger btn-sm me-2"
-                    onClick={() => eliminarGasto(gasto.id)}
+                    // onClick={() => eliminarGasto(gasto.id)}
+                    onClick={() => abrirModalEliminarGasto(gasto)}
                   >
                     <i className="bi bi-trash"></i>
                   </button>

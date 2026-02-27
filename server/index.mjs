@@ -105,22 +105,24 @@ app.post("/gastos", async (req, res) => {
     const periodoQuery = req.query.periodo;
     const data = req.body;
     const gastos = await leerArchivoAjson(gastosDB);
+    const [year, month] = data.periodoGastos.split("-").map(Number);
     if (data.categoria === "pagoAMeses") {
       const cantidadTotal = Number(data.cantidad);
       const totalMeses = Number(data.totalMeses);
-      const mensualidad = cantidadTotal / totalMeses;
+      const mensualidad = Math.round((cantidadTotal / totalMeses) * 100) / 100;
       const idCadena = uuidv4();
       for (let i = 0; i < totalMeses; i++) {
+        const fecha = new Date(year, month - 1 + i);
+        const periodoFormateado = `${fecha.getFullYear()}-${String(
+          fecha.getMonth() + 1,
+        ).padStart(2, "0")}`;
         gastos.push({
           ...data,
           id: uuidv4(),
           cantidad: mensualidad,
           restante: cantidadTotal - (i + 1) * mensualidad,
           numeroPago: `${i + 1} de ${totalMeses}`,
-          periodoGastos: String(i + Number(data.periodoGastos)).padStart(
-            2,
-            "0",
-          ),
+          periodoGastos: periodoFormateado,
           idCadena,
         });
       }

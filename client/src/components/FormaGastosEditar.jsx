@@ -4,7 +4,7 @@ export const FormaGastosEditar = ({
   editarGasto,
   setVentanaEdicion,
   gastoSeleccionado,
-  mesActivo,
+  periodoActivo,
 }) => {
   const estadoInicialFormaEdicion = {
     descripcion: "",
@@ -14,7 +14,7 @@ export const FormaGastosEditar = ({
     tipoPago: "credito",
     estatus: "",
     fecha: "",
-    periodoGastos: mesActivo,
+    periodoGastos: periodoActivo,
     titular: "propio",
     nombreTitular: "",
     saldo: "",

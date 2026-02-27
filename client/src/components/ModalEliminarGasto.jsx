@@ -5,6 +5,16 @@ export const ModalEliminarGasto = ({
 }) => {
   const existePagoMeses = gastoAEliminar.categoria === "pagoAMeses";
 
+  const valoresBienEscritos = (nombre) => {
+    const valores = {
+      pagoAMeses: "Pago a Meses",
+    };
+
+    return (
+      valores[nombre] || nombre.slice(0, 1).toUpperCase() + nombre.slice(1)
+    );
+  };
+
   return (
     <>
       <div className="modal fade show d-block">
@@ -23,8 +33,13 @@ export const ModalEliminarGasto = ({
               <span className="fs-5 mb-2">
                 {existePagoMeses
                   ? "¿Deseas eliminar solo el pago de este mes o toda la serie de pagos?"
-                  : "¿Seguro que deseas eliminar este ingreso?"}
+                  : "¿Seguro que deseas eliminar este gasto?"}
               </span>
+              <p className="fw-bold text-danger">
+                {valoresBienEscritos(gastoAEliminar.descripcion)}
+                {" - "}
+                {gastoAEliminar.fecha}
+              </p>
             </div>
 
             <div className="modal-footer border-0 justify-content-center pb-3">
