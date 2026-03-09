@@ -123,7 +123,7 @@ export const Forma = ({ guardarGasto, periodoActivo }) => {
         <input
           required
           type="month"
-          className="form-control"
+          className="form-control text-capitalize"
           name="periodoGastos"
           value={form.periodoGastos}
           onChange={handleChange}

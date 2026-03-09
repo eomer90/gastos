@@ -185,7 +185,7 @@ function App() {
               type="month"
               value={periodoActivo}
               onChange={handleChangeMes}
-              className="form-control shadow-sm text-center text-uppercase"
+              className="form-control shadow-sm text-center text-capitalize"
             />
           </div>
         </div>
