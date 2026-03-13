@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { v4 as uuidv4 } from "uuid";
 import { leerArchivoAjson, crearArchivo } from "./file.mjs";
+import mongo from "./db/connection.mjs";
 
 const app = express();
 const PORT = 3000;
@@ -25,13 +26,17 @@ app.get("/ingresos", async (req, res) => {
 app.post("/ingresos", async (req, res) => {
   try {
     const data = req.body;
-    const ingresos = await leerArchivoAjson(rutaDB);
-    ingresos.push({
+    await mongo.ingresos.insertOne({
       ...data,
-      id: uuidv4(),
       ingreso: Number(data.ingreso),
     });
-    await crearArchivo(rutaDB, ingresos);
+    // const ingresos = await leerArchivoAjson(rutaDB);
+    // ingresos.push({
+    //   ...data,
+    //   id: uuidv4(),
+    //   ingreso: Number(data.ingreso),
+    // });
+    // await crearArchivo(rutaDB, ingresos);
     res.status(201).json({ mensaje: "ingreso registrado", error: false });
   } catch (error) {
     res.json({ mensaje: "error al registrar ingreso", error: true });
@@ -193,6 +198,29 @@ app.patch("/gastos/:id", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+async function startServer() {
+  try {
+    await mongo.connect();
+
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error("Fallo conexión a MongoDB", err);
+    process.exit(1); // termina el proceso si no se puede conectar
+  }
+}
+
+startServer();
+
+process.on("SIGINT", async () => {
+  console.log("Cerrando conexión a MongoDB...");
+  await mongoConnection.close();
+  process.exit(0);
+});
+
+process.on("SIGTERM", async () => {
+  console.log("Cerrando conexión a MongoDB...");
+  await mongoConnection.close();
+  process.exit(0);
 });
