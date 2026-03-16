@@ -24,6 +24,7 @@ function App() {
   const [ventanaEdicionIngresos, setVentanaEdicionIngresos] = useState(false);
   const [gastoSeleccionado, setGastoSeleccionado] = useState(null);
   const [ingresoSeleccionado, setIngresoSeleccionado] = useState(null);
+  const [mensajeError, setMensajeError] = useState("");
   const [ventanaError, setVentanaError] = useState(false);
   const [ventanaEliminarGasto, setVentanaEliminarGasto] = useState(false);
   const [gastoAEliminar, setGastoAEliminar] = useState(null);
@@ -57,6 +58,7 @@ function App() {
     try {
       const res = await Api.post("ingresos", formIngresos);
       if (res.error) {
+        setMensajeError(res.mensaje);
         setVentanaError(true);
       } else {
         traerIngreso();
@@ -68,16 +70,10 @@ function App() {
 
   const editarIngreso = async (formIngresosEdicion, id) => {
     try {
-      const req = await fetch(`${API_URL}/ingresos/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formIngresosEdicion),
-      });
-      const res = await req.json();
+      const res = await Api.patch(`ingresos/${id}`, formIngresosEdicion);
+
       if (res.error) {
-        // mensaje
+        // mostrar error
       } else {
         traerIngreso();
       }
@@ -88,17 +84,8 @@ function App() {
 
   const eliminarIngreso = async (id) => {
     try {
-      const req = await fetch(`${API_URL}/ingresos`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
-      });
-      const res = await req.json();
-      if (res.error) {
-        // mensaje
-      } else {
+      const res = await Api.delete(`ingresos/${id}`);
+      if (!res.error) {
         traerIngreso();
       }
     } catch (error) {
@@ -289,6 +276,7 @@ function App() {
                   setVentanaEdicionIngresos={setVentanaEdicionIngresos}
                   ingresoSeleccionado={ingresoSeleccionado}
                   editarIngreso={editarIngreso}
+                  periodoActual={periodoActual}
                 />
               </div>
             </div>
@@ -310,7 +298,12 @@ function App() {
             />
           )}
 
-          {ventanaError && <ModalError setVentanaError={setVentanaError} />}
+          {ventanaError && (
+            <ModalError
+              setVentanaError={setVentanaError}
+              mensajeError={mensajeError}
+            />
+          )}
         </div>
       </div>
     </div>

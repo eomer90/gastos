@@ -140,25 +140,13 @@ export const FormaGastosEditar = ({
 
                 <div className="mb-4">
                   <label className="form-label fw-semibold">Periodo</label>
-                  <select
-                    className="form-select"
+                  <input
+                    type="month"
+                    className="form-control text-capitalize"
                     name="periodoGastos"
                     value={formGastosEdicion.periodoGastos}
                     onChange={handleChange}
-                  >
-                    <option value="01">Diciembre-Enero</option>
-                    <option value="02">Enero-Febrero</option>
-                    <option value="03">Febrero-Marzo</option>
-                    <option value="04">Marzo-Abril</option>
-                    <option value="05">Abril-Mayo</option>
-                    <option value="06">Mayo-Junio</option>
-                    <option value="07">Junio-Julio</option>
-                    <option value="08">Julio-Agosto</option>
-                    <option value="09">Agosto-Septiembre</option>
-                    <option value="10">Septiembre-Octubre</option>
-                    <option value="11">Octubre-Noviembre</option>
-                    <option value="12">Noviembre-Diciembre</option>
-                  </select>
+                  />
                 </div>
 
                 <div className="mb-3">

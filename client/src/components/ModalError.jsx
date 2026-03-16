@@ -1,4 +1,4 @@
-export const ModalError = ({ setVentanaError }) => {
+export const ModalError = ({ setVentanaError, mensajeError }) => {
   return (
     <>
       <div className="modal fade show d-block">
@@ -14,7 +14,7 @@ export const ModalError = ({ setVentanaError }) => {
             </div>
 
             <div className="modal-body text-center py-3">
-              <p className="fs-5 mb-2">El ingreso no pudo ser guardado</p>
+              <p className="fs-5 mb-2">{mensajeError}</p>
             </div>
 
             <div className="modal-footer border-0 justify-content-center pb-3">

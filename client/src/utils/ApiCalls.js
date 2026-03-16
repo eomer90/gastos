@@ -23,4 +23,11 @@ export class Api {
     });
     return req.json();
   }
+
+  static async delete(url) {
+    const req = await fetch(`${apiURL}/${url}`, {
+      method: "DELETE",
+    });
+    return req.json();
+  }
 }

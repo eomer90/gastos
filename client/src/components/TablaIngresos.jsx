@@ -80,7 +80,7 @@ export const TablaIngresos = ({
 
           <tbody>
             {ingresosOrdenados.map((ingreso) => (
-              <tr key={ingreso.id} className="text-center align-middle">
+              <tr key={ingreso._id} className="text-center align-middle">
                 <td className="fw-semibold">
                   {valoresBienEscritos(ingreso.descripcionIngreso)}
                 </td>

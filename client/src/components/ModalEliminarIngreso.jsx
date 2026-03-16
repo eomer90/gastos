@@ -49,7 +49,7 @@ export const ModalEliminarIngreso = ({
               <button
                 className="btn btn-danger px-4 rounded-pill"
                 onClick={() => {
-                  eliminarIngreso(ingresoAEliminar.id);
+                  eliminarIngreso(ingresoAEliminar._id);
                   setVentanaEliminarIngreso(false);
                 }}
               >
