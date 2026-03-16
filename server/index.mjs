@@ -3,10 +3,10 @@ import cors from "cors";
 import { v4 as uuidv4 } from "uuid";
 import { leerArchivoAjson, crearArchivo } from "./file.mjs";
 import mongo from "./db/connection.mjs";
+import { ObjectId } from "mongodb";
 
 const app = express();
 const PORT = 3000;
-const rutaDB = "./db/ingresos.json";
 const gastosDB = "./db/gastos.json";
 
 app.use(cors());
@@ -14,78 +14,81 @@ app.use(express.json());
 
 app.get("/ingresos", async (req, res) => {
   const periodoQuery = req.query.periodo;
-  const ingresos = await leerArchivoAjson(rutaDB);
 
-  const ingresosPorPeriodo = ingresos.filter(
-    (i) => i.periodoIngresos === periodoQuery,
-  );
+  const ingresos = await mongo.ingresos
+    .find({ periodoIngresos: periodoQuery })
+    .toArray();
 
-  res.json({ ingresos: ingresosPorPeriodo });
+  res.json({ ingresos });
 });
 
 app.post("/ingresos", async (req, res) => {
   try {
+    // throw new Error("Error forzado");
     const data = req.body;
     await mongo.ingresos.insertOne({
       ...data,
       ingreso: Number(data.ingreso),
     });
-    // const ingresos = await leerArchivoAjson(rutaDB);
-    // ingresos.push({
-    //   ...data,
-    //   id: uuidv4(),
-    //   ingreso: Number(data.ingreso),
-    // });
-    // await crearArchivo(rutaDB, ingresos);
     res.status(201).json({ mensaje: "ingreso registrado", error: false });
   } catch (error) {
-    res.json({ mensaje: "error al registrar ingreso", error: true });
+    res.json({ mensaje: "Error al registrar ingreso", error: true });
   }
 });
 
 app.patch("/ingresos/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const dataActualizada = req.body;
-
-    const ingresos = await leerArchivoAjson(rutaDB);
-
-    const index = ingresos.findIndex((i) => i.id === id);
-
-    if (index === -1) {
-      return res.status(404).json({ mensaje: "Ingreso no encontrado" });
+    const { _id, ...dataActualizada } = req.body;
+    const resultado = await mongo.ingresos.updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $set: {
+          ...dataActualizada,
+          ingreso: Number(dataActualizada.ingreso),
+        },
+      },
+    );
+    if (!resultado.matchedCount) {
+      return res.status(404).json({
+        mensaje: "Ingreso no encontrado",
+        error: true,
+      });
     }
-
-    ingresos[index] = {
-      ...ingresos[index],
-      ...dataActualizada,
-      cantidad: Number(dataActualizada.ingreso ?? ingresos[index].ingreso),
-    };
-
-    await crearArchivo(rutaDB, ingresos);
-
-    res
-      .status(200)
-      .json({ mensaje: "Ingreso actualizado correctamente", error: false });
+    res.status(200).json({
+      mensaje: "Ingreso actualizado correctamente",
+      error: false,
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ mensaje: "Error al actualizar ingreso", error: true });
+    console.error(error);
+    res.status(500).json({
+      mensaje: "Error al actualizar ingreso",
+      error: true,
+    });
   }
 });
 
-app.delete("/ingresos", async (req, res) => {
+app.delete("/ingresos/:id", async (req, res) => {
   try {
-    const id = req.body.id;
-    const ingresos = await leerArchivoAjson(rutaDB);
-    const ingresosFiltrados = ingresos.filter((i) => i.id !== id);
-    await crearArchivo(rutaDB, ingresosFiltrados);
+    const { id } = req.params;
+    const resultado = await mongo.ingresos.deleteOne({
+      _id: new ObjectId(id),
+    });
+    if (!resultado.deletedCount) {
+      return res.status(404).json({
+        mensaje: "Ingreso no encontrado",
+        error: true,
+      });
+    }
     res.status(200).json({
       mensaje: "ingreso eliminado",
       error: false,
     });
   } catch (error) {
-    res.json({ mensaje: "error al eliminar ingreso", error: true });
+    res.status(500).json({
+      mensaje: "error al eliminar ingreso",
+      error: true,
+    });
   }
 });
 
