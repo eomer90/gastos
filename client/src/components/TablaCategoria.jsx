@@ -95,9 +95,8 @@ export const TablaCategoria = ({
           <select className="form-select" onChange={handleChange}>
             <option value="">Selecciona filtro</option>
             <option value="descripcion">Descripción</option>
-            <option value="cantidad">Cantidad</option>
-            <option value="fecha">Fecha</option>
             <option value="categoria">Categoría</option>
+            <option value="fecha">Fecha</option>
             <option value="nombreTitular">Nombre del Titular</option>
           </select>
         </div>
@@ -114,10 +113,14 @@ export const TablaCategoria = ({
           )}
         </div>
         <div className="col-md-auto ms-auto mt-3">
-          <span className="badge bg-danger-subtle text-danger">
-            Total filtro: $
-            {Number(totalFiltradoXBusqueda.toFixed(2)).toLocaleString("es-MX")}
-          </span>
+          {mostrarInputBusqueda() && (
+            <span className="badge bg-danger-subtle text-danger">
+              Total: $
+              {Number(totalFiltradoXBusqueda.toFixed(2)).toLocaleString(
+                "es-MX",
+              )}
+            </span>
+          )}
         </div>
       </div>
 
@@ -134,7 +137,6 @@ export const TablaCategoria = ({
               <th>Categoría</th>
               <th>Fecha</th>
               <th>Titular</th>
-              <th>Saldo</th>
               <th>N° Pago</th>
               <th className="text-end">Cantidad</th>
               <th className="text-end">Restante</th>
@@ -160,21 +162,6 @@ export const TablaCategoria = ({
                   {gasto.nombreTitular ? (
                     <span className="badge bg-light text-dark border">
                       {valoresBienEscritos(gasto.nombreTitular)}
-                    </span>
-                  ) : (
-                    "-"
-                  )}
-                </td>
-                <td>
-                  {gasto.saldo ? (
-                    <span
-                      className={`badge ${
-                        gasto.saldo === "adeudado"
-                          ? "bg-danger text-dark"
-                          : "bg-success text-dark"
-                      }`}
-                    >
-                      {valoresBienEscritos(gasto.saldo)}
                     </span>
                   ) : (
                     "-"

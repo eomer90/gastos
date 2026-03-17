@@ -12,7 +12,6 @@ export const Forma = ({ guardarGasto, periodoActivo }) => {
     periodoGastos: periodoActivo,
     titular: "propio",
     nombreTitular: "",
-    saldo: "",
   };
   const [form, setForm] = useState(estadoInicialForma);
 
@@ -27,7 +26,6 @@ export const Forma = ({ guardarGasto, periodoActivo }) => {
 
       return {
         ...nuevoForm,
-        saldo: nuevoForm.nombreTitular !== "" ? "adeudado" : "",
       };
     });
   };
@@ -84,11 +82,12 @@ export const Forma = ({ guardarGasto, periodoActivo }) => {
           className="form-select"
         >
           <option value="fijo">Fijo</option>
-          <option value="suscripcion">Suscripción</option>
-          <option value="pagoAMeses">Pagos a meses</option>
           <option value="despensa">Alimentación y despensa</option>
+          <option value="pagoAMeses">Pagos a meses</option>
+          <option value="suscripcion">Suscripción</option>
           <option value="transporte">Transporte</option>
           <option value="variables">Variables</option>
+          <option value="viajes">Viajes</option>
         </select>
       </div>
 

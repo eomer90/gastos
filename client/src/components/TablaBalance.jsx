@@ -37,15 +37,11 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
     .filter((g) => g.titular === "propio")
     .reduce((acc, g) => acc + Number(g.cantidad), 0);
 
-  const totalAbonado = gastosOrdenados
-    .filter((g) => g.saldo === "abonado")
-    .reduce((acum, g) => acum + Number(g.cantidad), 0);
-
-  const acumEfectivo = ingresosOrdenados
+  const acumEfectivoTotal = ingresosOrdenados
     .filter((i) => i.tipoIngreso === "efectivo")
     .reduce((acum, actual) => acum + Number(actual.ingreso), 0);
 
-  const acumProyectado = ingresosOrdenados
+  const acumProyectadoTotal = ingresosOrdenados
     .filter((i) => i.tipoIngreso === "proyectado")
     .reduce((acum, actual) => acum + Number(actual.ingreso), 0);
 
@@ -62,13 +58,14 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
     .filter((g) => g.titular !== "propio")
     .reduce((acc, g) => acc + Number(g.cantidad), 0);
 
-  const totalIngresosEfectivo = acumEfectivo + totalAbonado - totalPagado;
+  const ingresoEfectivoReal = acumEfectivoTotal - totalPagado;
 
-  const totalGeneral = totalIngresosEfectivo + acumProyectado;
+  const ingresosreales =
+    ingresoEfectivoReal + acumProyectadoTotal + totalAjenos;
 
-  const balanceReal = totalGeneral - totalGastos;
+  const balance = ingresosreales - totalGastos;
 
-  const balanceProyectado = totalIngresos + totalAjenos - totalGastos;
+  const saldo = totalIngresos + totalAjenos - totalGastos;
 
   const valoresBienEscritos = (nombre) => {
     const valores = {
@@ -82,26 +79,26 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
 
   return (
     <>
-      <div className="d-flex justify-content-between align-items-center mb-2">
-        <h2 className="mb-0">BALANCE</h2>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="mb-0">SALDO</h2>
         <span className="badge bg-primary-subtle text-primary px-3 py-2">
           <span className="fw-semibold">Total:</span>{" "}
           <span className="fw-bold fs-4">
-            ${Number(balanceProyectado.toFixed(2)).toLocaleString("es-MX")}
+            ${Number(saldo.toFixed(2)).toLocaleString("es-MX")}
           </span>
         </span>
       </div>
-      <div className="d-flex justify-content-between align-items-left mb-4">
-        <h5 className="mb-0">BALANCE REAL</h5>
+      {/* <div className="d-flex justify-content-between align-items-left mb-4">
+        <h5 className="mb-0">BALANCE</h5>
         <span className="badge bg-primary-subtle text-primary">
-          Total Real: ${Number(balanceReal.toFixed(2)).toLocaleString("es-MX")}
+          Total: ${Number(balance.toFixed(2)).toLocaleString("es-MX")}
         </span>
-      </div>
+      </div> */}
 
       <div className="d-flex justify-content-between align-items-center mb-2">
         <h5 className="mb-0">INGRESOS REALES</h5>
         <span className="badge bg-success-subtle text-success">
-          Total: ${Number(totalGeneral.toFixed(2)).toLocaleString("es-MX")}
+          Total: ${Number(ingresosreales.toFixed(2)).toLocaleString("es-MX")}
         </span>
       </div>
 
@@ -119,16 +116,15 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
               <td className="fw-semibold text-center">Efectivo</td>
               <td className="text-end text-success fw-semibold">
                 $
-                {Number(totalIngresosEfectivo.toFixed(2)).toLocaleString(
-                  "es-MX",
-                )}
+                {Number(ingresoEfectivoReal.toFixed(2)).toLocaleString("es-MX")}
               </td>
             </tr>
 
             <tr>
               <td className="fw-semibold text-center">Proyectado</td>
               <td className="text-end text-success fw-semibold">
-                ${Number(acumProyectado.toFixed(2)).toLocaleString("es-MX")}
+                $
+                {Number(acumProyectadoTotal.toFixed(2)).toLocaleString("es-MX")}
               </td>
             </tr>
 
@@ -138,10 +134,7 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
                   {valoresBienEscritos(nombre)}
                 </td>
                 <td className="text-end text-success fw-semibold">
-                  $
-                  {Number(
-                    total.toFixed(2) - totalAbonado.toFixed(2),
-                  ).toLocaleString("es-MX")}
+                  ${Number(total.toFixed(2)).toLocaleString("es-MX")}
                 </td>
               </tr>
             ))}
@@ -175,7 +168,7 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
             </tr>
 
             <tr>
-              <td className="fw-semibold text-center">Crédito compartido</td>
+              <td className="fw-semibold text-center">Crédito ajeno</td>
               <td className="text-end text-danger fw-semibold">
                 ${Number(totalCreditoAjenos.toFixed(2)).toLocaleString("es-MX")}
               </td>

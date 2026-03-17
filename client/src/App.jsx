@@ -71,9 +71,9 @@ function App() {
   const editarIngreso = async (formIngresosEdicion, id) => {
     try {
       const res = await Api.patch(`ingresos/${id}`, formIngresosEdicion);
-
       if (res.error) {
-        // mostrar error
+        setMensajeError(res.mensaje);
+        setVentanaError(true);
       } else {
         traerIngreso();
       }
@@ -85,7 +85,10 @@ function App() {
   const eliminarIngreso = async (id) => {
     try {
       const res = await Api.delete(`ingresos/${id}`);
-      if (!res.error) {
+      if (res.error) {
+        setMensajeError(res.mensaje);
+        setVentanaError(true);
+      } else {
         traerIngreso();
       }
     } catch (error) {

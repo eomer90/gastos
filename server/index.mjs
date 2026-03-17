@@ -30,7 +30,7 @@ app.post("/ingresos", async (req, res) => {
       ...data,
       ingreso: Number(data.ingreso),
     });
-    res.status(201).json({ mensaje: "ingreso registrado", error: false });
+    res.status(201).json({ mensaje: "Ingreso registrado", error: false });
   } catch (error) {
     res.json({ mensaje: "Error al registrar ingreso", error: true });
   }
@@ -38,6 +38,7 @@ app.post("/ingresos", async (req, res) => {
 
 app.patch("/ingresos/:id", async (req, res) => {
   try {
+    // throw new Error("Error forzado");
     const { id } = req.params;
     const { _id, ...dataActualizada } = req.body;
     const resultado = await mongo.ingresos.updateOne(
@@ -70,6 +71,7 @@ app.patch("/ingresos/:id", async (req, res) => {
 
 app.delete("/ingresos/:id", async (req, res) => {
   try {
+    // throw new Error("Error forzado");
     const { id } = req.params;
     const resultado = await mongo.ingresos.deleteOne({
       _id: new ObjectId(id),
@@ -86,7 +88,7 @@ app.delete("/ingresos/:id", async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      mensaje: "error al eliminar ingreso",
+      mensaje: "Error al eliminar ingreso",
       error: true,
     });
   }
@@ -99,13 +101,6 @@ app.get("/gastos", async (req, res) => {
     (g) => g.periodoGastos === periodoQuery,
   );
   res.json({ gastos: gastosPorPeriodo });
-});
-
-app.get("/pepito/:numero", (req, res) => {
-  const { numero } = req.params;
-  console.log(numero);
-  const edad = "54";
-  res.json({ nombre: "Juan", edad: edad });
 });
 
 app.post("/gastos", async (req, res) => {

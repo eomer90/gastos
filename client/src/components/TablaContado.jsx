@@ -41,7 +41,8 @@ export const TablaContado = ({
     if (
       campo === "descripcion" ||
       campo === "categoria" ||
-      campo === "nombreTitular"
+      campo === "nombreTitular" ||
+      campo === "estatus"
     )
       return "text";
     if (campo === "cantidad") return "number";
@@ -93,10 +94,10 @@ export const TablaContado = ({
           <select className="form-select" onChange={handleChange}>
             <option value="">Selecciona filtro</option>
             <option value="descripcion">Descripción</option>
-            <option value="cantidad">Cantidad</option>
-            <option value="fecha">Fecha</option>
             <option value="categoria">Categoría</option>
+            <option value="fecha">Fecha</option>
             <option value="nombreTitular">Nombre del Titular</option>
+            <option value="estatus">Estatus</option>
           </select>
         </div>
 
@@ -113,10 +114,14 @@ export const TablaContado = ({
         </div>
 
         <div className="col-md-auto ms-auto mt-3">
-          <span className="badge bg-danger-subtle text-danger">
-            Total filtro: $
-            {Number(totalFiltradoXBusqueda.toFixed(2)).toLocaleString("es-MX")}
-          </span>
+          {mostrarInputBusqueda() && (
+            <span className="badge bg-danger-subtle text-danger">
+              Total: $
+              {Number(totalFiltradoXBusqueda.toFixed(2)).toLocaleString(
+                "es-MX",
+              )}
+            </span>
+          )}
         </div>
       </div>
 
@@ -166,8 +171,8 @@ export const TablaContado = ({
                   <span
                     className={`badge ${
                       gasto.estatus === "pendiente"
-                        ? "bg-warning text-dark"
-                        : "bg-info text-dark"
+                        ? "bg-warning-subtle text-dark"
+                        : "bg-info-subtle text-dark"
                     }`}
                   >
                     {valoresBienEscritos(gasto.estatus)}

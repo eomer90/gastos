@@ -17,7 +17,6 @@ export const FormaGastosEditar = ({
     periodoGastos: periodoActivo,
     titular: "propio",
     nombreTitular: "",
-    saldo: "",
   };
   const [formGastosEdicion, setFormGastosEdicion] = useState(gastoSeleccionado);
 
@@ -35,14 +34,12 @@ export const FormaGastosEditar = ({
         ...prev,
         [name]: value,
         nombreTitular: "",
-        saldo: "",
       }));
     } else if (name === "titular" && value === "ajeno") {
       setFormGastosEdicion((prev) => ({
         ...prev,
         [name]: value,
         nombreTitular: "",
-        saldo: "adeudado",
       }));
     } else if (name === "categoria" && value !== "pagoAMeses") {
       setFormGastosEdicion((prev) => ({
@@ -239,20 +236,6 @@ export const FormaGastosEditar = ({
                     />
                   </div>
                 )}
-
-                <div className="mb-3">
-                  <label className="form-label fw-semibold">Saldo</label>
-                  <select
-                    value={formGastosEdicion.saldo}
-                    name="saldo"
-                    onChange={handleChange}
-                    className="form-select"
-                  >
-                    <option value="">Selecciona</option>
-                    <option value="adeudado">Adeudado</option>
-                    <option value="abonado">Abonado</option>
-                  </select>
-                </div>
               </div>
 
               <div className="modal-footer border-0 px-4 pb-4">
