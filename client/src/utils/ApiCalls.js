@@ -24,9 +24,11 @@ export class Api {
     return req.json();
   }
 
-  static async delete(url) {
+  static async delete(url, body) {
     const req = await fetch(`${apiURL}/${url}`, {
       method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
     });
     return req.json();
   }

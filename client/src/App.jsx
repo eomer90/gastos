@@ -12,8 +12,6 @@ import { Api } from "./utils/ApiCalls";
 import { ModalEliminarGasto } from "./components/ModalEliminarGasto";
 import { ModalEliminarIngreso } from "./components/ModalEliminarIngreso";
 
-const API_URL = "http://localhost:3000";
-
 const periodoActual = new Date().toISOString().slice(0, 7);
 
 function App() {
@@ -100,7 +98,8 @@ function App() {
     try {
       const res = await Api.post("gastos", formGastos);
       if (res.error) {
-        //mostrar un modal de error
+        setMensajeError(res.mensaje);
+        setVentanaError(true);
       } else {
         traerGasto();
       }
@@ -111,18 +110,13 @@ function App() {
 
   const editarGasto = async (formGastosEdicion, id) => {
     try {
-      await fetch(`${API_URL}/gastos/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formGastosEdicion),
-      });
-
-      const req = await fetch(`${API_URL}/gastos?periodo=${periodoActivo}`);
-      const res = await req.json();
-
-      setGastos(res.gastos);
+      const res = await Api.patch(`gastos/${id}`, formGastosEdicion);
+      if (res.error) {
+        setMensajeError(res.mensaje);
+        setVentanaError(true);
+      } else {
+        traerGasto();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -130,18 +124,13 @@ function App() {
 
   const eliminarGasto = async (id, isCadena = false) => {
     try {
-      await fetch(`${API_URL}/gastos`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id, isCadena }),
-      });
-
-      const req = await fetch(`${API_URL}/gastos?periodo=${periodoActivo}`);
-      const res = await req.json();
-
-      setGastos(res.gastos);
+      const res = await Api.delete(`gastos/${id}`, { isCadena });
+      if (res.error) {
+        setMensajeError(res.mensaje);
+        setVentanaError(true);
+      } else {
+        traerGasto();
+      }
     } catch (error) {
       console.log(error);
     }

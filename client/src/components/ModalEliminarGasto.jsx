@@ -54,7 +54,7 @@ export const ModalEliminarGasto = ({
                   <button
                     className="btn btn-danger px-4 rounded-pill"
                     onClick={() => {
-                      eliminarGasto(gastoAEliminar.id);
+                      eliminarGasto(gastoAEliminar._id);
                       setVentanaEliminarGasto(false);
                     }}
                   >
@@ -74,7 +74,7 @@ export const ModalEliminarGasto = ({
                 <button
                   className="btn btn-danger px-4 rounded-pill"
                   onClick={() => {
-                    eliminarGasto(gastoAEliminar.id);
+                    eliminarGasto(gastoAEliminar._id);
                     setVentanaEliminarGasto(false);
                   }}
                 >

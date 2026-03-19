@@ -26,19 +26,6 @@
     "id": "4b18b52d-0092-4ce9-836d-e6f0937f185f"
   },
   {
-    "descripcion": "Movistar: Efren",
-    "cantidad": 300,
-    "categoria": "fijo",
-    "totalMeses": "",
-    "tipoPago": "credito",
-    "estatus": "",
-    "fecha": "2026-03-12",
-    "periodoGastos": "2026-03",
-    "titular": "ajeno",
-    "nombreTitular": "efren",
-    "id": "2b9994b4-0108-46e7-a082-ba40897f4456"
-  },
-  {
     "descripcion": "Pasajes: Efren",
     "cantidad": 560,
     "categoria": "transporte",

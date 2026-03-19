@@ -68,7 +68,7 @@ export const FormaGastosEditar = ({
 
   const handleSubmit = (ev) => {
     ev.preventDefault();
-    editarGasto(formGastosEdicion, gastoSeleccionado.id);
+    editarGasto(formGastosEdicion, gastoSeleccionado._id);
     setFormGastosEdicion(estadoInicialFormaEdicion);
     setVentanaEdicion(false);
   };
