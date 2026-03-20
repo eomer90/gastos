@@ -66,9 +66,12 @@ function App() {
     }
   };
 
-  const editarIngreso = async (formIngresosEdicion, id) => {
+  const editarIngreso = async (formIngresosEdicion) => {
     try {
-      const res = await Api.patch(`ingresos/${id}`, formIngresosEdicion);
+      const res = await Api.patch(
+        `ingresos/${ingresoSeleccionado._id}`,
+        formIngresosEdicion,
+      );
       if (res.error) {
         setMensajeError(res.mensaje);
         setVentanaError(true);

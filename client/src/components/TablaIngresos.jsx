@@ -27,7 +27,7 @@ export const TablaIngresos = ({
 
   const ingresoEstimado = totalIngresos + totalAjenos;
 
-  const editarIngreso = (ingreso) => {
+  const seleccionarIngresoAEditar = (ingreso) => {
     setIngresoSeleccionado(ingreso);
     setVentanaEdicionIngresos(true);
   };
@@ -113,7 +113,7 @@ export const TablaIngresos = ({
 
                   <button
                     className="btn btn-outline-primary btn-sm"
-                    onClick={() => editarIngreso(ingreso)}
+                    onClick={() => seleccionarIngresoAEditar(ingreso)}
                   >
                     <i className="bi bi-pencil"></i>
                   </button>

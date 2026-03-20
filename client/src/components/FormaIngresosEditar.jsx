@@ -30,7 +30,7 @@ export const FormaIngresosEditar = ({
 
   const onSubmitIngreso = (ev) => {
     ev.preventDefault();
-    editarIngreso(formIngresosEdicion, ingresoSeleccionado._id);
+    editarIngreso(formIngresosEdicion);
     setFormingresosEdicion(estadoInicialIngresosEdicion);
     setVentanaEdicionIngresos(false);
   };
