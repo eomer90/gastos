@@ -2,31 +2,9 @@ export const TablaIngresos = ({
   ingresosOrdenados,
   setVentanaEdicionIngresos,
   setIngresoSeleccionado,
-  gastosOrdenados,
   setVentanaEliminarIngreso,
   setIngresoAEliminar,
 }) => {
-  const totalIngresos = ingresosOrdenados.reduce(
-    (acum, { ingreso }) => acum + Number(ingreso),
-    0,
-  );
-
-  const titularXGasto = gastosOrdenados
-    .filter((g) => g.titular !== "propio")
-    .reduce((acc, g) => {
-      if (!acc[g.nombreTitular.trim()]) {
-        acc[g.nombreTitular.trim()] = 0;
-      }
-      acc[g.nombreTitular.trim()] += g.cantidad;
-      return acc;
-    }, {});
-
-  const totalAjenos = gastosOrdenados
-    .filter((g) => g.titular !== "propio")
-    .reduce((acc, g) => acc + Number(g.cantidad), 0);
-
-  const ingresoEstimado = totalIngresos + totalAjenos;
-
   const seleccionarIngresoAEditar = (ingreso) => {
     setIngresoSeleccionado(ingreso);
     setVentanaEdicionIngresos(true);
@@ -50,20 +28,11 @@ export const TablaIngresos = ({
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="mb-0">INGRESO ESTIMADO</h2>
-        <span className="badge bg-success-subtle text-success px-3 py-2">
-          <span className="fw-semibold">Total:</span>{" "}
-          <span className="fw-bold fs-4">
-            ${Number(ingresoEstimado.toFixed(2)).toLocaleString("es-MX")}
-          </span>
-        </span>
+        <h2 className="mb-0">INGRESOS</h2>
       </div>
 
       <div className="d-flex justify-content-between align-items-center mb-2">
         <h5 className="mb-0">INGRESOS</h5>
-        <span className="badge bg-success-subtle text-success">
-          Total: ${Number(totalIngresos.toFixed(2)).toLocaleString("es-MX")}
-        </span>
       </div>
 
       <div className="table-responsive">
@@ -128,35 +97,6 @@ export const TablaIngresos = ({
                 </td>
               </tr>
             )}
-          </tbody>
-        </table>
-
-        <div className="d-flex justify-content-between align-items-center mb-2">
-          <h5 className="mb-0">CUENTAS POR COBRAR</h5>
-          <span className="badge bg-success-subtle text-success">
-            Total: ${Number(totalAjenos.toFixed(2)).toLocaleString("es-MX")}
-          </span>
-        </div>
-
-        <table className="table table-sm table-bordered align-middle">
-          <thead className="table-light text-center">
-            <tr>
-              <th>A nombre de</th>
-              <th className="text-end">Cantidad</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {Object.entries(titularXGasto).map(([nombre, total]) => (
-              <tr key={nombre}>
-                <td className="fw-semibold text-center">
-                  {valoresBienEscritos(nombre)}
-                </td>
-                <td className="text-end text-success fw-semibold">
-                  ${Number(total.toFixed(2)).toLocaleString("es-MX")}
-                </td>
-              </tr>
-            ))}
           </tbody>
         </table>
       </div>

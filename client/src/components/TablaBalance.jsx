@@ -13,6 +13,10 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
     0,
   );
 
+  const totalCredito = gastosOrdenados
+    .filter((g) => g.tipoPago === "credito")
+    .reduce((acc, g) => acc + Number(g.cantidad), 0);
+
   const gastosLiberados = filtrarContado
     .filter((g) => g.estatus === "liberado")
     .reduce((acc, g) => acc + Number(g.cantidad), 0);
@@ -26,16 +30,6 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
       acc[g.nombreTitular.trim()] += g.cantidad;
       return acc;
     }, {});
-
-  const totalCreditoAjenos = gastosOrdenados
-    .filter((g) => g.tipoPago === "credito")
-    .filter((g) => g.titular !== "propio")
-    .reduce((acc, g) => acc + Number(g.cantidad), 0);
-
-  const totalCreditoPropio = gastosOrdenados
-    .filter((g) => g.tipoPago === "credito")
-    .filter((g) => g.titular === "propio")
-    .reduce((acc, g) => acc + Number(g.cantidad), 0);
 
   const acumEfectivoTotal = ingresosOrdenados
     .filter((i) => i.tipoIngreso === "efectivo")
@@ -63,8 +57,6 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
   const ingresosreales =
     ingresoEfectivoReal + acumProyectadoTotal + totalAjenos;
 
-  const balance = ingresosreales - totalGastos;
-
   const saldo = totalIngresos + totalAjenos - totalGastos;
 
   const valoresBienEscritos = (nombre) => {
@@ -88,22 +80,16 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
           </span>
         </span>
       </div>
-      {/* <div className="d-flex justify-content-between align-items-left mb-4">
-        <h5 className="mb-0">BALANCE</h5>
-        <span className="badge bg-primary-subtle text-primary">
-          Total: ${Number(balance.toFixed(2)).toLocaleString("es-MX")}
-        </span>
-      </div> */}
 
       <div className="d-flex justify-content-between align-items-center mb-2">
-        <h5 className="mb-0">INGRESOS REALES</h5>
+        <h5 className="mb-0">INGRESOS TOTALES</h5>
         <span className="badge bg-success-subtle text-success">
           Total: ${Number(ingresosreales.toFixed(2)).toLocaleString("es-MX")}
         </span>
       </div>
 
       <div className="table-responsive">
-        <table className="table table-sm table-bordered align-middle mb-5">
+        <table className="table table-sm table-bordered align-middle mb-4">
           <thead className="table-light">
             <tr>
               <th className="text-center">Concepto</th>
@@ -161,19 +147,11 @@ export const TablaBalance = ({ ingresosOrdenados, gastosOrdenados }) => {
 
           <tbody>
             <tr>
-              <td className="fw-semibold text-center">Crédito propio</td>
+              <td className="fw-semibold text-center">Crédito</td>
               <td className="text-end text-danger fw-semibold">
-                ${Number(totalCreditoPropio.toFixed(2)).toLocaleString("es-MX")}
+                ${Number(totalCredito.toFixed(2)).toLocaleString("es-MX")}
               </td>
             </tr>
-
-            <tr>
-              <td className="fw-semibold text-center">Crédito ajeno</td>
-              <td className="text-end text-danger fw-semibold">
-                ${Number(totalCreditoAjenos.toFixed(2)).toLocaleString("es-MX")}
-              </td>
-            </tr>
-
             <tr>
               <td className="fw-semibold text-center">Contado</td>
               <td className="text-end text-danger fw-semibold">

@@ -81,17 +81,6 @@ export const ModalEliminarGasto = ({
                   Sí, eliminar
                 </button>
               )}
-
-              {/* 
-              <button
-                className="btn btn-danger px-4 rounded-pill"
-                onClick={() => {
-                  eliminarIngreso(ingresoAEliminar.id);
-                  setModalEliminarIngreso(false);
-                }}
-              >
-                Sí, eliminar
-              </button> */}
             </div>
           </div>
         </div>

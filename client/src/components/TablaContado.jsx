@@ -21,11 +21,6 @@ export const TablaContado = ({
     return valor.toString().toLowerCase().includes(busqueda.toLowerCase());
   });
 
-  const totalContado = gastosXContado.reduce(
-    (acc, g) => acc + Number(g.cantidad),
-    0,
-  );
-
   const totalFiltradoXBusqueda = gastosBusqueda.reduce(
     (acum, { cantidad }) => acum + cantidad,
     0,
@@ -40,7 +35,6 @@ export const TablaContado = ({
   const tipoInputBusqueda = () => {
     if (
       campo === "descripcion" ||
-      campo === "categoria" ||
       campo === "nombreTitular" ||
       campo === "estatus"
     )
@@ -81,12 +75,6 @@ export const TablaContado = ({
     <>
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 className="mb-0">CONTADO</h2>
-        <span className="badge bg-danger-subtle text-danger px-3 py-2">
-          <span className="fw-semibold">Total:</span>{" "}
-          <span className="fw-bold fs-4">
-            ${Number(totalContado.toFixed(2)).toLocaleString("es-MX")}
-          </span>
-        </span>
       </div>
 
       <div className="row mb-3">
@@ -102,17 +90,27 @@ export const TablaContado = ({
         </div>
 
         <div className="col-md-4">
-          {mostrarInputBusqueda() && (
-            <input
-              type={tipoInputBusqueda()}
-              className="form-control"
-              placeholder="Buscar..."
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-            />
-          )}
+          {mostrarInputBusqueda() &&
+            (tipoInputBusqueda() ? (
+              <input
+                type={tipoInputBusqueda()}
+                className="form-control"
+                placeholder="Buscar..."
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+              />
+            ) : (
+              <select className="form-select" onChange={handleChange}>
+                <option value="fijo">Fijo</option>
+                <option value="despensa">Alimentación y despensa</option>
+                <option value="pagoAMeses">Pagos a meses</option>
+                <option value="suscripcion">Suscripción</option>
+                <option value="transporte">Transporte</option>
+                <option value="variables">Variables</option>
+                <option value="viajes">Viajes</option>
+              </select>
+            ))}
         </div>
-
         <div className="col-md-auto ms-auto mt-3">
           {mostrarInputBusqueda() && (
             <span className="badge bg-danger-subtle text-danger">
@@ -186,7 +184,6 @@ export const TablaContado = ({
                 <td>
                   <button
                     className="btn btn-outline-danger btn-sm me-2"
-                    // onClick={() => eliminarGasto(gasto.id)}
                     onClick={() => abrirModalEliminarGasto(gasto)}
                   >
                     <i className="bi bi-trash"></i>

@@ -14,11 +14,6 @@ export const TablaCategoria = ({
     (g) => g.tipoPago === "credito",
   );
 
-  const totalCredito = gastosXCredito.reduce(
-    (acc, g) => acc + Number(g.cantidad),
-    0,
-  );
-
   const gastosBusqueda = gastosXCredito.filter((g) => {
     const valor = g[campo];
 
@@ -40,12 +35,7 @@ export const TablaCategoria = ({
   };
 
   const tipoInputBusqueda = () => {
-    if (
-      campo === "descripcion" ||
-      campo === "categoria" ||
-      campo === "nombreTitular"
-    )
-      return "text";
+    if (campo === "descripcion" || campo === "nombreTitular") return "text";
     if (campo === "cantidad") return "number";
     if (campo === "fecha") return "date";
   };
@@ -82,12 +72,6 @@ export const TablaCategoria = ({
     <>
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 className="mb-0">CRÉDITO</h2>
-        <span className="badge bg-danger-subtle text-danger px-3 py-2">
-          <span className="fw-semibold">Total:</span>{" "}
-          <span className="fw-bold fs-4">
-            ${Number(totalCredito.toFixed(2)).toLocaleString("es-MX")}
-          </span>
-        </span>
       </div>
 
       <div className="row mb-3">
@@ -102,15 +86,26 @@ export const TablaCategoria = ({
         </div>
 
         <div className="col-md-4">
-          {mostrarInputBusqueda() && (
-            <input
-              type={tipoInputBusqueda()}
-              className="form-control"
-              placeholder="Buscar..."
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-            />
-          )}
+          {mostrarInputBusqueda() &&
+            (tipoInputBusqueda() ? (
+              <input
+                type={tipoInputBusqueda()}
+                className="form-control"
+                placeholder="Buscar..."
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+              />
+            ) : (
+              <select className="form-select" onChange={handleChange}>
+                <option value="fijo">Fijo</option>
+                <option value="despensa">Alimentación y despensa</option>
+                <option value="pagoAMeses">Pagos a meses</option>
+                <option value="suscripcion">Suscripción</option>
+                <option value="transporte">Transporte</option>
+                <option value="variables">Variables</option>
+                <option value="viajes">Viajes</option>
+              </select>
+            ))}
         </div>
         <div className="col-md-auto ms-auto mt-3">
           {mostrarInputBusqueda() && (
@@ -192,7 +187,6 @@ export const TablaCategoria = ({
                 <td>
                   <button
                     className="btn btn-outline-danger btn-sm me-2"
-                    // onClick={() => eliminarGasto(gasto.id)}
                     onClick={() => abrirModalEliminarGasto(gasto)}
                   >
                     <i className="bi bi-trash"></i>
