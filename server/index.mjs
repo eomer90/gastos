@@ -224,12 +224,12 @@ startServer();
 
 process.on("SIGINT", async () => {
   console.log("Cerrando conexión a MongoDB...");
-  await mongoConnection.close();
+  await mongo.close();
   process.exit(0);
 });
 
 process.on("SIGTERM", async () => {
   console.log("Cerrando conexión a MongoDB...");
-  await mongoConnection.close();
+  await mongo.close();
   process.exit(0);
 });
