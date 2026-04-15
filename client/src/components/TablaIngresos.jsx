@@ -69,7 +69,7 @@ export const TablaIngresos = ({
                 </td>
 
                 <td className="fw-semibold text-success text-end">
-                  ${Number(ingreso.ingreso.toFixed(2)).toLocaleString("es-MX")}
+                  ${Number(ingreso.ingreso).toFixed(2)}
                 </td>
 
                 <td>
