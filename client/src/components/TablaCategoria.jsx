@@ -96,10 +96,15 @@ export const TablaCategoria = ({
                 onChange={(e) => setBusqueda(e.target.value)}
               />
             ) : (
-              <select className="form-select" onChange={handleChange}>
+              <select
+                className="form-select"
+                onChange={(e) => setBusqueda(e.target.value)}
+              >
                 <option value="fijo">Fijo</option>
                 <option value="despensa">Alimentación y despensa</option>
                 <option value="pagoAMeses">Pagos a meses</option>
+                <option value="salidas">Salidas</option>
+                <option value="salud">Salud</option>
                 <option value="suscripcion">Suscripción</option>
                 <option value="transporte">Transporte</option>
                 <option value="variables">Variables</option>
