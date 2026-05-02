@@ -84,6 +84,8 @@ export const Forma = ({ guardarGasto, periodoActivo }) => {
           <option value="fijo">Fijo</option>
           <option value="despensa">Alimentación y despensa</option>
           <option value="pagoAMeses">Pagos a meses</option>
+          <option value="salidas">Salidas</option>
+          <option value="salud">Salud</option>
           <option value="suscripcion">Suscripción</option>
           <option value="transporte">Transporte</option>
           <option value="variables">Variables</option>
