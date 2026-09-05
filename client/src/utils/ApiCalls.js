@@ -1,4 +1,5 @@
-const apiURL = "http://localhost:3000";
+// const apiURL = "http://localhost:3000";
+const apiURL = import.meta.env.VITE_API_URL;
 
 export class Api {
   static async get(url) {
